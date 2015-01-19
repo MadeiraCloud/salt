@@ -75,6 +75,11 @@ cgroupfs_mount() {
 }
 
 case "$1" in
+    mount)
+        fail_unless_root
+        cgroupfs_mount
+        echo "cgroupfs mounted"
+        ;;
     start)
         fail_unless_root
 
