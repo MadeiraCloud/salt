@@ -1914,9 +1914,12 @@ Ensure that a container from the given name is running. If not, run it.
 			6000/tcp: 6000 (default ip: 0.0.0.0)
 			80: 6666 (default protocol: tcp)
 
-*   **`files`** (*optional*): list of persistent files
+*   **`force`** (*optional*): Force (re)build container on each round.
 
-*   **`force`** (*optional*): Force (re)build container on each round
+		note:
+			Use this option if you edit any other parameter. Don't forget to disable it once a round has succeed.
+
+*   **`files`** (*optional*): list of persistent files
 
 		example:
 			/etc/nginx/nginx.conf : *content*
@@ -2200,9 +2203,12 @@ Run a container from a remote image
 			6000/tcp: 6000 (default ip: 0.0.0.0)
 			80: 6666 (default protocol: tcp)
 
-*   **`files`** (*optional*): list of persistent files
-
 *   **`force`** (*optional*): Force (re)build container on each round
+
+		note:
+			Use this option if you edit any other parameter. Don't forget to disable it once a round has succeed.
+
+*   **`files`** (*optional*): list of persistent files
 
 		example:
 			/etc/nginx/nginx.conf : *content*
