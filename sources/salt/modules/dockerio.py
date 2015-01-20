@@ -1700,7 +1700,7 @@ def pull(repo, tag=None, username=None, password=None, email=None, *args, **kwar
                     valid(status,
                           out=logs if logs else ret,
                           id=None,
-                          comment='Image {0} is up to date'.format(repotag)
+                          comment='Image {0} is up to date'.format(repotag))
                 else:
                     valid(status,
                           out=logs if logs else ret,
