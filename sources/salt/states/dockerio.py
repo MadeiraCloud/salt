@@ -99,6 +99,7 @@ Available Functions
 
 # Import python libs
 import re
+import os
 import hashlib
 import json
 
