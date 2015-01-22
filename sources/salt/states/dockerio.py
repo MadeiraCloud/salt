@@ -1161,46 +1161,48 @@ def vops_running(containers,
 
     # Persist parameters
     directory = os.path.join(CONFIG_PATH,"docker_persist")
+    filepath = None
     try:
         if not os.path.isdir(directory):
             os.makedirs(directory,0755)
+        filepath = os.path.join(directory,kwargs.get("name","default").split("_state-")[1])
     except Exception as e:
         pass
-    filepath = os.path.join(directory,kwargs.get("name","default"))
-    cs_old = None
-    try:
-        with open(filepath,'r') as f:
-            cs_old = f.read()
-    except Exception as e:
-        pass
-    d = {
-        'containers': containers,
-        'image': image,
-        'tag': tag,
-        'entrypoint': entrypoint,
-        'command': command,
-        'environment': environment,
-        'ports': ports,
-        'volumes': volumes,
-        'devices': devices,
-        'mem_limit': mem_limit,
-        'cpu_shares': cpu_shares,
-        'binds': binds,
-        'publish_all_ports': publish_all_ports,
-        'links': links,
-        'port_bindings': port_bindings,
-        'count': count
-    }
-    md5 = hashlib.md5()
-    md5.update(json.dumps(d))
-    cs = md5.hexdigest()
-    if cs_old and (cs_old != cs):
-        force = True
-    try:
-        with open(filepath,'w') as f:
-            f.write(cs)
-    except Exception as e:
-        pass
+    if filepath:
+        cs_old = None
+        try:
+            with open(filepath,'r') as f:
+                cs_old = f.read()
+        except Exception as e:
+            pass
+        d = {
+            'containers': containers,
+            'image': image,
+            'tag': tag,
+            'entrypoint': entrypoint,
+            'command': command,
+            'environment': environment,
+            'ports': ports,
+            'volumes': volumes,
+            'devices': devices,
+            'mem_limit': mem_limit,
+            'cpu_shares': cpu_shares,
+            'binds': binds,
+            'publish_all_ports': publish_all_ports,
+            'links': links,
+            'port_bindings': port_bindings,
+            'count': count
+        }
+        md5 = hashlib.md5()
+        md5.update(json.dumps(d))
+        cs = md5.hexdigest()
+        if cs_old and (cs_old != cs):
+            force = True
+        try:
+            with open(filepath,'w') as f:
+                f.write(cs)
+        except Exception as e:
+            pass
 
 
     if tag:
