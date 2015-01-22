@@ -99,6 +99,9 @@ Available Functions
 
 # Import python libs
 import re
+import os
+import hashlib
+import json
 
 # Import salt libs
 from salt._compat import string_types
@@ -112,7 +115,6 @@ try:
 except ImportError:
     HAS_DOCKER = False
 
-
 # Define the module's virtual name
 __virtualname__ = 'docker'
 
@@ -124,6 +126,9 @@ def __virtual__():
     if HAS_DOCKER:
         return __virtualname__
     return False
+
+
+CONFIG_PATH="/var/lib/visualops/opsagent"
 
 
 INVALID_RESPONSE = 'We did not get an acceptable answer from docker'
@@ -908,7 +913,8 @@ def vops_pulled(repo,
 
 
     if repo:
-        ret = pulled(repo,tag,force=True,username=username,password=password,email=email)
+        ret = pulled(repo,tag,username=username,password=password,email=email)
+#        ret = pulled(repo,tag,force=True,username=username,password=password,email=email)
 #        # PUSHED
 #        print "######### PULLED #####"
 #        print ret
@@ -1151,6 +1157,53 @@ def vops_running(containers,
         (ports,port_bindings) = gen_ports(ports,port_bindings,len(containers))
         if not ports or not port_bindings:
             return _invalid(comment="Error generating port bindings (is there enough space between each allocation required?)")
+
+
+    # Persist parameters
+    directory = os.path.join(CONFIG_PATH,"docker_persist")
+    filepath = None
+    try:
+        if not os.path.isdir(directory):
+            os.makedirs(directory,0755)
+        filepath = os.path.join(directory,kwargs.get("name","default").split("_state-")[1])
+    except Exception as e:
+        pass
+    if filepath:
+        cs_old = None
+        try:
+            with open(filepath,'r') as f:
+                cs_old = f.read()
+        except Exception as e:
+            pass
+        d = {
+            'containers': containers,
+            'image': image,
+            'tag': tag,
+            'entrypoint': entrypoint,
+            'command': command,
+            'environment': environment,
+            'ports': ports,
+            'volumes': volumes,
+            'devices': devices,
+            'mem_limit': mem_limit,
+            'cpu_shares': cpu_shares,
+            'binds': binds,
+            'publish_all_ports': publish_all_ports,
+            'links': links,
+            'port_bindings': port_bindings,
+            'count': count
+        }
+        md5 = hashlib.md5()
+        md5.update(json.dumps(d))
+        cs = md5.hexdigest()
+        if cs_old and (cs_old != cs):
+            force = True
+        try:
+            with open(filepath,'w') as f:
+                f.write(cs)
+        except Exception as e:
+            pass
+
 
     if tag:
         image = "%s:%s"%(image,tag)
