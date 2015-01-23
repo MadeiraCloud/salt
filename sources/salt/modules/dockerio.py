@@ -1574,11 +1574,9 @@ def _parse_image_multilogs_string(ret, repo, repotag=None):
         # search last layer grabbed
         for l in logs:
             if isinstance(l, dict):
-                if l.get('status') == 'Download complete' and l.get('id'):
+                valid = ["Already exists",'Download complete']
+                if l.get('status') in valid:
                     infos = _get_image_infos(repotag)
-                    break
-                elif re.match("Status: Image is up to date for ", l.get('status',"")):
-                    infos = {"id":None}
                     break
     return logs, infos
 
@@ -1696,17 +1694,11 @@ def pull(repo, tag=None, username=None, password=None, email=None, *args, **kwar
             repotag = (repo if not tag else '{0}:{1}'.format(repo, tag))
             logs, infos = _parse_image_multilogs_string(ret, repo, repotag=repotag)
             if infos:
-                if not infos.get('id', None):
-                    valid(status,
-                          out=logs if logs else ret,
-                          id=None,
-                          comment='Image {0} is up to date'.format(repotag))
-                else:
-                    valid(status,
-                          out=logs if logs else ret,
-                          id=infos['id'],
-                          comment='Image {0} was pulled ({1})'.format(
-                              repotag, infos['id']))
+                valid(status,
+                      out=logs if logs else ret,
+                      id=infos['id'],
+                      comment='Image {0} was pulled ({1})'.format(
+                          repotag, infos['id']))
             else:
                 _pull_assemble_error_status(status, ret, logs)
         else:

@@ -310,7 +310,7 @@ def pulled(repo, tag=None, username=None, password=None, email=None, force=False
     previous_id = iinfos['out']['id'] if iinfos['status'] else None
     func = __salt('docker.pull')
     returned = func(repo_base, tag, username=username, password=password,email=email)
-    if previous_id != returned['id']:
+    if (previous_id != returned['id']) and returned['id']:
         changes = {repo: True}
     else:
         changes = {}
@@ -913,8 +913,8 @@ def vops_pulled(repo,
 
 
     if repo:
-        ret = pulled(repo,tag,username=username,password=password,email=email)
-#        ret = pulled(repo,tag,force=True,username=username,password=password,email=email)
+        # Force to pull new versions
+        ret = pulled(repo,tag,force=True,username=username,password=password,email=email)
 #        # PUSHED
 #        print "######### PULLED #####"
 #        print ret
