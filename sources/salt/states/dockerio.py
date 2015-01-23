@@ -913,7 +913,7 @@ def vops_pulled(repo,
 
 
     if repo:
-#        ret = pulled(repo,tag,username=username,password=password,email=email)
+        # Force to pull new versions
         ret = pulled(repo,tag,force=True,username=username,password=password,email=email)
 #        # PUSHED
 #        print "######### PULLED #####"
