@@ -488,10 +488,10 @@ def mod_watch(name, sig=None, reload=False, full_restart=False, actions=None):
     pid = __salt__['service.status'](name, sig)
 
     if pid or actions.get(name,None):
-        if 'service.reload_' in __salt__ and reload:
+        if 'service.reload' in __salt__ and reload:
             action = "reload"
             act = [{
-                "func": __salt__['service.reload_'],
+                "func": __salt__['service.reload'],
                 "action": action,
             }]
         elif 'service.full_restart' in __salt__ and full_restart:
@@ -510,7 +510,7 @@ def mod_watch(name, sig=None, reload=False, full_restart=False, actions=None):
         else:
             action = "default"
             act = [{
-                "func": __salt__['service.reload_'],
+                "func": __salt__['service.reload'],
                 "action": "reload",
             },{
                 "func": __salt__['service.restart'],
