@@ -545,8 +545,9 @@ class Minion(object):
         self.grains_cache = self.opts['grains']
 
         if 'proxy' in self.opts['pillar']:
-            log.debug('I am {0} and I need to start some proxies for {0}'.format(self.opts['id'],
-                                                                                 self.opts['pillar']['proxy']))
+            log.debug('I am {0} and I need to start some proxies for {1}'.format(
+                self.opts['id'],
+                self.opts['pillar']['proxy']))
             for p in self.opts['pillar']['proxy']:
                 log.debug('Starting {0} proxy.'.format(p))
                 pid = os.fork()
