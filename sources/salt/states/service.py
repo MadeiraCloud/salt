@@ -530,6 +530,8 @@ def mod_watch(name, sig=None, reload=False, full_restart=False, actions=None):
     for a in act:
         if actions.get(name,None):
             result = a["func"](a["cmd"])
+            ret['state_stdout'] += "%s\n%s\n"%(result['stdout'],result['stdout'])
+            result = not bool(result['retcode'])
         else:
             result = a["func"](name, state_ret=ret)
 
