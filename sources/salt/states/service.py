@@ -540,10 +540,10 @@ def mod_watch(name, sig=None, reload=False, full_restart=False, actions=None):
         ret['comment'] += 'Service {0}ed\n'.format(a["action"]) if result else \
                          'Failed to {0} the service\n'.format(a["action"])
         pid_new = __salt__['service.status'](name, sig)
-#        if (a["action"] == "restart") and (pid == pid_new):
-#            ret['result'] = False
-#            ret['comment'] += "\nService could not be restarted."
-#            break
+        if (a["action"] == "restart") and (pid == pid_new):
+            ret['result'] = False
+            ret['comment'] += "\nService could not be restarted."
+            break
         if result:
             break
 
