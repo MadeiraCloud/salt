@@ -52,7 +52,7 @@ class StateAdaptor(object):
     # watch addin parameters
     mod_watch_param = {
         'linux.service': {
-            'full_restart': True,
+#            'full_restart': True,
         },
         'linux.supervisord': {
             'restart': True,
@@ -343,6 +343,7 @@ class StateAdaptor(object):
         'linux.service' : {
             'attributes' : {
                 'name' : 'names',
+                'actions' : 'actions',
                 # 'watch' : ''
             },
             'states' : ['running', 'mod_watch'],
@@ -1572,6 +1573,15 @@ class StateAdaptor(object):
                     addin.pop("watch")
                     addin["force"] = True
                 utils.log("DEBUG", "Docker built addin: %s"%(addin), ("__build_up", self))
+            elif module in ["linux.service"]:
+                addin["actions"] = {}
+                services_list = []
+                for item in addin.get("names",[]):
+                    key = item.get("key")
+                    if not key: continue
+                    addin["actions"][key] = (item["value"] if item.get("value") else None)
+                    services_list.append(key)
+                addin["names"] = services_list
 
         except Exception, e:
             utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))
