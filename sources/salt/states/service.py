@@ -518,7 +518,7 @@ def mod_watch(name, sig=None, reload=False, full_restart=False, actions=None):
             }]
     else:
         act = [{
-            "func": __salt__['start'],
+            "func": __salt__['service.start'],
             "action": "start",
         }]
 
