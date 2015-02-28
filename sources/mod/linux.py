@@ -582,18 +582,11 @@ ensure the specified services are running, and trigger service restart if necess
 
 ### Parameters
 
-*   **`name`** (*required*): the list of the service names to be run. The value represents the action if one of the watched file has changed (if applicable):
+*   **`name`** (*required*): the list of the service names to be run
 
-	- ***`<null>`*** *`default`*: try to reload the service. If reload fails, restart the service.
-	- ***`<command>`***: path to a command to execute
-	- ***`reload`***: 'reload' the service
-	- ***`restart`***: 'restart' the service
+		example: httpd, mysqld
 
-
-		example: httpd: bash /opt/scripts/nginx_mysql_restart.sh, mysqld: restart
-
-
-*   **`watch`** (*optional*): watch a list of files, execute action if any of them is modified
+*   **`watch`** (*optional*): watch a list of files, restart the service if any of them is modified
 
 		example: /etc/nginx/nginx.conf, /etc/my.cnf
 				''',
@@ -601,7 +594,7 @@ ensure the specified services are running, and trigger service restart if necess
 			},
 			'parameter'	:	{
 				'name'		:	{
-					'type'		:	'dict',
+					'type'		:	'array',
 					'required'	:	True,
 					'visible'	:	True
 				},

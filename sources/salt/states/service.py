@@ -412,7 +412,7 @@ def disabled(name, **kwargs):
     return _disable(name, None, **kwargs)
 
 
-def mod_watch_old(name, sig=None, reload=False, full_restart=False, action=None):
+def mod_watch(name, sig=None, reload=False, full_restart=False):
     '''
     The service watcher, called to invoke the watch command.
 
@@ -451,7 +451,7 @@ def mod_watch_old(name, sig=None, reload=False, full_restart=False, action=None)
     result = restart_func(name, state_ret=ret)
 
     # to check service status
-    if not __salt__['service.status'](name, sig):
+    if not __salt__['service.status'](name, sig or name):
         ret['result'] = False
         ret['state_stdout'] = 'Service {0} failed to start'.format(name)
         return ret
@@ -460,96 +460,4 @@ def mod_watch_old(name, sig=None, reload=False, full_restart=False, action=None)
     ret['result'] = result
     ret['comment'] = 'Service {0}ed'.format(action) if result else \
                      'Failed to {0} the service'.format(action)
-    return ret
-
-
-
-
-
-
-
-def mod_watch(name, sig=None, reload=False, full_restart=False, actions=None):
-    '''
-    The service watcher, called to invoke the watch command.
-
-    name
-        The name of the init or rc script used to manage the service
-
-    sig
-        The string to search for when looking for the service process with ps
-    '''
-    ret = {'name': name,
-           'changes': {},
-           'result': True,
-           'comment': '',
-           'state_stdout': ''}
-    action = ''
-
-    pid = __salt__['service.status'](name, sig)
-
-    if pid or actions.get(name,None):
-        if 'service.reload' in __salt__ and reload:
-            action = "reload"
-            act = [{
-                "func": __salt__['service.reload'],
-                "action": action,
-            }]
-        elif 'service.full_restart' in __salt__ and full_restart:
-            action = "fully restart"
-            act = [{
-                "func": __salt__['service.full_restart'],
-                "action": action,
-            }]
-        elif actions.get(name,None):
-            action = "script"
-            act = [{
-                "func": __salt__['cmd.run_stdall'],
-                "action": action,
-                "cmd": actions[name],
-            }]
-        else:
-            action = "default"
-            act = [{
-                "func": __salt__['service.reload'],
-                "action": "reload",
-            },{
-                "func": __salt__['service.restart'],
-                "action": "restart",
-            }]
-    else:
-        act = [{
-            "func": __salt__['start'],
-            "action": "start",
-        }]
-
-    if __opts__['test']:
-        ret['result'] = None
-        ret['comment'] = 'Service is set to be {0}ed'.format(action)
-        return ret
-
-    for a in act:
-        if actions.get(name,None):
-            result = a["func"](a["cmd"])
-            ret['state_stdout'] += "%s\n%s\n"%(result['stdout'],result['stdout'])
-            result = not bool(result['retcode'])
-        else:
-            result = a["func"](name, state_ret=ret)
-
-        ret['changes'] = {name: result}
-        ret['result'] = result
-        ret['comment'] += 'Service {0}ed\n'.format(a["action"]) if result else \
-                         'Failed to {0} the service\n'.format(a["action"])
-        pid_new = __salt__['service.status'](name, sig)
-#        if (a["action"] == "restart") and (pid == pid_new):
-#            ret['result'] = False
-#            ret['comment'] += "\nService could not be restarted."
-#            break
-        if result:
-            break
-
-    # to check service status
-    if not __salt__['service.status'](name, sig or name):
-        ret['result'] = False
-        ret['state_stdout'] += 'Service {0} failed to start'.format(name)
-
     return ret
