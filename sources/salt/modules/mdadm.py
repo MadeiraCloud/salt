@@ -266,6 +266,8 @@ def save_config():
     else:
         cfg_file = '/etc/mdadm.conf'
 
+    __salt__['file.touch'](cfg_file)
+
     if not __salt__['file.search'](cfg_file, scan):
         __salt__['file.append'](cfg_file, scan)
 
