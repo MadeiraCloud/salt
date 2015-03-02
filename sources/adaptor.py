@@ -1597,6 +1597,7 @@ class StateAdaptor(object):
                 addin["names"] = services_list
             elif module in ["linux.raid"]:
                 addin["force"] = True
+                addin["run"] = True
 
         except Exception, e:
             utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))
