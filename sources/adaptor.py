@@ -1193,6 +1193,10 @@ class StateAdaptor(object):
                             }
                         }]
 
+                        # ## update ssl and install pip in centos/rhel
+                        # if cmd_name.upper() == 'PIP' and self.os_type.upper() in ['CENTOS', 'RHEL']:
+                        #     self.__preinstall_pip()
+
                 if module == 'common.npm.package':
                     if self.os_type in ['redhat', 'centos'] and float(self.os_release) >= 7.0 or self.os_type == 'debian':
                         #self.__preinstall_npm()
@@ -1895,16 +1899,30 @@ class StateAdaptor(object):
             utils.log("ERROR", "Check command %s excpetion: %s" % (cmd_name, str(e)), ("__check_cmd", self))
             return False
 
-    # def __check_state(self, module, state):
-    #   """
-    #       Check supported state.
-    #   """
+    # def __preinstall_pip(self):
+    #     """
+    #         Preinstall pip on centos/rhel.
+    #     """
+    #     try:
+    #         import subprocess
 
-    #   if state not in self.mod_map[module]['states']:
-    #       print "not supported state %s in module %s" % (state, module)
-    #       return 1
+    #         cmd = 'yum upgrade -y ca-certificates --disablerepo=epel; pip install pip --upgrade'
+    #         process = subprocess.Popen(
+    #             cmd,
+    #             shell=True,
+    #             stdout=subprocess.PIPE,
+    #             stderr=subprocess.PIPE)
 
-    #   return 0
+    #         out, err = process.communicate()
+
+    #         if process.returncode != 0:
+    #             utils.log("ERROR", "Execute command %s failed..."%cmd_name, ("__preinstall_pip", self))
+    #             return False
+
+    #         return True
+    #     except Exception, e:
+    #         utils.log("ERROR", "Execute command %s excpetion: %s" % (cmd, str(e)), ("__preinstall_pip", self))
+    #         return False
 
     def __preinstall_npm(self):
         """
