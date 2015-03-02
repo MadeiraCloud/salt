@@ -878,6 +878,15 @@ class StateAdaptor(object):
                 {'linux.cmd' : chef_req},
             ]
         },
+        'linux.raid' : {
+            'attributes' : {
+                "device-name": "name",
+                "level": "level",
+                "devices": "devices",
+            },
+            'states' : ['present'],
+            'type' : 'mdadm',
+        },
     }
 
 
