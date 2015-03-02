@@ -1368,7 +1368,7 @@
             }, 
             "reference": {
                 "cn": "", 
-                "en": "\n### Description\nCreate and ensure a Raid array is present.\n\nSee `mdadm` documentation for more details.\n\nWarning: the process may take a while.\n\n### Parameters\n\n*   **`device-name`** (*required*): Name of the raid array\n\n\t\texample:\n\t\t\t/dev/md0\n\n*   **`level`** (*required*): The RAID level to use when creating the raid. Options are: linear, raid0, 0, stripe, raid1, 1, mirror, raid4, 4, raid5, 5, raid6, 6, raid10, 10, multipath, mp, faulty, container. Obviously some of these are synonymous.\n\n\t\texample:\n\t\t\traid1\n\n*   **`devices`** (*required*): A list of devices used to build the array.\n\n\t\texample:\n\t\t\t/dev/xvdf, /dev/xvdg\n\t\t\t\t"
+                "en": "\n### Description\nCreate and ensure a Raid array is present.\n\nSee `mdadm` documentation for more details.\n\n### Parameters\n\n*   **`device-name`** (*required*): Name of the raid array\n\n\t\texample:\n\t\t\t/dev/md0\n\n*   **`level`** (*required*): The RAID level to use when creating the raid. Options are: linear, raid0, 0, stripe, raid1, 1, mirror, raid4, 4, raid5, 5, raid6, 6, raid10, 10, multipath, mp, faulty, container. Obviously some of these are synonymous.\n\n\t\texample:\n\t\t\traid1\n\n*   **`devices`** (*required*): A list of devices used to build the array.\n\n\t\texample:\n\t\t\t/dev/xvdf, /dev/xvdg\n\t\t\t\t"
             }
         }, 
         "rpm key": {
