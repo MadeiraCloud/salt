@@ -2636,6 +2636,11 @@ See `mdadm` documentation for more details.
 
 		example:
 			/dev/xvdf, /dev/xvdg
+
+*   **`arguments`** (*optional*): Additional arguments passed to the mdadm binary (see mdadm documentation). You can use these arguments to specify chunk size, for example.
+
+		example:
+			chunk:	256
 				''',
 				'cn'	:	''''''
 			},
@@ -2653,6 +2658,11 @@ See `mdadm` documentation for more details.
 				'devices'		:	{
 					'type'		:	'array',
 					'required'	:	True,
+					'visible'	:	True,
+				},
+				'arguments'		:	{
+					'type'		:	'dict',
+					'required'	:	False,
 					'visible'	:	True,
 				},
 			},

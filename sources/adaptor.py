@@ -883,6 +883,7 @@ class StateAdaptor(object):
                 "device-name": "name",
                 "level": "level",
                 "devices": "devices",
+                "arguments": "arguments",
             },
             'states' : ['present'],
             'type' : 'raid',
