@@ -96,11 +96,17 @@ def present(name,
         return ret
 
     # Attempt to create the array
-    __salt__['raid.create'](name,
-                            level,
-                            devices,
-                            raid_devices,
-                            **kwargs)
+    res = __salt__['raid.create'](name,
+                                  level,
+                                  devices,
+                                  raid_devices,
+                                  **kwargs)
+    out = ""
+    if res.get("stdout"):
+        out += "%s\n\n"%res["stdout"]
+    if res.get("stderr"):
+        out += "%s\n"%res["stderr"]
+    ret['state_stdout'] = out
 
     raids = __salt__['raid.list']()
     changes = raids.get(name)
