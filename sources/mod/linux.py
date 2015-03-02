@@ -2620,6 +2620,8 @@ Create and ensure a Raid array is present.
 
 See `mdadm` documentation for more details.
 
+Warning: the process may take a while.
+
 ### Parameters
 
 *   **`device-name`** (*required*): Name of the raid array
