@@ -885,7 +885,7 @@ class StateAdaptor(object):
                 "devices": "devices",
             },
             'states' : ['present'],
-            'type' : 'mdadm',
+            'type' : 'raid',
         },
     }
 
