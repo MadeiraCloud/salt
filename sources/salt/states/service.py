@@ -548,7 +548,7 @@ def mod_watch(name, sig=None, reload=False, full_restart=False, actions=None):
             break
 
     # to check service status
-    if not __salt__['service.status'](name, sig or name):
+    if not __salt__['service.status'](name, sig):
         ret['result'] = False
         ret['state_stdout'] += 'Service {0} failed to start'.format(name)
 
