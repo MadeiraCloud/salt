@@ -230,7 +230,7 @@ def create(name,
     if test_mode is True:
         return cmd
     elif test_mode is False:
-        return __salt__['cmd.run_stdall'](cmd)
+        return __salt__['cmd.run_stdall'](cmd,timeout=600)
 
 
 def save_config():
