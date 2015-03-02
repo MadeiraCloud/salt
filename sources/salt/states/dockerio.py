@@ -974,7 +974,7 @@ def vops_built(tag,
     force_install = False
 
 
-    if tag and path and force:
+    if tag and path and (force != None):
         ret = built(tag,path,force=force)
 #        # DEBUG
 #        print "######### BUILT #####"
@@ -992,8 +992,8 @@ def vops_built(tag,
             return _ret_status(ret)
         if ret.get('changes'):
             force_install = True
-    elif not force:
-        out_text += "Image %s from Dockerfile in %s already built\n"%(tag,path)
+#    elif not force:
+#        out_text += "Image %s from Dockerfile in %s already built\n"%(tag,path)
     elif not tag:
         return _invalid(comment="tag name missing")
     elif not path:

@@ -1788,7 +1788,7 @@ def push(repo, tag=None, username=None, password=None, email=None, *args, **kwar
                 return status
 
         registry, repo_name = docker.auth.resolve_repository_name(repo)
-        ret = client.push(repo, tag)
+        ret = client.push(repository)
         logs, infos = _parse_image_multilogs_string(ret, repo_name)
 #        # DEBUG
 #        print "RET=%s"%ret
