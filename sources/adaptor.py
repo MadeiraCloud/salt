@@ -6,6 +6,7 @@ VisualOps OpsAgent states adaptor
 
 # System imports
 import os
+import sys
 import urllib2
 import hashlib
 from string import Template
