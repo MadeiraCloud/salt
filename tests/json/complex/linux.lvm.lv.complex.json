@@ -134,7 +134,7 @@
                         "lv-size": "500M",
                         "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"],
                         "contiguous": "n",
-                        "mirror-number": 1,
+                        "mirror-number": "1",
                         "persistent": "n"
                     }
                 },
@@ -156,8 +156,8 @@
                         "lv-size": "500M",
                         "path": ["/dev/sdb1", "/dev/sdb2", "/dev/sdb3", "/dev/sdb4"],
                         "contiguous": "n",
-                        "stripe-number": 2,
-                        "stripe-size": 64
+                        "stripe-number": "2",
+                        "stripe-size": "64"
                     }
                 },
                 {

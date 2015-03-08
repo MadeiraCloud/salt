@@ -31,10 +31,10 @@
           "parameter": {
             "path": "/tmp/dst",
             "dev": "/tmp/volume",
-            'filesystem': 'none',
-            'dump': '0',
-            'pass': '0',
-            "opts": ['bind','ro']
+            "filesystem": "none",
+            "dump": "0",
+            "pass": "0",
+            "opts": ["bind","ro"]
           }
         },
         {
@@ -55,7 +55,7 @@
           "_": "5 [test3] test file in destination directoy /tmp/dest/foo - True",
           "module": "linux.cmd",
           "parameter": {
-            "cmd": "cat /tmp/dest/foo",
+            "cmd": "cat /tmp/dest/foo"
           }
         },
         {

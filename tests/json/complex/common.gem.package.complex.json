@@ -7,9 +7,11 @@
           "_": "1 [prepare] install rubygems with yum - True|False",
           "module": "linux.yum.package",
           "parameter": {
-            "name": {
-              "rubygems": ""
-            }
+              "name": [
+                  {
+                      "key": "rubygems"
+                  }
+              ]
           }
         },
         {
@@ -17,9 +19,11 @@
           "_": "2 [prepare] install rubygems with apt - True|False",
           "module": "linux.apt.package",
           "parameter": {
-            "name": {
-              "rubygems": ""
-            }
+              "name": [
+                  {
+                      "key": "rubygems"
+                  }
+              ]
           }
         },
         {
@@ -27,9 +31,11 @@
           "_": "3 [test1] install a2ws with gens - True",
           "module": "common.gem.package",
           "parameter": {
-            "name": {
-              "a2ws": ""
-            }
+              "name": [
+                  {
+                      "key": "a2ws"
+                  }
+              ]
           }
         }
       ]

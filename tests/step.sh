@@ -96,10 +96,10 @@ function show_result(){
 
   if [ `which colout| wc -l` -eq 1 ]
   then
-    $1 $2 | colout "True|False" red
+    $1 $2 $3 | colout "True|False" red
   else
     install_colout
-    $1 $2
+    $1 $2 $3
   fi
 
 }
@@ -124,9 +124,9 @@ function do_module_test(){
         cp json/${JSON_TYPE}/${line}.json ./state.json
         show_json json/${JSON_TYPE}/${line}.json
         echo "- result ---------------------------------------"
-        show_result "${PY_BIN}" "${EXE_BIN}"
+        show_result "${PY_BIN}" "${EXE_BIN}" "${PWD}/state.json"
       else
-        echo "!!! can not found json/${JSON_TYPE}/${line}.json !!!"
+        echo "!!! cannot find json/${JSON_TYPE}/${line}.json !!!"
       fi
       break
     fi
@@ -136,7 +136,7 @@ function do_module_test(){
 
 #### main ###########################################
 
-export GREP_OPTIONS='--color=auto' 
+export GREP_OPTIONS='--color=auto'
 
 ## check parameter count
 if [ $# -ne 1 -a $# -ne 2 ]

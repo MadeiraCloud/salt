@@ -16,22 +16,34 @@
           "_": "2 [test2] install chef and stuff - True",
           "module": "linux.apt.package",
           "parameter": {
-            "name": {
-              "ohai": "",
-              "chef": "",
-              "chef-server": "10.18.2"
-            },
-            'fromrepo': "opscode",
+              "name": [
+                  {
+                      "key":"ohai"
+                  },
+                  {
+                      "key":"chef"
+                  },
+                  {
+                      "key":"chef-server",
+                      "value":"10.18.2"
+                  },
+                  {
+                      "key":"fromrepo",
+                      "value":"opscode"
+                  }
+              ]
           }
         },
         {
-          "id": "state-7B5B2E8A-17CD-4578-8E85-15D0206B5F1E",
+          "id": "state-7B5B2E8A-17CD-4578-8E85-15D0206B5F1F",
           "_": "3 [test2] install wrong chef version - False",
           "module": "linux.apt.package",
           "parameter": {
-            "name": {
-              "chef": "1"
-            }
+              "name": [
+                  {
+                      "key":"chef"
+                  }
+              ]
           }
         }
       ]
