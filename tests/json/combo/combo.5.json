@@ -26,7 +26,7 @@
           "parameter": {
             "repo": "https://github.com/VisualOps/pysa",
             "path": "/tmp/svn/test/",
-            "force": true,
+            "force": true
           }
         }
       ]
