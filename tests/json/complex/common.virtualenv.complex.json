@@ -274,7 +274,7 @@
           "module": "linux.cmd",
           "parameter": {
             "timeout": "1000",
-            "cmd": "/tmp/test/virtualenv11/python2.7/bin/pip --help"
+            "cmd": "/tmp/test/virtualenv11/bin/pip --help"
           }
         }
       ]

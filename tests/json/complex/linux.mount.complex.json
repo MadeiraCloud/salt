@@ -55,7 +55,7 @@
           "_": "5 [test3] test file in destination directoy /tmp/dest/foo - True",
           "module": "linux.cmd",
           "parameter": {
-            "cmd": "cat /tmp/dest/foo",
+            "cmd": "cat /tmp/dest/foo"
           }
         },
         {

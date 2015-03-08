@@ -20,7 +20,6 @@
             "repo": "https://github.com/VisualOps/pysa",
             "path": "/tmp/svn/test/",
             "force": true,
-            "revision": "trunk"
           }
         }
       ]

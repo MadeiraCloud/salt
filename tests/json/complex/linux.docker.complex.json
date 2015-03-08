@@ -73,7 +73,7 @@
           "_": "6 [test3] Test ran image - True",
           "module": "linux.cmd",
           "parameter": {
-            "cmd": "curl localhost",
+            "cmd": "sleep 5 && curl localhost",
             "timeout": "120"
           }
         },
@@ -122,7 +122,7 @@
           "_": "10 [test6] Test ran image - True",
           "module": "linux.cmd",
           "parameter": {
-            "cmd": "curl localhost:81",
+            "cmd": "sleep 5 && curl localhost:81",
             "timeout": "120"
           }
         },
@@ -165,7 +165,7 @@
           "_": "14 [test7] Test ran image - True",
           "module": "linux.cmd",
           "parameter": {
-            "cmd": "curl localhost:80",
+            "cmd": "sleep 5 && curl localhost:80",
             "timeout": "120"
           }
         },
@@ -213,7 +213,7 @@
           "_": "18 [test7] Test ran image - True",
           "module": "linux.cmd",
           "parameter": {
-            "cmd": "curl localhost:81",
+            "cmd": "sleep 5 && curl localhost:81",
             "timeout": "120"
           }
         },
@@ -257,7 +257,7 @@
           "_": "22 [test10] Test ran image - False",
           "module": "linux.cmd",
           "parameter": {
-            "cmd": "curl localhost/wordpress | grep 404",
+            "cmd": "sleep 5 && (curl localhost/wordpress | grep 404)",
             "timeout": "120"
           }
         },
@@ -293,7 +293,7 @@
           "_": "25 [test13] Run new image from container - True",
           "module": "linux.docker.running",
           "parameter": {
-            "names": ["my_ubuntu_httpd_pulled"],
+            "container": "my_ubuntu_httpd_pulled",
             "image": "visualops/my_ubuntu_httpd",
             "port_bindings": [{
                 "key": "80",
@@ -306,7 +306,7 @@
           "_": "26 [test3] Test ran image - False",
           "module": "linux.cmd",
           "parameter": {
-            "cmd": "curl localhost:81/wordpress | grep 404",
+            "cmd": "sleep 5 && (curl localhost:81/wordpress | grep 404)",
             "timeout": "120"
           }
         }
