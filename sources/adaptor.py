@@ -2005,10 +2005,15 @@ def __log(lvl, f=None):
 
 # ===================== UT =====================
 def ut():
-#    __log('DEBUG')
+    #    __log('DEBUG')
+
+    if len(sys.argv) > 1:
+        state_file = sys.argv[1]
+    else:
+        state_file = '/opt/visualops/bootstrap/salt/tests/state.json'
 
     import json
-    pre_states = json.loads(open('/opt/visualops/bootstrap/salt/tests/state.json').read())
+    pre_states = json.loads(open(state_file).read())
 
     # salt_opts = {
     #   'file_client':       'local',
