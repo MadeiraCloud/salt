@@ -7,23 +7,27 @@
           "_": "1 [prepare] install mercurial with yum - True|False",
           "module": "linux.yum.package",
           "parameter": {
-            "name": {
-              "mercurial": ""
-            }
+              "name": [
+                  {
+                      "key": "mercurial"
+                  }
+              ]
           }
         },
         {
-          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1G",
           "_": "2 [prepare] install mercurial with apt - True|False",
           "module": "linux.apt.package",
           "parameter": {
-            "name": {
-              "mercurial": ""
-            }
+              "name": [
+                  {
+                      "key": "mercurial"
+                  }
+              ]
           }
         },
         {
-          "id": "state-1B1576AF-8966-4B72-92CF-1266752169E0",
+          "id": "state-1B1576AF-8966-4B72-92CF-1266752169EH",
           "_": "3 [prepare] create/ensure mercurial location directory - True",
           "module": "linux.dir",
           "parameter": {
@@ -34,7 +38,7 @@
           }
         },
         {
-          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1F",
+          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1I",
           "_": "4 [test1] clone hgview with mercurial - True",
           "module": "common.hg",
           "parameter": {

@@ -20,11 +20,13 @@
           "_": "2 [test1] install package with required parameter when package not installed (no gpg) - True",
           "module": "linux.apt.package",
           "parameter": {
-            "name": {
-              "chef": ""
-            },
-            "fromrepo": "opscode",
-            "verify_gpg": false,
+              "name": [
+                  {
+                      "key":"chef"
+                  }
+              ],
+              "fromrepo": "opscode",
+              "verify_gpg": false
           }
         },
         {
@@ -32,11 +34,14 @@
           "_": "2 [test1] install package with required version and required parameter when package not installed (with gpg)- True",
           "module": "linux.apt.package",
           "parameter": {
-            "name": {
-              "chef-server": "10.18.2"
-            },
-            "fromrepo": "opscode",
-            "verify_gpg": true,
+              "name": [
+                  {
+                      "key":"chef-server",
+                      "value":"10.18.2"
+                  },
+              ],
+              "fromrepo": "opscode",
+              "verify_gpg": true
           }
         },
         {
@@ -44,9 +49,12 @@
           "_": "4 [test1] install wrong chef version - False",
           "module": "linux.apt.package",
           "parameter": {
-            "name": {
-              "chef": "1"
-            },
+              "name": [
+                  {
+                      "key":"chef",
+                      "value":"1"
+                  }
+              ]
           }
         },
         {
@@ -54,8 +62,8 @@
           "_": "5 [test1] check package exist - True",
           "module": "linux.cmd",
           "parameter": {
-            "timeout": "1000",
-            "cmd": "which chef"
+              "timeout": "1000",
+              "cmd": "which chef"
           }
         },
 
@@ -65,9 +73,11 @@
           "_": "6 [test2] install package with required parameter when package already installed - True",
           "module": "linux.apt.package",
           "parameter": {
-            "name": {
-              "chef": ""
-            }
+              "name": [
+                  {
+                      "key":"chef"
+                  }
+              ]
           }
         },
 
@@ -86,10 +96,12 @@
           "_": "8 [test3] install mysql with debconf file - True",
           "module": "linux.apt.package",
           "parameter": {
-            "name": {
-              "mysql-server-5.5": ""
-            },
-            "debconf": "/tmp/debconf.conf"
+              "name": [
+                  {
+                      "key":"mysql-server-5.5"
+                  }
+              ],
+              "debconf": "/tmp/debconf.conf"
           }
         }
 

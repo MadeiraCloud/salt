@@ -55,7 +55,7 @@
           "_": "5 [test3] Run created image - True",
           "module": "linux.docker.running",
           "parameter": {
-            "names": ["my_ubuntu_httpd"],
+            "container": "my_ubuntu_httpd",
             "image": "visualops/ubuntu_httpd",
             "port_bindings": [{
                 "key": "80",
@@ -108,7 +108,7 @@
           "_": "9 [test6] Run created image from container - True",
           "module": "linux.docker.running",
           "parameter": {
-            "names": ["my_ubuntu_httpd_pulled"],
+            "container": "my_ubuntu_httpd_pulled",
             "image": "visualops/my_ubuntu_httpd",
             "port_bindings": [{
                 "key": "80",
@@ -152,7 +152,7 @@
           "_": "13 [test7] Test indempotence running - True",
           "module": "linux.docker.running",
           "parameter": {
-            "names": ["my_ubuntu_httpd"],
+            "container": "my_ubuntu_httpd",
             "image": "visualops/ubuntu_httpd",
             "port_bindings": [{
                 "key": "80",
@@ -200,7 +200,7 @@
           "_": "17 [test7] Test indempotence running2 - True",
           "module": "linux.docker.running",
           "parameter": {
-            "names": ["my_ubuntu_httpd_pulled"],
+            "container": "my_ubuntu_httpd_pulled",
             "image": "visualops/my_ubuntu_httpd",
             "port_bindings": [{
                 "key": "80",
@@ -244,7 +244,7 @@
           "_": "21 [test10] Run new image - True",
           "module": "linux.docker.running",
           "parameter": {
-            "names": ["my_ubuntu_httpd"],
+            "container": "my_ubuntu_httpd",
             "image": "visualops/ubuntu_httpd",
             "port_bindings": [{
                 "key": "80",

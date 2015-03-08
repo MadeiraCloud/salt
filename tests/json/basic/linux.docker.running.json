@@ -7,7 +7,7 @@
           "module": "linux.docker.running",
           "parameter": {
             "name": "my_ubuntu_httpd",
-            "image": "visualops/ubuntu_httpd",
+            "image": "visualops/ubuntu_httpd"
           }
         }
       ]

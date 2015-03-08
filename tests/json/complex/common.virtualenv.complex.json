@@ -8,9 +8,11 @@
           "_": "2 [prepare] setup pip with yum - True|False",
           "module": "linux.yum.package",
           "parameter": {
-            "name": {
-              "python-pip": ""
-            }
+              "name": [
+                  {
+                      "key":"python-pip"
+                  }
+              ]
           }
         },
         {
@@ -18,9 +20,11 @@
           "_": "3 [test1] setup supervisor - True",
           "module": "common.pip.package",
           "parameter": {
-            "name": {
-              "virtualenv": ""
-            }
+              "name": [
+                  {
+                      "key":"virtualenv"
+                  }
+              ]
           }
         },
         {
@@ -52,7 +56,7 @@
 
 
         {
-          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020632301",
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020632344",
           "_": "7 [test3] Setup python2.7 on yum platform (dirty way) - True|False",
           "module": "linux.cmd",
           "parameter": {
@@ -61,7 +65,7 @@
           }
         },
         {
-          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020632201",
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020632266",
           "_": "8 [test3] create virtualen with python2.6 - True",
           "module": "common.virtualenv",
           "parameter": {
@@ -81,7 +85,7 @@
           }
         },
         {
-          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020102301",
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D02010230A",
           "_": "10 [test4] Setup python3 on apt platform - True|False",
           "module": "linux.cmd",
           "parameter": {
@@ -90,7 +94,7 @@
           }
         },
         {
-          "id": "state-7EEE6E8A-17CD-4578-8E85-15D0206DC201",
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D0206DC20B",
           "_": "11 [test4] create virtualen with python3 - True",
           "module": "common.virtualenv",
           "parameter": {
@@ -101,17 +105,19 @@
 
 
         {
-          "id": "state-7EEE6E8A-17CD-4578-8E85-15D02BA32301",
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D02BA3230C",
           "_": "12 [test5] Install pysa python module - True|False",
           "module": "common.pip.package",
           "parameter": {
-            "name": {
-              "pysa": ""
-            }
+              "name": [
+                  {
+                      "key":"pysa"
+                  }
+              ]
           }
         },
         {
-          "id": "state-7EEE6E8A-17CD-4578-8E85-15D550632400",
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D55063240D",
           "_": "13 [test5] create python test file - True",
           "module": "linux.file",
           "parameter": {
@@ -120,7 +126,7 @@
           }
         },
         {
-          "id": "state-7EEE6E8A-17BC-4578-8E85-15D100692201",
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D10069220E",
           "_": "14 [test5] create sys enabled packages venv - True",
           "module": "common.virtualenv",
           "parameter": {
@@ -129,7 +135,7 @@
           }
         },
         {
-          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020002302",
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D02000230F",
           "_": "15 [test5] import pysa in venv - True",
           "module": "linux.cmd",
           "parameter": {
@@ -138,7 +144,7 @@
           }
         },
         {
-          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020102201",
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D02010220G",
           "_": "16 [test5] create sys disabled packages venv - True",
           "module": "common.virtualenv",
           "parameter": {
@@ -147,7 +153,7 @@
           }
         },
         {
-          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020202302",
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D02020230H",
           "_": "17 [test5] import pysa in venv - False",
           "module": "linux.cmd",
           "parameter": {
@@ -158,7 +164,7 @@
 
 
         {
-          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020302201",
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D02030220I",
           "_": "18 [test6] create always copy venv - True",
           "module": "common.virtualenv",
           "parameter": {
@@ -167,7 +173,7 @@
           }
         },
         {
-          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020402302",
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D02040230J",
           "_": "19 [test6] Test if link - False",
           "module": "linux.cmd",
           "parameter": {
@@ -178,7 +184,7 @@
 
 
         {
-          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020AA2201",
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020AA220K",
           "_": "20 [test7] create never copy venv and unzip setup tools - True",
           "module": "common.virtualenv",
           "parameter": {
@@ -187,7 +193,7 @@
           }
         },
         {
-          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020BB2302",
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020BB230L",
           "_": "21 [test7] Test if link - True",
           "module": "linux.cmd",
           "parameter": {
@@ -198,7 +204,7 @@
 
 
         {
-          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020AA22BB",
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020AA22BM",
           "_": "22 [test7] create no setup tools venv - True",
           "module": "common.virtualenv",
           "parameter": {
@@ -207,7 +213,7 @@
           }
         },
         {
-          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020BB23CC",
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020BB23CN",
           "_": "23 [test7] Test if link - False",
           "module": "linux.cmd",
           "parameter": {
@@ -216,7 +222,7 @@
           }
         },
         {
-          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020AA22DD",
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020AA22DO",
           "_": "24 [test7] create setup tools venv - True",
           "module": "common.virtualenv",
           "parameter": {
@@ -225,7 +231,7 @@
           }
         },
         {
-          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020BB23EE",
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020BB23EP",
           "_": "25 [test7] Test if link - True",
           "module": "linux.cmd",
           "parameter": {
@@ -236,7 +242,7 @@
 
 
         {
-          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020AA22BB",
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020AA22BQ",
           "_": "26 [test8] create no pip venv - True",
           "module": "common.virtualenv",
           "parameter": {
@@ -245,7 +251,7 @@
           }
         },
         {
-          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020BB23CC",
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020BB23CR",
           "_": "27 [test8] Test if link - False",
           "module": "linux.cmd",
           "parameter": {
@@ -254,7 +260,7 @@
           }
         },
         {
-          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020AA22DD",
+          "id": "state-7EEE6E8A-17BC-4578-8E85-15D020AA22DS",
           "_": "28 [test8] create pip venv - True",
           "module": "common.virtualenv",
           "parameter": {
@@ -263,7 +269,7 @@
           }
         },
         {
-          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020BB23EE",
+          "id": "state-7EEE6E8A-17CD-4578-8E85-15D020BB23ET",
           "_": "29 [test8] Test if link - True",
           "module": "linux.cmd",
           "parameter": {
