@@ -257,7 +257,7 @@
           "_": "22 [test10] Test ran image - False",
           "module": "linux.cmd",
           "parameter": {
-            "cmd": "sleep 5 && (curl localhost/wordpress | grep 404)",
+            "cmd": "sleep 5 && (curl localhost/wordpress | grep 301)",
             "timeout": "120"
           }
         },
@@ -306,7 +306,16 @@
           "_": "26 [test3] Test ran image - False",
           "module": "linux.cmd",
           "parameter": {
-            "cmd": "sleep 5 && (curl localhost:81/wordpress | grep 404)",
+            "cmd": "sleep 5 && (curl localhost:81/wordpress | grep 301)",
+            "timeout": "120"
+          }
+        },
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300099",
+          "_": "26 [test3] Test ran image - False",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "sleep 5 && (curl localhost | grep \"It works!\")",
             "timeout": "120"
           }
         }
