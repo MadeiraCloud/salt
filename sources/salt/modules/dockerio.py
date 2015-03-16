@@ -1533,7 +1533,7 @@ def remove_image(image, *args, **kwargs):
                         comment=(
                             'Image marked to be deleted but not deleted yet'))
             except Exception:
-                valid(status, id=image, comment='Image deleted')
+                valid(status, id=image, comment='Image deleted %s'%(image))
         else:
             invalid(status)
     except Exception:
