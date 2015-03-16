@@ -1422,8 +1422,9 @@ def clean_images(name=None, quiet=False, all=True, *args, **kwargs):
     status = base_status.copy()
     comment = ""
     try:
-        infos = _set_id(client.images(name=name, quiet=quiet, all=all, filters={"dangling":True}))
+        infos = client.images(name=name, quiet=quiet, all=all, filters={"dangling":True})
         for img in infos:
+            img = _set_id(img)
             iid = img.get("id",None)
             if not iid:
                 continue
