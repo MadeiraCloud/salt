@@ -48,6 +48,7 @@ if [ "$S_PLATFORM" = "APT" ]; then
     if [ "$REF_CKSUM" != "$CUR_CKSUM" ]; then
         wget -nv ${S_OA_BASE_REMOTE}/docker/docker_${DOCKER_DEB_VERSION}_all.deb -O ${S_OA_CONF_DIR}/docker.deb
         apt-get -y remove docker 2> /dev/null
+        service docker stop 2> /dev/null
     fi
 elif [ "$S_PLATFORM" = "YUM" ]; then
     DOCKER_NAME="docker.rpm"
@@ -59,6 +60,7 @@ elif [ "$S_PLATFORM" = "YUM" ]; then
     if [ "$REF_CKSUM" != "$CUR_CKSUM" ]; then
         wget -nv ${S_OA_BASE_REMOTE}/docker/docker-${DOCKER_RPM_VERSION}.x86_64.rpm -O ${S_OA_CONF_DIR}/docker.rpm
         yum -y remove docker 2> /dev/null
+        service docker stop 2> /dev/null
     fi
 fi
 
