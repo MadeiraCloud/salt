@@ -7,7 +7,7 @@
 ##
 
 USAGE="$0 deb|rpm [path]"
-VERSION="1.4.1"
+VERSION="1.5.0"
 
 function get_docker() {
     curl -sSL -O https://get.docker.com/builds/Linux/x86_64/docker-$VERSION
