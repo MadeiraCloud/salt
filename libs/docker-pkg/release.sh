@@ -6,8 +6,8 @@
 ## (c) 2014 MadeiraCloud LTD.
 ##
 
-DEB="docker_1.4.1-0_all.deb"
-RPM="docker-1.4.1-1.x86_64.rpm"
+DEB="docker_1.5.0-0_all.deb"
+RPM="docker-1.5.0-1.x86_64.rpm"
 
 GPG_PRIVATE_PATH=${HOME}/.ssh/keys/madeira.gpg.private.key
 gpg --allow-secret-key-import --import ${GPG_PRIVATE_PATH}

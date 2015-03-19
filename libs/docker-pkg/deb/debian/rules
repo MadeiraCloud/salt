@@ -2,7 +2,7 @@
 
 # Package name
 package		=	docker
-VERSION		=	1.4.1
+VERSION		=	1.5.0
 # Top directory of the source code
 SRCTOP		:=	$(shell if [ "$$PWD" != "" ]; then echo $$PWD; else pwd; fi)
 # Destination directory where files will be installed
