@@ -2738,7 +2738,7 @@ Runs a Mesos Master instance
 						"marathon",
 					],
 				},
-				"slave_ip" : {
+				"master_ip" : {
 					"type"		: "line",
 					"required"	: True,
 					"visible"	: False,

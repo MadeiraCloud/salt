@@ -1160,6 +1160,11 @@
                     "type": "line", 
                     "visible": true
                 }, 
+                "master_ip": {
+                    "required": true, 
+                    "type": "line", 
+                    "visible": false
+                }, 
                 "masters_addresses": {
                     "required": true, 
                     "type": "dict", 
@@ -1169,11 +1174,6 @@
                     "required": true, 
                     "type": "line", 
                     "visible": true
-                }, 
-                "slave_ip": {
-                    "required": true, 
-                    "type": "line", 
-                    "visible": false
                 }
             }, 
             "reference": {
