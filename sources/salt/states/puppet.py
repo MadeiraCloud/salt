@@ -33,22 +33,22 @@ def apply(manifests, arguments=[]):
         for a in arguments:
             if ("key" not in a) or ("value" not in a): continue
             ags.append("%s=%s"%(a["key"],a["value"]))
-        try:
-            ret = __salt__['puppet.run'](*ags)
-        except Exception as e:
-            comment += "Error processing file %s.\n"%(manifest)
-            return _invalid(name=manifest,
-                            comment=comment)
-        else:
-            out += "%s\n"%ret["stdout"]
-            out += "%s\n"%ret["stderr"]
-            if ret.get("retcode"):
-                comment += "Manifest %s processed with error(s) (code %s).\n"%(manifest,ret["retcode"])
-                return _invalid(name=manifest,
-                                comment=comment,
-                                stdout=out)
-            else:
-                comment += "Manifest %s processed without error.\n"%(manifest)
+            try:
+                ret = __salt__['puppet.run'](*ags)
+except Exception as e:
+    comment += "Error processing file %s.\n"%(manifest)
+    return _invalid(name=manifest,
+                    comment=comment)
+else:
+    out += "%s\n"%ret["stdout"]
+    out += "%s\n"%ret["stderr"]
+    if ret.get("retcode"):
+        comment += "Manifest %s processed with error(s) (code %s).\n"%(manifest,ret["retcode"])
+        return _invalid(name=manifest,
+                        comment=comment,
+                        stdout=out)
+else:
+    comment += "Manifest %s processed without error.\n"%(manifest)
     return _valid(name=manifest,
                   comment=comment,
                   stdout=out)
