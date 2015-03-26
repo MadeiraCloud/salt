@@ -937,13 +937,6 @@ class StateAdaptor(object):
                 {'linux.apt.repo' : { 'content' : "deb https://get.docker.com/ubuntu docker main", 'name': "docker", 'os': ["ubuntu","debian"] }},
                 {'linux.apt.repo' : { 'content' : "deb http://repos.mesosphere.io/ubuntu trusty main", 'name': "mesos", 'os': ["ubuntu","debian"] }},
                 {'linux.apt.package' : { 'name' : [
-                    {'key':"linux-image-extra-%s"%os.uname()[2]},
-                    {'key':"libcgroup-dev"},
-                ] }},
-                {'linux.apt.package' : { 'name' : [
-                    {'key':'docker', 'value':os.path.join(CONFIG_PATH,"docker.deb")},
-                ] }},
-                {'linux.apt.package' : { 'name' : [
                     {'key':"mesos"},
                     {'key':"zookeeper","value":"purged"},
                     {'key':"haproxy"},
