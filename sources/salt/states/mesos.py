@@ -32,7 +32,7 @@ def master(cluster_name, server_id, masters_addresses, master_ip, hostname=None,
 
 # Create Mesos Slave
 def slave(masters_addresses, attributes, slave_ip):
-    attributes_line = ";".join([ "%s:%s"%(k,v) for k,v in attributes.iteritems ])
+    attributes_line = ";".join([ "%s:%s"%(items["key"],items.get("value","")) for items in attributes ])
     return _valid()
 
 
