@@ -945,10 +945,11 @@ def start(container, binds=None, ports=None, port_bindings=None,
                 bindings = {}
                 for k, v in port_bindings.iteritems():
                     bindings[k] = (v.get('HostIp', ''), v['HostPort'])
+            cap_add = (["SYS_ADMIN"] if devices else None)
             client.start(dcontainer, binds=binds, port_bindings=bindings,
                          lxc_conf=lxc_conf, devices=devices,
                          publish_all_ports=publish_all_ports, links=links,
-                         privileged=privileged)
+                         privileged=privileged, cap_add=cap_add)
             if is_running(dcontainer):
                 valid(status,
                       comment='Container {0} was started'.format(container),
