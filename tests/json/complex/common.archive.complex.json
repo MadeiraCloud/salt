@@ -12,6 +12,7 @@
             "checksum": "http://wordpress.org/wordpress-3.9.1.zip.md5"
           }
         },
+
         {
           "id": "state-2E042A11-4697-465B-B995-5C3194145D38",
           "_": "1 [test1] gz archive test - True",
