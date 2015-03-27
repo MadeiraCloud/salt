@@ -6,6 +6,8 @@ Run a Mesos Instance
 (c) 2014-2015 - MadeiraCloud
 '''
 
+import os
+
 # Result object template
 def _result(name="",changes={},result=False,comment="",stdout=''):
     return {'name': name,
@@ -21,19 +23,70 @@ def _invalid(name="",changes={},comment="",stdout=''):
     return _result(name=name,changes=changes,result=False,comment=comment,stdout=stdout)
 
 
+
+# ensure host is present
+def host_present(name, ip):
+    if __salt__['hosts.has_pair'](ip, name):
+        return ""
+    current_ip = __salt__['hosts.get_ip'](name)
+    if current_ip and current_ip != ip:
+        __salt__['hosts.rm_host'](current_ip, name)
+    if __salt__['hosts.add_host'](ip, name):
+        return 'Added host {0}\n'.format(name)
+    return ""
+
+# set hosts
+def set_hosts(hosts):
+    return "".join([ host_present(item.get("value",item["key"]),item["key"]) for item in hosts ])
+
+# set a file
+def set_file(name, content, mode):
+    if os.path.isdir(name):
+        return False, 'Specified target {0} is a directory\n'.format(name)
+    ret = __salt__['file.manage_file'](name,None,None,None,None,'root','root',mode,__env__,None,contents=content)
+    return ret["result"], "%s\n"%ret.get("comment","")
+
+# run a command
+def run_cmd(cmd, if_absent):
+    if os.path.exists(if_absent):
+        return _valid()
+    act = __salt__['cmd.run_stdall']
+    try:
+        ret = act(cmd)
+    except Exception as e:
+        result = False
+        comment = "failed to run command: %s"%cmd
+        ret['stderr'] = "%s"%e
+    else:
+        result = (True if ret['retcode'] == 0 else False)
+        comment = ("" if result else "failed to run command: %s"%cmd)
+    return _result(result=result,
+                   comment=comment,
+                   stdout="%s"%(ret['stderr'] if ret.get('stderr') else ret.get('stdout','')))
+
+
+
+
 # Create Mesos Master
-def master(cluster_name, server_id, masters_addresses, master_ip, hostname=None, framework=None):
+def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname=None, framework=None):
     if not hostname:
         hostname = master_ip
     if not framework:
         framework = []
-    return _valid()
+    return _valid(comment=name)
 
 
 # Create Mesos Slave
-def slave(masters_addresses, attributes, slave_ip):
-    attributes_line = ";".join([ "%s:%s"%(items["key"],items.get("value","")) for items in attributes ])
-    return _valid()
+def slave(name, masters_addresses, attributes, slave_ip):
+    comment = set_hosts(masters_addresses)
+    attributes_line = ";".join([ "%s:%s"%(item["key"],item.get("value","")) for item in attributes ])
+    return _valid(comment=name)
+
+
+
+
+
+
 
 
 
