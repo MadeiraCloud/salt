@@ -8,6 +8,12 @@ Run a Mesos Instance
 
 import os
 
+from salt.states import service
+from opsagent.checksum import Checksum
+
+WATCH_PATH="/var/lib/visualops/opsagent/watch"
+
+
 # Result object template
 def _result(name="",changes={},result=False,comment="",stdout=''):
     return {'name': name,
@@ -32,19 +38,19 @@ def host_present(name, ip):
     if current_ip and current_ip != ip:
         __salt__['hosts.rm_host'](current_ip, name)
     if __salt__['hosts.add_host'](ip, name):
-        return 'Added host {0}\n'.format(name)
+        return 'Added host {0}'.format(name)
     return ""
 
 # set hosts
 def set_hosts(hosts):
-    return "".join([ host_present(item.get("value",item["key"]),item["key"]) for item in hosts ])
+    return "\n".join([ host_present(item.get("value",item["key"]),item["key"]) for item in hosts ])
 
 # set a file
 def set_file(name, content, mode):
     if os.path.isdir(name):
-        return False, 'Specified target {0} is a directory\n'.format(name)
+        return False, 'Specified target {0} is a directory'.format(name)
     ret = __salt__['file.manage_file'](name,None,None,None,None,'root','root',mode,__env__,None,contents=content)
-    return ret["result"], "%s\n"%ret.get("comment","")
+    return ret["result"], "%s"%ret.get("comment","")
 
 # run a command
 def run_cmd(cmd, if_absent):
@@ -64,6 +70,25 @@ def run_cmd(cmd, if_absent):
                    comment=comment,
                    stdout="%s"%(ret['stderr'] if ret.get('stderr') else ret.get('stdout','')))
 
+# Run/restart service
+def run_service(name, watch_list, state_id):
+    comment = ""
+    ret = service.running(name,enable=True)
+    if not ret.get("result"):
+        comment += "Unable to run service %s"%name
+        return False,comment
+    comment += "Service %s: %s\n"%(name,ret.get("comment","Available"))
+    for watch in watch_list:
+        cs = Checksum(watch,state_id,WATCH_PATH)
+        if cs.update(edit=False,tfirst=True):
+            ret = service.mod_watch(name)
+            if not ret.get("result"):
+                comment += "Unable to restart service %s after change triggered on file %s"%(name,watch)
+                return False,comment
+            comment += "Service %s: %s\n"%(name,ret.get("comment","Restarted"))
+            cs.update(edit=True,tfirst=True)
+            return True,comment
+
 
 
 
@@ -81,119 +106,3 @@ def slave(name, masters_addresses, attributes, slave_ip):
     comment = set_hosts(masters_addresses)
     attributes_line = ";".join([ "%s:%s"%(item["key"],item.get("value","")) for item in attributes ])
     return _valid(comment=name)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# TODO: delete
-# Apply recipe manifest
-def apply(manifests, arguments=[]):
-    if not manifests:
-        return _invalid(comment="No file specified")
-    comment = ""
-    out = ""
-    for manifest in manifests:
-        ags = ["apply",manifest]
-        for a in arguments:
-            if ("key" not in a) or ("value" not in a): continue
-            ags.append("%s=%s"%(a["key"],a["value"]))
-            try:
-                ret = __salt__['puppet.run'](*ags)
-            except Exception as e:
-                comment += "Error processing file %s.\n"%(manifest)
-                return _invalid(name=manifest,
-                                comment=comment)
-            else:
-                out += "%s\n"%ret["stdout"]
-                out += "%s\n"%ret["stderr"]
-    if ret.get("retcode"):
-        comment += "Manifest %s processed with error(s) (code %s).\n"%(manifest,ret["retcode"])
-        return _invalid(name=manifest,
-                        comment=comment,
-                        stdout=out)
-    else:
-        comment += "Manifest %s processed without error.\n"%(manifest)
-    return _valid(name=manifest,
-                  comment=comment,
-                  stdout=out)
-
-
-# make filesystem
-def mkfs(device, fstype="ext4", label=None, block_size=None):
-    extfs=["ext2","ext3","ext4"]
-    xfs=["xfs"]
-    if not device:
-        return {'name': device,
-                'changes': {},
-                'result': False,
-                'comment': 'No device specified',
-                'state_stdout': ''}
-    if (fstype not in extfs) and (fstype not in xfs):
-        return {'name': device,
-                'changes': {},
-                'result': False,
-                'comment': 'Wrong fstype: "%s"'%(fstype),
-                'state_stdout': ''}
-
-    act = __salt__['cmd.retcode']
-    status = act("blkid | grep -i '^%s:' | grep -i 'TYPE=\"%s\"'"%(device,fstype))
-    if status == 0:
-        return {'name': device,
-                'changes': {},
-                'result': True,
-                'comment': 'Device is %s already a %s partitions.'%(device,fstype),
-                'state_stdout': ''}
-
-    opts = ("-L %s"%label if label else "")
-    if fstype in extfs:
-        if block_size:
-            opts += " -b %s"%label
-        cmd = 'mke2fs -F -t {0} {1} {2}'.format(fstype, opts, device)
-    elif fstype in xfs:
-        if block_size:
-            opts += " -b size=%s"%label
-        cmd = 'mkfs.xfs -f {0} {1}'.format(opts, device)
-
-    act = __salt__['cmd.run_stdall']
-    try:
-        ret = act(cmd)
-    except Exception as e:
-        return {'name': device,
-                'changes': {},
-                'result': False,
-                'comment': 'Error creating file system',
-                'state_stdout': "%s"%e}
-
-    result = (True if ret['retcode'] == 0 else False)
-    comment = ("Device %s formated (type=%s)"%(device,fstype) if result else "Error while formating %s (type=%s)"%(device,fstype))
-    # TODO: changes
-    return {'name': device,
-            'changes': {},
-            'result': result,
-            'comment': comment,
-            'state_stdout': "%s"%(ret['stderr'] if ret.get('stderr') else ret.get('stdout',''))}
