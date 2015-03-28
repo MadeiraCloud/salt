@@ -487,6 +487,9 @@ def mod_watch(name, sig=None, reload=False, full_restart=False, actions=None):
 
     pid = __salt__['service.status'](name, sig)
 
+    if not actions:
+        actions = {}
+
     if pid or actions.get(name,None):
         if 'service.reload' in __salt__ and reload:
             action = "reload"
