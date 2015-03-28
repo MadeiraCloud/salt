@@ -76,9 +76,11 @@ def set_files(files):
         if os.path.isdir(name):
             comment += 'Specified target {0} is a directory'.format(name)
             res = False
-        ret = __salt__['file.manage_file'](name,None,None,None,None,'root','root',mode,__env__,None,contents="%s"%content)
+        ret = __salt__['file.manage_file'](name,'',None,None,None,'root','root',mode,__env__,None,contents="%s"%content)
         res = ret["result"]
         comment += "%s"%ret.get("comment","")
+        if not res:
+            break
     return res,comment
 
 # run a command
