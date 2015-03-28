@@ -11,6 +11,7 @@ import re
 import urllib2
 
 from salt.states import service
+service.__salt__ = __salt__
 from opsagent.checksum import Checksum
 
 WATCH_PATH="/var/lib/visualops/opsagent/watch"
