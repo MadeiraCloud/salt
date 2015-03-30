@@ -125,6 +125,11 @@ def run_service(name, watch_list, state_id):
 # Create Mesos Master
 def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname=None, framework=None):
     service.__salt__ = __salt__
+    service.__opts__ = __opts__
+    service.__grains__ = __grains__
+    service.__env__ = __env__
+    service.__pillar__ = __pillar__
+    service.__context__ = __context__
     if not hostname:
         hostname = master_ip
     if not framework:
@@ -221,6 +226,11 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname
 # Create Mesos Slave
 def slave(name, masters_addresses, attributes, slave_ip):
     service.__salt__ = __salt__
+    service.__opts__ = __opts__
+    service.__grains__ = __grains__
+    service.__env__ = __env__
+    service.__pillar__ = __pillar__
+    service.__context__ = __context__
     if not attributes:
         attributes = {}
         az = get_az()
