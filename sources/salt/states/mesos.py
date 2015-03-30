@@ -261,7 +261,7 @@ def slave(name, masters_addresses, attributes, slave_ip):
     )
     gl_comment += ret.get("comment","")
     if not ret.get("result"): return _invalid(comment=gl_comment)
-    res, comment = run_service("haproxy", None, name)
+    res, comment = run_service("haproxy", [], name)
     gl_comment += comment
     if not res: return _invalid(comment=gl_comment)
 
