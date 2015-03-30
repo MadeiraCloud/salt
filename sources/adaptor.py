@@ -936,6 +936,7 @@ class StateAdaptor(object):
                 {'linux.cmd' : { 'cmd' : "apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9", 'os': ["ubuntu","debian"] }},
                 {'linux.apt.repo' : { 'content' : "deb https://get.docker.com/ubuntu docker main", 'name': "docker", 'os': ["ubuntu","debian"] }},
                 {'linux.apt.repo' : { 'content' : "deb http://repos.mesosphere.io/ubuntu trusty main", 'name': "mesos", 'os': ["ubuntu","debian"] }},
+                {'linux.file': { "path": "/etc/haproxy/haproxy.cfg", "content": get_file_content(os.path.join(CONFIG_PATH,"mesos-apt","haproxy.cfg")) }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':"mesos"},
                     {'key':"zookeeper","value":"purged"},
