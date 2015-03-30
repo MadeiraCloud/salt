@@ -11,7 +11,6 @@ import re
 import urllib2
 
 from salt.states import service
-service.__salt__ = __salt__
 from opsagent.checksum import Checksum
 
 WATCH_PATH="/var/lib/visualops/opsagent/watch"
@@ -125,6 +124,7 @@ def run_service(name, watch_list, state_id):
 
 # Create Mesos Master
 def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname=None, framework=None):
+    service.__salt__ = __salt__
     if not hostname:
         hostname = master_ip
     if not framework:
@@ -220,6 +220,7 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname
 
 # Create Mesos Slave
 def slave(name, masters_addresses, attributes, slave_ip):
+    service.__salt__ = __salt__
     if not attributes:
         attributes = {}
         az = get_az()
