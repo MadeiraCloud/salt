@@ -119,7 +119,7 @@ def run_service(name, watch_list, state_id):
                 return False,comment
             comment += "Service %s: %s\n"%(name,ret.get("comment","Restarted"))
             cs.update(edit=True,tfirst=True)
-            return True,comment
+    return True,comment
 
 
 # Create Mesos Master
