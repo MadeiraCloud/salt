@@ -129,7 +129,6 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname
     service.__grains__ = __grains__
     service.__env__ = __env__
     service.__pillar__ = __pillar__
-    service.__context__ = __context__
     if not hostname:
         hostname = master_ip
     if not framework:
@@ -230,7 +229,6 @@ def slave(name, masters_addresses, attributes, slave_ip):
     service.__grains__ = __grains__
     service.__env__ = __env__
     service.__pillar__ = __pillar__
-    service.__context__ = __context__
     if not attributes:
         attributes = {}
         az = get_az()
