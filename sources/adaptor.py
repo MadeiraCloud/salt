@@ -18,6 +18,15 @@ from opsagent import utils
 URI_TIMEOUT=600
 CONFIG_PATH="/var/lib/visualops/opsagent"
 
+def get_file_content(path):
+    try:
+        with open(path) as f:
+            content = f.read()
+    except Exception as e:
+        return ""
+    else:
+        return content
+
 # Watch special action for docker deploy state (config file change)
 def watch_docker_deploy(config, parameter, e=None):
     elems = ([e]
@@ -888,6 +897,57 @@ class StateAdaptor(object):
             },
             'states' : ['present'],
             'type' : 'raid',
+        },
+
+        'linux.mesos.master' : {
+            'attributes' : {
+                "cluster_name": "cluster_name",
+                "server_id": "server_id",
+                "masters_addresses": "masters_addresses",
+                "hostname": "hostname",
+                "framework": "framework",
+                "master_ip": "master_ip",
+            },
+            'states' : ['master'],
+            'type' : 'mesos',
+            'require' : [
+                {'linux.cmd' : { 'cmd' : "apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF", 'os': ["ubuntu","debian"] }},
+                {'linux.apt.repo' : { 'content' : "deb http://repos.mesosphere.io/ubuntu trusty main", 'name': "mesos", 'os': ["ubuntu","debian"] }},
+                {'linux.apt.package' : { 'name' : [
+                    {'key':"mesosphere"},
+                    {'key':"openjdk-7-jre-headless"},
+                ], 'os': ["ubuntu","debian"] }},
+                {'linux.file': { "path": "/etc/init/mesos-master.conf", "content": get_file_content(os.path.join(CONFIG_PATH,"mesos-apt","mesos-master.conf")) }},
+                {'linux.file': { "path": "/etc/init.d/mesos-master", "content": get_file_content(os.path.join(CONFIG_PATH,"mesos-apt","mesos-master")), "mode": "755" }},
+                {'linux.dir' : { 'path' : ['/etc/marathon/conf'] , "recursive": True}},
+            ]
+        },
+
+        'linux.mesos.slave' : {
+            'attributes' : {
+                "masters_addresses": "masters_addresses",
+                "attributes": "attributes",
+                "slave_ip": "slave_ip",
+            },
+            'states' : ['slave'],
+            'type' : 'mesos',
+            'require' : [
+                {'linux.cmd' : { 'cmd' : "apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF", 'os': ["ubuntu","debian"] }},
+                {'linux.cmd' : { 'cmd' : "apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9", 'os': ["ubuntu","debian"] }},
+                {'linux.apt.repo' : { 'content' : "deb https://get.docker.com/ubuntu docker main", 'name': "docker", 'os': ["ubuntu","debian"] }},
+                {'linux.apt.repo' : { 'content' : "deb http://repos.mesosphere.io/ubuntu trusty main", 'name': "mesos", 'os': ["ubuntu","debian"] }},
+                {'linux.file': { "path": "/etc/haproxy/haproxy.cfg", "content": get_file_content(os.path.join(CONFIG_PATH,"mesos-apt","haproxy.cfg")) }},
+                {'linux.apt.package' : { 'name' : [
+                    {'key':"mesos"},
+                    {'key':"zookeeper","value":"purged"},
+                    {'key':"haproxy"},
+                    {'key':"apt-transport-https"},
+                    {'key':"lxc-docker"},
+                ], 'os': ["ubuntu","debian"] }},
+                {'linux.file': { "path": "/etc/default/haproxy", "content": get_file_content(os.path.join(CONFIG_PATH,"mesos-apt","haproxy")) }},
+                {'linux.file': { "path": "/usr/local/bin/haproxy-marathon-bridge", "content": get_file_content(os.path.join(CONFIG_PATH,"mesos-apt","haproxy-marathon-bridge")), "mode": "755" }},
+                {'linux.file': { "path": "/etc/init.d/mesos-slave", "content": get_file_content(os.path.join(CONFIG_PATH,"mesos-apt","mesos-slave")), "mode": "755" }},
+            ]
         },
     }
 

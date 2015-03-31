@@ -2666,9 +2666,10 @@ See `mdadm` documentation for more details.
 					'visible'	:	True,
 				},
 			},
-		},
+                },
 
-		# create mesos module
+
+		# mesos master/slave state
 		"mesos master": {
 			"module": "linux.mesos.master",
 			"reference": {
@@ -2706,41 +2707,41 @@ Runs a Mesos Master instance
 
 		example:
 			marathon
-"""
+			"""
 			},
-			"parameter": {
-				"cluster_name": {
-					"type": "line",
-					"required": True,
-					"visible": True,
+			"parameter" : {
+				"cluster_name" : {
+					"type" 		: "line",
+					"required"	: True,
+					"visible"	: True,
 				},
-				"server_id": {
-					"type": "line",
-					"required": True,
-					"visible": True,
+				"server_id" : {
+					"type" 		: "line",
+					"required"	: True,
+					"visible"	: True,
 				},
-				"masters_addresses": {
-					"type": "dict",
-					"required": True,
-					"visible": True,
+				"masters_addresses" : {
+					"type"		: "dict",
+					"required"	: True,
+					"visible"	: True,
 				},
-				"hostname": {
-					"type": "line",
-					"required": False,
-					"visible": True,
+				"hostname" : {
+					"type"		: "line",
+					"required"	: False,
+					"visible"	: True,
 				},
-				"framework": {
-					"type": "array",
-					"required": True,
-					"visible": True,
-					"option": [
+				"framework"	: {
+					"type"		: "array",
+					"required"	: False,
+					"visible"	: True,
+					"option"	: [
 						"marathon",
 					],
 				},
-				"master_ip": {
-					"type": "line",
-					"required": True,
-					"visible": False,
+				"master_ip" : {
+					"type"		: "line",
+					"required"	: True,
+					"visible"	: False,
 				},
 			},
 		},
@@ -2755,6 +2756,7 @@ Runs a Mesos Slave instance
 ### Parameters
 
 *   **`masters_addresses`** (*required*): IPs/hostnames of the Mesos Master servers. If no hostname is given, the ip address will be used by default as hostname.
+
 
 		example:
 			@{master1.PrivateIpAddress}:    master1
@@ -2771,24 +2773,24 @@ Runs a Mesos Slave instance
 			zone:   all
 """,
 			},
-			"parameter": {
-				"masters_addresses": {
-					"type": "dict",
-					"required": True,
-					"visible": True,
+			"parameter" : {
+				"masters_addresses" : {
+					"type"		: "dict",
+					"required"	: True,
+					"visible"	: True,
 				},
-				"attributes": {
-					"type": "dict",
-					"required": True,
-					"visible": True
+				"attributes" : {
+					"type"		: "dict",
+					"required"	: True,
+					"visible"	: True
 				},
-				"slave_ip": {
-					"type": "line",
-					"required": True,
-					"visible": False,
+				"slave_ip" : {
+					"type"		: "line",
+					"required"	: True,
+					"visible"	: False,
 				},
 			},
-		}
+		},
 
 	}
 }

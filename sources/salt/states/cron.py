@@ -221,7 +221,7 @@ def present(name,
         return ret
 
     if data == 'updated':
-        ret['comment'] = 'Cron {0} updated'.format(name, user)
+        ret['comment'] = 'Cron {0} updated'.format(name)
         ret['changes'] = {user: name}
         return ret
     ret['comment'] = ('Cron {0} for user {1} failed to commit with error \n{2}'
