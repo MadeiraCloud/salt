@@ -193,6 +193,10 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname
     gl_comment += comment
     if not res: return _invalid(comment=gl_comment)
 
+    ret = run_cmd("hostname $(cat /etc/hostname)")
+    gl_comment += ret.get("comment","")
+    if not ret.get("result"): return _invalid(comment=gl_comment)
+
     res, comment = run_service("zookeeper", [
         "/var/lib/zookeeper/myid",
         "/etc/zookeeper/conf/zoo.cfg",
