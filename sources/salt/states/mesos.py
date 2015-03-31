@@ -167,7 +167,7 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname
         "content":master_ip,
     },{
         "name":"/etc/mesos-master/hostname",
-        "content":hostname,
+        "content":master_ip,
     },{
         "name":"/etc/mesos-master/cluster",
         "content":cluster_name,
@@ -176,10 +176,10 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname
         "content":master_ip,
     },{
         "name":"/etc/marathon/conf/master",
-        "content":ma_zk+"/mesos",
+        "content":me_zk+"/mesos",
     },{
         "name":"/etc/marathon/conf/zk",
-        "content":ma_zk+"/marathon",
+        "content":me_zk+"/marathon",
     },{
         "name":"/etc/hostname",
         "content":hostname,

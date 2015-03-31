@@ -468,7 +468,7 @@ def mod_watch_old(name, sig=None, reload=False, full_restart=False, action=None)
 
 
 
-def mod_watch(name, sig=None, reload=False, full_restart=False, actions=None):
+def mod_watch(name, sig=None, reload=False, restart=False, full_restart=False, actions=None):
     '''
     The service watcher, called to invoke the watch command.
 
@@ -497,12 +497,12 @@ def mod_watch(name, sig=None, reload=False, full_restart=False, actions=None):
                 "func": __salt__['service.reload'],
                 "action": action,
             }]
-#        elif 'service.full_restart' in __salt__ and full_restart:
-#            action = "fully restart"
-#            act = [{
-#                "func": __salt__['service.full_restart'],
-#                "action": action,
-#            }]
+        elif 'service.restart' in __salt__ and (full_restart or restart):
+            action = "restart"
+            act = [{
+                "func": __salt__['service.restart'],
+                "action": action,
+            }]
         elif actions.get(name,None):
             action = "script"
             act = [{
