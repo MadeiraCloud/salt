@@ -1743,26 +1743,26 @@ class StateAdaptor(object):
                                     if isinstance(item, dict) and 'pkgs' in item.keys() and 'rubygems' in item['pkgs']:
                                         item['pkgs'][item['pkgs'].index("rubygems")] = "rubygems-integration"
 
-                        # deal with docker service dependence
-                        elif module == 'docker':
-                            req_list = [ i['require'] for i in chunk if 'require' in i ]
-                            if req_list:
-                                req_list = req_list[0]
+                        # # deal with docker service dependence
+                        # elif module == 'docker':
+                        #     req_list = [ i['require'] for i in chunk if 'require' in i ]
+                        #     if req_list:
+                        #         req_list = req_list[0]
 
-                                req_pkg = []
-                                the_srv = None
-                                for r in req_list:
-                                    for type, tag in r.iteritems():
-                                        if type == 'pkg':
-                                            req_pkg.append(tag)
-                                        elif type == 'service':
-                                            the_srv = tag
+                        #         req_pkg = []
+                        #         the_srv = None
+                        #         for r in req_list:
+                        #             for type, tag in r.iteritems():
+                        #                 if type == 'pkg':
+                        #                     req_pkg.append(tag)
+                        #                 elif type == 'service':
+                        #                     the_srv = tag
 
-                                if the_srv and len(req_pkg)>0:
-                                    req = {'require':[]}
-                                    for pkg_tag in req_pkg:
-                                        req['require'].append({'pkg':pkg_tag})
-                                    self.states[the_srv]['service'].append(req)
+                        #         if the_srv and len(req_pkg)>0:
+                        #             req = {'require':[]}
+                        #             for pkg_tag in req_pkg:
+                        #                 req['require'].append({'pkg':pkg_tag})
+                        #             self.states[the_srv]['service'].append(req)
 
         except Exception, e:
             utils.log("DEBUG", "Expand states exception: %s" % str(e), ("__expand", self))
