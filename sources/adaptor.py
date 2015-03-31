@@ -1010,7 +1010,7 @@ class StateAdaptor(object):
                 s_module, s_parameter = self.__check_module(s_module, s_parameter)
 
                 utils.log("INFO", "Begin to convert module %s" % (s_module), ("convert", self))
-                self.states.update(self.__salt(step, s_module, s_parameter))
+                self.states += self.__salt(step, s_module, s_parameter)
                 i += 1
                 if not self.states: self.states = None
 
@@ -1077,7 +1077,7 @@ class StateAdaptor(object):
 
 
     def __salt(self, step, module, parameter):
-        salt_state = {}
+        salt_states = []
 
         utils.log("DEBUG", "Begin to generate addin of step %s, module %s..." % (step, module), ("__salt", self))
         addin = self.__init_addin(module, parameter)
@@ -1087,16 +1087,19 @@ class StateAdaptor(object):
 
         try:
             for state, addin in module_states.iteritems():
+                salt_state = {}
+
                 # add require
                 utils.log("DEBUG", "Begin to generate requirity ...", ("__salt", self))
                 require = []
                 if 'require' in self.mod_map[module]:
                     req_state = self.__get_require(self.mod_map[module]['require'], module, parameter)
                     if req_state:
-                        for item in req_state:
-                            for req_tag, req_value in item.iteritems():
-                                salt_state[req_tag] = req_value
-                                require.append({ next(iter(req_value)) : req_tag })
+                        salt_states += req_state
+                        # for item in req_state:
+                        #     for req_tag, req_value in item.iteritems():
+                        #         salt_state[req_tag] = req_value
+                        #         require.append({ next(iter(req_value)) : req_tag })
 
                 # add require in
                 utils.log("DEBUG", "Begin to generate require-in ...", ("__salt", self))
@@ -1138,12 +1141,14 @@ class StateAdaptor(object):
                 if 'require_in' in self.mod_map[module]:
                     salt_state[tag]['__env__'] = 'base'
                     salt_state[tag]['__sls__'] = 'visualops'
+
+                salt_states.append(salt_state)
         except Exception, e:
             utils.log("DEBUG", "Generate salt states of id %s module %s exception:%s" % (step, module, str(e)), ("__salt", self))
             raise StateException("Generate salt states exception")
 
-        if not salt_state:  raise StateException("conver state failed: %s %s" % (module, parameter))
-        return salt_state
+        if not salt_states:  raise StateException("conver state failed: %s %s" % (module, parameter))
+        return salt_states
 
     def __init_addin(self, module, parameter):
         addin = {}
