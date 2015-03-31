@@ -1,1771 +1,1763 @@
 {
     "common": {
         "archive": {
-            "distro": null, 
-            "module": "common.archive", 
+            "distro": null,
+            "module": "common.archive",
             "parameter": {
                 "checksum": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": false
-                }, 
+                },
                 "if-path-absent": {
-                    "required": false, 
-                    "type": "array", 
+                    "required": false,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "path": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "source": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nextract an archive file\n\n### Parameters\n\n*   **`source`** (*required*): the archive file url\n\n\t\texample: http(s):///host/path/to/archive.tar.gz\n\n\t>note: currently supported archive format: tar, tgz, tar.gz, bz, bz2, tbz, zip (archive file must end with one of these extention name)\n\t\t\tlocal archive file `file://path/to/file` not supported in this version\n\n*   **`path`** (*required*): the path to extract the archive\n\n\t>note: the path will be auto-created if it doesn't exist\n\n*   **`checksum`** (*optional*): the url of the source checksum file or checksum value string, whose value (content) will be used to verify the integrity of the source archive, only support md5\n\n\t\texample:\n\t\t\thttp(s):///host/path/to/checksum_file\n\t\t\tmd5:md5_value_string\n\n*   **`if-path-absent`** (*optional*): extract the archive only if none of the specified path exists, see blow\n\n\t> note: once the source archive is successfully extracted to the specified path, the opsagent will decide whether to re-fetch and extract the source archive depending on or not:\n\t- when `if-path-absent` specified:\n\t\t- if none of the specified paths exist, the archive will be re-fetched, until some paths exist\n\t\t- if some paths exists, the archive will only be re-fetched only if `checksum` is used and its value changes between rounds\n\t- when `if-path-absent` not used:\n\t\t- if `checksum` not used, the archive will be re-fetched in every round\n\t\t- if `checksum` used, thhe archive will be re-fetched if the checksum value changes between rounds\n\t\t\t\t"
             }
-        }, 
+        },
         "gem": {
-            "distro": null, 
-            "module": "common.gem.package", 
+            "distro": null,
+            "module": "common.gem.package",
             "parameter": {
                 "name": {
-                    "default": "", 
+                    "default": "",
                     "option": [
-                        "latest", 
+                        "latest",
                         "removed"
-                    ], 
-                    "required": true, 
-                    "type": "dict", 
+                    ],
+                    "required": true,
+                    "type": "dict",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage ruby gems\n\n### Parameters\n\n*\t**`name`** (*required*): the package names and versions. You can specify multiple packages. The following values can be used for package version:\n\t- ***`<null>`*** *`default`*: ensure the package is installed. If not, it will install the latest version available of all GEM repos available\n\t- ***`<version>`***: ensure the package is installed, at the version specified. If the version in unavailable of all GEM repos available on the host, the state will fail\n\t- **`latest`**: ensure the package is installed at the latest version. If a newer version is available of all GEM repos available on the host, the package will upgrade automatically\n\t- **`removed`**: ensure the package is absent\n\t\t\t\t"
             }
-        }, 
+        },
         "git": {
-            "distro": null, 
-            "module": "common.git", 
+            "distro": null,
+            "module": "common.git",
             "parameter": {
                 "force": {
-                    "default": false, 
-                    "required": false, 
+                    "default": false,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "path": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "repo": {
-                    "required": true, 
+                    "required": true,
                     "type": "line"
-                }, 
+                },
                 "revision": {
-                    "default": "master", 
-                    "required": false, 
+                    "default": "master",
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "ssh-key-file": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "user": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage a git repo\n\n### Parameters\n\n* **`path`** (*required* ): the path to clone the repo\n\n\t\texample: /var/www/html/mysite/\n\n*   **`repo`** (*required*): the git repository uri\n\n\t\texample:\n\t\t\t/path/to/repo.git/\n\t\t\tfile:///path/to/repo.git/\n\t\t\thttp[s]://host[:port][path]\n\t\t\tftp[s]://host[:port][path]\n\t\t\tssh://[user@]host[:port]/~[user][path]\n\t\t\tgit://[user@]host[:port]/~[user][path]\n\t\t\trsync://host[:port][path]\n\n* **`revision`** (*optional*): the revision to checkout\n\n\t\texample:\n\t\t\tspecify a branch and keep it synced: master, develop\n\t\t\tspecify a static tag - release-1.0\n\t\t\tspecify a particular revision id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6\n\n* **`ssh-key-file`** (*optional*): the path of the ssh keypair file\n\n\t\texample: /root/.ssh/id_rsa\n\n* **`force`** (*optional*): force the checkout if there is conflict, by default ***`false`***\n\n* **`user`** (*optional*): the username that performs the operation, by default ***`root`***\n\t\t\t\t"
             }
-        }, 
+        },
         "hg": {
-            "distro": null, 
-            "module": "common.hg", 
+            "distro": null,
+            "module": "common.hg",
             "parameter": {
                 "force": {
-                    "default": false, 
-                    "required": false, 
+                    "default": false,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "path": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "repo": {
-                    "required": true, 
+                    "required": true,
                     "type": "line"
-                }, 
+                },
                 "revision": {
-                    "default": "default", 
-                    "required": false, 
+                    "default": "default",
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "user": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage a hg repo\n\n### Parameters\n\n* **`path`** (*required* ): the path to clone the repo\n\n\t\texample: /var/www/html/mysite/\n\n*   **`repo`** (*required*): the hg repository uri\n\n\t\texample:\n\t\t\tlocal/filesystem/path\n\t\t\tfile://local/filesystem/path\n\t\t\thttp://[user@]host[:port]/[path]\n\t\t\thttps://[user@]host[:port]/[path]\n\t\t\tssh://[user@]host[:port]/[path]\n\n* **`revision`** (*optional*): the revision to checkout\n\n\t\texample:\n\t\t\tspecify a branch and keep it synced: master, develop\n\t\t\tspecify a static tag - release-1.0\n\t\t\tspecify a particular revision id - 8b1e0f7e499f9af07eed5ba6a3fc5490e72631b6\n\n* **`force`** (*optional*): force the checkout if there is conflict, by default ***`false`***\n\n* **`user`** (*optional*): the username that performs the operation, by default ***`root`***\n\t\t\t\t"
             }
-        }, 
+        },
         "npm": {
-            "distro": null, 
-            "module": "common.npm.package", 
+            "distro": null,
+            "module": "common.npm.package",
             "parameter": {
                 "name": {
-                    "default": "", 
-                    "required": true, 
-                    "type": "dict", 
+                    "default": "",
+                    "required": true,
+                    "type": "dict",
                     "value": [
-                        "latest", 
+                        "latest",
                         "removed"
-                    ], 
+                    ],
                     "visible": true
-                }, 
+                },
                 "path": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\n                                        manage node.js package (requires npm 1.2 or higher)\n\n### Parameters\n\n*\t**`name`** (*required*): the package names and versions. You can specify multiple packages. The following values can be used for package version:\n\t- ***`<null>`*** *`default`*: ensure the package is installed. If not, it will install the latest version available in all active NPM repos\n\t- ***`<version>`***: ensure the package is installed, at the specified version. If the version in unavailable in all active NPM repos on the host, the state will fail\n\t- **latest**: ensure the package is installed at the latest version. If a newer version is available in all active NPM repos on the host, the package will upgrade automatically\n\t- **removed**: ensure the package is absent\n\n\t>note: the specified packages will be installed as global packages (npm install --global)\n\n* **`path`** (*optional*): the path where the packages should be installed to `$path/node_modules`\n\t\t>note:\n\t\t\tif ignored, the packages will be installed as global packages, usually `/usr/local/lib/node_modules/` (e.g. npm install --global)\n\t\t\t\t"
             }
-        }, 
+        },
         "pip": {
-            "distro": null, 
-            "module": "common.pip.package", 
+            "distro": null,
+            "module": "common.pip.package",
             "parameter": {
                 "name": {
-                    "default": "", 
-                    "required": true, 
-                    "type": "dict", 
+                    "default": "",
+                    "required": true,
+                    "type": "dict",
                     "value": [
-                        "latest", 
+                        "latest",
                         "removed"
-                    ], 
+                    ],
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage pip packages\n\n### Parameters\n\n*\t**`name`** (*required*): the package names and versions. You can specify multiple packages. The following values can be used for package version:\n\t- ***`<null>`*** *`default`*: ensure the package is installed. If not, it will install the latest version available of all PIP repos activated\n\t- ***`<version>`***: ensure the package is installed, in the specified version. If the version in unavailable of all PIP repos activated on the host, the state will fail\n\t- **`latest`**: ensure the package is installed at the latest version. If a newer version is available of all PIP repos activated on the host, the package will upgrade automatically\n\t- **`removed`**: ensure the package is absent\n\t\t\t\t"
             }
-        }, 
+        },
         "svn": {
-            "distro": null, 
-            "module": "common.svn", 
+            "distro": null,
+            "module": "common.svn",
             "parameter": {
                 "force": {
-                    "default": false, 
-                    "required": false, 
+                    "default": false,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "password": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "path": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "repo": {
-                    "required": true, 
+                    "required": true,
                     "type": "line"
-                }, 
+                },
                 "revision": {
-                    "default": "HEAD", 
+                    "default": "HEAD",
                     "options": [
-                        "HEAD", 
-                        "BASE", 
-                        "COMMITED", 
+                        "HEAD",
+                        "BASE",
+                        "COMMITED",
                         "PREV"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "user": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "username": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage a svn repo\n\n### Parameters\n\n* **`path`** (*required* ): the path to checkout the repo\n\n\t\texample: /var/www/html/mysite/\n\n* **`repo`** (*required*): the svn repository uri\n\n\t\texample:\n\t\t\tfile://local/filesystem/path\n\t\t\thttp://[user@]host[:port][path]\n\t\t\thttps://[user@]host[:port][path]\n\t\t\tsvn://[user@]host[:port][path]\n\t\t\tsvn+ssh://[user@]host[:port][path]\n\n* **`revision`** (*optional*): the revision to checkout\n\n\t\texample: HEAD, BASE, COMMITED, PREV, etc,. (ref: [Revision Specifiers](http://svnbook.red-bean.com/en/1.7/svn.tour.revs.specifiers.html))\n\n* **`username`** (*optional*): the username of the svn server\n\n* **`password`** (*optional*): the password of the svn user\n\n* **`force`** (*optional*): force the checkout if there is conflict, by default ***`false`***\n\n* **`user`** (*optional*): the username that performs the operation, by default ***`root`***\n\t\t\t\t"
             }
-        }, 
+        },
         "timezone": {
-            "distro": null, 
-            "module": "common.timezone", 
+            "distro": null,
+            "module": "common.timezone",
             "parameter": {
                 "name": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "use-utc": {
-                    "default": true, 
-                    "required": false, 
+                    "default": true,
+                    "required": false,
                     "type": "bool"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage the timezone\n\n### Parameters\n\n*   **`name`** (*required*): the timezone name\n\n\texample: Pacific/Tahiti\n\n*   **`use-utc`** (*optional*): whether to use UTC for the hardware clock or not, by default ***`true`***\n\t\t\t\t"
             }
-        }, 
+        },
         "virtualenv": {
-            "distro": null, 
-            "module": "common.virtualenv", 
+            "distro": null,
+            "module": "common.virtualenv",
             "parameter": {
                 "extra-search-dir": {
-                    "required": false, 
+                    "required": false,
                     "type": "array"
-                }, 
+                },
                 "path": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "python-bin": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "requirements-file": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "system-site-packages": {
-                    "default": true, 
-                    "required": false, 
+                    "default": true,
+                    "required": false,
                     "type": "bool"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage a python virtualenv\n\n### Parameters\n\n*   **`path`** (*required*): the environment path\n\n*   **`python-bin`** (*optional*): the path the python interpreter to use\n\n\t>note:\n\t\t\tpython2.5 will use the python2.5 interpreter to create the new environment.\n\t\t\tThe default is the interpreter that virtualenv was installed with\n\n*   **`requirements-file`** (*optional*): the python requirements file path, which will be used to configure this environment\n\n*   **`system-site-packages`** (*optional*): whether to give the virtual environment access to the global site-packages or not, by default ***`true`***\n\n*   **`extra-search-dir`** (*optional*): whether to always copy files rather than symlinking or not, by default ***`false`***\n\t\t\t\t"
             }
         }
-    }, 
+    },
     "linux": {
         "apt pkg": {
             "distro": [
-                "debian", 
+                "debian",
                 "ubuntu"
-            ], 
-            "module": "linux.apt.package", 
+            ],
+            "module": "linux.apt.package",
             "parameter": {
                 "deb-conf-file": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "name": {
-                    "default": "", 
+                    "default": "",
                     "option": [
-                        "latest", 
-                        "removed", 
+                        "latest",
+                        "removed",
                         "purged"
-                    ], 
-                    "required": true, 
-                    "type": "dict", 
+                    ],
+                    "required": true,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "repo": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "verify-gpg": {
-                    "default": false, 
-                    "required": false, 
+                    "default": false,
+                    "required": false,
                     "type": "bool"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage apt packages\n\n### Parameters\n\n*   *`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:\n\t- ***`<null>`*** *`default`*: ensure the package is installed. If not, it will install the latest version available of all APT repos activated\n\t- ***`<version>`***: ensure the package is installed, at the version specified. If the version in unavailable of all APT repos activated on the host, the state will fail\n\t- **`<uri>`**: ensure the package will be fetched from the following uri. Warning: if one uri is specified, only packages with uri specified will be installed. *uri* can be a remote or local path to a rpm package.\n\t- **`latest`**: ensure the package is installed at the latest version. If a newer version is available of all APT repos activated on the host, the package will upgrade automatically\n\t- **`removed`**: ensure the package is absent\n\t- **`purged`**: ensure the package is absent, and also delete all related configuration data of the package\n\n\n* **`repo`** (*optional*): the repo name, which you want to use to install the packages\n\n\t\texample: main\n\n* **`deb-conf-file`** (*optional*): the Deb configuration file path\n\n\t\texample: /etc/apt/deb.conf\n\n* **`verify-gpg`** (*optional*): verify the package's GPG signature, by default ***`true`***\n\t\t\t\t"
             }
-        }, 
+        },
         "apt ppa": {
             "distro": [
-                "debian", 
+                "debian",
                 "ubuntu"
-            ], 
-            "module": "linux.apt.ppa", 
+            ],
+            "module": "linux.apt.ppa",
             "parameter": {
                 "name": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "password": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "username": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage apt ppa\n\n### Parameters\n\n*   **`name`** (*required*): the ppa user/acrhive name, please don't add `ppa:`\n\n\t\texample: chromium-daily/stable\n\n* **`username`** (*optional*): the ppa account's username, for auth only\n\n* **`password`** (*optional*): the ppa account's password, for auth only\n\t\t\t\t"
             }
-        }, 
+        },
         "apt repo": {
             "distro": [
-                "debian", 
+                "debian",
                 "ubuntu"
-            ], 
-            "module": "linux.apt.repo", 
+            ],
+            "module": "linux.apt.repo",
             "parameter": {
                 "content": {
-                    "required": true, 
+                    "required": true,
                     "type": "text"
-                }, 
+                },
                 "name": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage apt repo\n\n### Parameters\n\n*   **`name`** (*required*): the repository name (`/etc/apt/sources.list.d/$name.list` will be created)\n\n* **`content`** (*required*): the source list file content\n\n\t\texample: deb http://www.rabbitmq.com/debian/ testing main\n\t\t\t\t"
             }
-        }, 
+        },
         "chef client": {
-            "distro": null, 
-            "module": "linux.chef.client", 
+            "distro": null,
+            "module": "linux.chef.client",
             "parameter": {
                 "arguments": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "client_key": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "config": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "server": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "version": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nRun a Chef client. This module allows you to run a Chef recipe distributed by a Chef server. This is useful if you already have a Chef server running and you want to control the client recipe execution on your instance using VisualOps.\n\nSee Chef documentation for more details.\n\n### Parameters\n\n*   **`server`** (*required*): URI to remote Chef server. Ensure you are able to resolv its hostname.\n\n\t\texample:\n\t\t\thttps://localhost\n\n*   **`client_key`** (*optional*): Path to client authentication key. This is usually required to establish a connection to the chef server.\n\n\t\texample:\n\t\t\t/path/to/client/key\n\n*   **`config`** (*optional*): Path to chef config file\n\n\t\texample:\n\t\t\t/path/to/config/file\n\n*   **`arguments`** (*optional*): Additional arguments to chef, passed to the chef binary (see chef documentation). You can use these arguments to specify a running group, or a log level, for example.\n\n\t\texample:\n\t\t\tgroup:     root\n\t\t\tlog_level: warning\n\n*   **`version`** (*optional*): Chef version. Leave empty for latest version.\n\n\t\texample:\n\t\t\t12.0.1\n\t\t\t\t"
             }
-        }, 
+        },
         "chef solo": {
-            "distro": null, 
-            "module": "linux.chef.solo", 
+            "distro": null,
+            "module": "linux.chef.solo",
             "parameter": {
                 "arguments": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "config": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "override-runlist": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "recipe_url": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "version": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nRun a Chef solo. You should have your Chef recipe already present on your instance, or download it using the `recipe_url` parameter. Not that it is highly recommended to write a Chef configuration file, that you can specify in the `config` parameter. The config file may contains the location of your recipe, as well as the different items to run.\n\nSee Chef documentation for more details.\n\n### Parameters\n\n*   **`config`** (*recommended*): Path to Chef recipe config file. Generally used to specify a custom location of your Chef recipe.\n\n\t\texample:\n\t\t\t/path/to/config/file\n\n*   **`override_runlist`** (*optional*): Replace current run list with specified items for a single run\n\n\t\texample:\n\t\t        recipe[chef-server::default]\n\n*   **`recipe_url`** (*optional*): URI to remote gzipped tarball of recipes (`-r` option of chef-solo)\n\n\t\texample:\n\t\t\thttp://server.com/recipe.tgz\n\n*   **`arguments`** (*optional*): Additional arguments to Chef, passed to the Chef binary (see Chef documentation). You can use these arguments to specify a running group, or a log level, for example.\n\n\t\texample:\n\t\t\tgroup:            root\n\t\t\tlog_level:        warning\n\n*   **`version`** (*optional*): Chef version. Leave empty for latest version.\n\n\t\texample:\n\t\t\t12.0.1\n\t\t\t\t"
             }
-        }, 
+        },
         "cmd": {
-            "distro": null, 
-            "module": "linux.cmd", 
+            "distro": null,
+            "module": "linux.cmd",
             "parameter": {
                 "cmd": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "cwd": {
-                    "default": "/opt/visualops/tmp/", 
-                    "required": false, 
+                    "default": "/opt/visualops/tmp/",
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "env": {
-                    "required": false, 
+                    "required": false,
                     "type": "dict"
-                }, 
+                },
                 "group": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "if-path-absent": {
-                    "required": false, 
-                    "type": "array", 
+                    "required": false,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "if-path-present": {
-                    "required": false, 
-                    "type": "array", 
+                    "required": false,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "shell": {
-                    "default": "/bin/sh", 
-                    "option": "", 
-                    "required": false, 
+                    "default": "/bin/sh",
+                    "option": "",
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "timeout": {
-                    "default": 600, 
-                    "required": false, 
+                    "default": 600,
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "user": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nexecute a shell command\n\n### Parameters\n*   **`shell`** (*optional*): the absolute path of the shell to execute the command, by default `/bin/sh`\n\n*   **`cmd`** (*required*): the command to execute\n\n\t\texample: find . -name *.pyc | xargs rm\n\n*   **`cwd`** (*optional*): the current working directory to execute the command, be default `/opt/visualops/tmp/`\n\n*   **`user`** (*optional*): the user to execute the command, by default the user which the agent runs as\n\n*   **`group`** (*optional*): the group to execute the command, by default the group which the agent runs as\n\n*   **`env`** (*optional*): environment variables for the command\n\n*   **`timeout`** (*optional*): command timeout, by default `600` (in seconds)\n\n\t>note: By default, a command will be terminated and taken \"failed\" if not finishe in 600 seconds. However you can change with this option.\n\n*   **`if-path-present`** (*optional*): the command will run only if all specified paths exist\n\n*   **`if-path-absent`** (*optional*): the command will not run if any of the specified paths exists\n\t\t\t\t"
             }
-        }, 
+        },
         "cronjob": {
-            "distro": null, 
-            "module": "linux.cronjob", 
+            "distro": null,
+            "module": "linux.cronjob",
             "parameter": {
                 "cmd": {
-                    "required": true, 
-                    "type": "array", 
+                    "required": true,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "day-of-month": {
                     "option": [
                         "*"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "day-of-week": {
                     "option": [
                         "*"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "hour": {
                     "option": [
                         "*"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "minute": {
                     "option": [
                         "*"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "month": {
                     "option": [
                         "*"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "user": {
-                    "default": "root", 
-                    "required": true, 
-                    "type": "line", 
+                    "default": "root",
+                    "required": true,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage a cron job\n\n### Parameters\n\n*   **`user`** (*required*): the user to execute the cron job, by default: root\n\n*   **`cmd`** (*required*): a list of command\n\n\t\texample:\n\t\t\tcat /proc/meminfo >> /tmp/meminfo\n\t\t\tntpdate  time.apple.com\n\n*   **`minute`** (*optional*): 0 - 59\n\n*   **`hour`** (*optional*): 0 - 23 (must be a valid day if a month is specified)\n\n*   **`day-of-month`** (*optional*): 1 - 31\n\n*   **`month`** (*optional*): 1 - 12\n\n*   **`day-of-week`** (*optional*): 0 - 7, sunday is represented by 0 or 7, monday by 1\n\t\t\t\t"
             }
-        }, 
+        },
         "dir": {
-            "distro": null, 
-            "module": "linux.dir", 
+            "distro": null,
+            "module": "linux.dir",
             "parameter": {
                 "absent": {
-                    "default": false, 
-                    "required": false, 
+                    "default": false,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "group": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "mode": {
-                    "default": "0755", 
-                    "required": false, 
+                    "default": "0755",
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "path": {
-                    "required": true, 
+                    "required": true,
                     "type": "array"
-                }, 
+                },
                 "recursive": {
-                    "default": true, 
-                    "required": false, 
+                    "default": true,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "user": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage a directory\n\n### Parameters\n\n*   **`path`** (*required*): a list of directory paths\n\n\t\texample: /var/www/html\n\n\t>note: This state ensures the specifed directory is present with correposnding attributes. If the parent directory is present, its attributes will be left unchanged, otherwise it will be created with the same attributes as the specified directory itself.\n\n* **`user`** (*optional*): the user name of the directory owner\n\n\t\texample: root\n\n\t>note: If specified, the directory owner will be set to this user. Otherwise, the result depends on whether the directory exists or not. If existed, the directory owner will be left unchanged, otherwise default: root\n\n* **`group`** (*optional*): the group name of the directory owner\n\n\t\texample: root\n\n    >note: If specified, the directory will be set to this group. Otherwise, the result depends on whether the directory exists or not. If existed, the directory group will be left unchanged; otherwise default: root\n\n* **`mode`** (*optional*): the directory mode\n\n\t\texample: 0755\n\n\t>note: If specified, the directory will be set to this mode. Otherwise, the result depends on whether the directory exists or not. If existed, the directory mode will be left unchanged\n\n* **`recursive`** (*optional*): whehther to recursively set attributes of all sub-directories under *path*, by default ***`true`***\n\n* **`absent`** (*optional*): ensure all directories are absent, by default ***`false`***\n\n\t>note: If True, all other parameters are ignored\n\t\t\t\t"
             }
-        }, 
+        },
         "docker": {
-            "distro": null, 
-            "module": "linux.docker.deploy", 
+            "distro": null,
+            "module": "linux.docker.deploy",
             "parameter": {
                 "command": {
-                    "required": false, 
-                    "type": "array", 
+                    "required": false,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "container": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "count": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "cpu_shares": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "devices": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "email": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "environment": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "files": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "force": {
-                    "default": false, 
-                    "required": false, 
-                    "type": "bool", 
+                    "default": false,
+                    "required": false,
+                    "type": "bool",
                     "visible": true
-                }, 
+                },
                 "image": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "mem_limit": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "password": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "port_bindings": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "tag": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "username": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "volumes": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nRun a container from a remote image\n\n### Parameters\n\n*   **`container`** (*required*): Desired name of the container (must be the name specified in \"pulled\" and \"built\" states, if any)\n\n\t\texample:\n\t\t\tmy_container\n\n*   **`image`** (*required*): Image/repo from which to build this container\n\n\t\texample:\n\t\t\tnamespace/image\n\n*   **`tag`** (*optional*): Repository tag (default: latest)\n\n\t\texample:\n\t\t\tlatest\n\n*   **`username`** (*optional*): Username used to login to repository\n\n*   **`password`** (*optional*): Password used to login to repository (required if username specified)\n\n*   **`email`** (*optional*): Email used to login to repository (required if username specified)\n\n*   **`count`** (*optional*): Specify the number of containers to run\n\n*   **`command`** (*optional*): Command to run in the container (if not specified in `Dockerfile`)\n\n\t\texample (in case of apache server):\n\t\t\t/usr/bin/apache2\n\t\t\t-D\n\t\t\tFOREGROUND\n\n*   **`environment`** (*optional*): Environment variables for the container (if not specified in `Dockerfile`)\n\n\t\texample:\n\t\t\tFOO: bar\n\n*   **`volumes`** (*optional*): List of volumes to attach (if not specified in `Dockerfile`). (specify :ro for read only mode)\n\n\t\texample:\n\t\t\t/host/path: /mount/point\n\t\t\t/host/path: /mount/point/read/only:ro\n\n*   **`devices`** (*optional*): List of devices to attach (if not specified in `Dockerfile`). (specify :rwm to set read, write and mknode rights limitation)\n\n\t\texample:\n\t\t\t/dev/sdhost: /dev/sdcontainer\n\t\t\t/dev/sda:    /dev/xvda\n                        /dev/xvdf:   /dev/xvdf:r\n\n*   **`mem_limit`** (*optional*): Memory size limit (if not specified in `Dockerfile`)\n\n\t\texample:\n\t\t\t512m\n\n*   **`cpu_shares`** (*optional*): CPU shares authorized (if not specified in `Dockerfile`)\n\n\t\texample:\n\t\t\t0-3\n\n\t\texample:\n\t\t\t0\n\n*   **`port_bindings`** (*optional*): List of ports to expose on host system. Maps containers port/protocol to host listening ip:port\n\n\t\tnote:\n\t\t\tIf the count parameter is specified, the host port will be incremented by one on each.\n\n\t\texample:\n\t\t\t5000/tcp: 127.0.0.1:5000\n\t\t\t6000/tcp: 6000 (default ip: 0.0.0.0)\n\t\t\t80: 6666 (default protocol: tcp)\n\n*   **`force`** (*optional*): Force (re)build container on each round\n\n\t\tnote:\n\t\t\tUse this option if you edit any other parameter. Don't forget to disable it once a round has succeed.\n\n*   **`files`** (*optional*): list of persistent files\n\n\t\texample:\n\t\t\t/etc/nginx/nginx.conf : *content*\n\t\t\t/etc/my.cnf           : *content*\n\t\t\t\t"
             }
-        }, 
+        },
         "docker built": {
-            "distro": null, 
-            "module": "linux.docker.built", 
+            "distro": null,
+            "module": "linux.docker.built",
             "parameter": {
                 "containers": {
-                    "required": false, 
-                    "type": "array", 
+                    "required": false,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "force": {
-                    "default": false, 
-                    "required": false, 
-                    "type": "bool", 
+                    "default": false,
+                    "required": false,
+                    "type": "bool",
                     "visible": true
-                }, 
+                },
                 "path": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "tag": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nEnsure an image is built from a `Dockerfile`. If not, build it. If the file changes, the image will be rebuilt.\n\n### Parameters\n\n*   **`tag`** (*required*): Tag of the image\n\n\t\texample:\n\t\t\tnamespace/image\n\n*   **`path`** (*required*): Filesystem path to the `Dockerfile`\n\n\t\texample:\n\t\t\t/opt/docker/image\n\n*   **`containers`** (*optional*): Container(s) associated to the newly created image (specify it if you want your container to be re-created when the file changes)\n\n\t\texample:\n\t\t\tmy_container\n\n*   **`force`** (*optional*): Force (re)build on each round\n\t\t\t\t"
             }
-        }, 
+        },
         "docker pulled": {
-            "distro": null, 
-            "module": "linux.docker.pulled", 
+            "distro": null,
+            "module": "linux.docker.pulled",
             "parameter": {
                 "containers": {
-                    "required": false, 
-                    "type": "array", 
+                    "required": false,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "email": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "password": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "repo": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "tag": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "username": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nPull the latest image from the specified repository at the specified tag (if any)\n\n### Parameters\n\n*   **`repo`** (*required*): Repository URL or/and Image name\n\n\t\texample:\n\t\t\tnamespace/repo\n\n*   **`tag`** (*optional*): Repository tag (default: latest)\n\n\t\texample:\n\t\t\tlatest\n\n*   **`username`** (*optional*): Username used to login to repository\n\n*   **`password`** (*optional*): Password used to login to repository (required if username specified)\n\n*   **`email`** (*optional*): Email used to login to repository (required if username specified)\n\n*   **`containers`** (*optional*): Container(s) associated to this image (specify it if you want your container to be re-created when a new version of the image is pulled)\n\n\t\texample:\n\t\t\tmy_container\n\t\t\t\t"
             }
-        }, 
+        },
         "docker pushed": {
-            "distro": null, 
-            "module": "linux.docker.pushed", 
+            "distro": null,
+            "module": "linux.docker.pushed",
             "parameter": {
                 "author": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "container": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "dep_containers": {
-                    "required": false, 
-                    "type": "array", 
+                    "required": false,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "email": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "message": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "password": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "repository": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "tag": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "username": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nPush an image to a docker registry. (`docker push`)\n\n### Parameters\n\n*   **`repository`** (*required*): Repository to push\n\n\t\texample:\n\t\t\tnamespace/image\n\n\t\texample:\n\t\t\tnamespace/my_container\n\n*   **`container`** (*optional*): Container id to commit (if desired to push a container as an image)\n\n\t\texample:\n\t\t\tmy_container\n\n*   **`tag`** (*optional*): Repository tag (default: latest)\n\n\t\texample:\n\t\t\tlatest\n\n*   **`message`** (*optional*): Commit message (if container specified to be commited)\n\n*   **`author`** (*optional*): Author (if container specified to be commited)\n\n*   **`username`** (*optional*): Username used to login to repository\n\n*   **`password`** (*optional*): Password used to login to repository (required if username specified)\n\n*   **`email`** (*optional*): Email used to login to repository (required if username specified)\n\n*   **`dep_containers`** (*optional*): Containers needed to be shutdown if something new is pushed (in order to be rebuilt)\n\n\t\texample:\n\t\t\tmy_container\n\t\t\t\t"
             }
-        }, 
+        },
         "docker running": {
-            "distro": null, 
-            "module": "linux.docker.running", 
+            "distro": null,
+            "module": "linux.docker.running",
             "parameter": {
                 "command": {
-                    "required": false, 
-                    "type": "array", 
+                    "required": false,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "container": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "count": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "cpu_shares": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "devices": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "email": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "environment": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "files": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "force": {
-                    "default": false, 
-                    "required": false, 
-                    "type": "bool", 
+                    "default": false,
+                    "required": false,
+                    "type": "bool",
                     "visible": true
-                }, 
+                },
                 "image": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "mem_limit": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "password": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "port_bindings": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "tag": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "username": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "volumes": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nEnsure that a container from the given name is running. If not, run it.\n\n### Parameters\n\n*   **`container`** (*required*): Desired name of the container (must be the name specified in \"pulled\" and \"built\" states, if any)\n\n\t\texample:\n\t\t\tmy_container\n\n*   **`image`** (*required*): Image from which to build this container\n\n\t\texample:\n\t\t\tnamespace/image\n\n\n*   **`count`** (*optional*): Specify the number of containers to run\n\n*   **`command`** (*optional*): Command to run in the container (if not specified in `Dockerfile`)\n\n\t\texample (in case of apache server):\n\t\t\t/usr/bin/apache2\n\t\t\t-D\n\t\t\tFOREGROUND\n\n*   **`environment`** (*optional*): Environment variables for the container (if not specified in `Dockerfile`)\n\n\t\texample:\n\t\t\tFOO: bar\n\n*   **`volumes`** (*optional*): List of volumes to attach (if not specified in `Dockerfile`). (specify :ro for read only mode)\n\n\t\texample:\n\t\t\t/host/path: /mount/point\n\t\t\t/host/path: /mount/point/read/only:ro\n\n*   **`devices`** (*optional*): List of devices to attach (if not specified in `Dockerfile`). (specify :rwm to set read, write and mknode rights limitation)\n\n\t\texample:\n\t\t\t/dev/sdhost: /dev/sdcontainer\n\t\t\t/dev/sda:    /dev/xvda\n                        /dev/xvdf:   /dev/xvdf:r\n\n*   **`mem_limit`** (*optional*): Memory size limit (if not specified in `Dockerfile`)\n\n\t\texample:\n\t\t\t512m\n\n*   **`cpu_shares`** (*optional*): CPU shares authorized (if not specified in `Dockerfile`)\n\n\t\texample:\n\t\t\t0-3\n\n\t\texample:\n\t\t\t0\n\n*   **`port_bindings`** (*optional*): List of ports to expose on host system. Maps containers port/protocol to host listening ip:port\n\n\t\tnote:\n\t\t\tIf the count parameter is specified, the host port will be incremented by one on each.\n\n\t\texample:\n\t\t\t5000/tcp: 127.0.0.1:5000\n\t\t\t6000/tcp: 6000 (default ip: 0.0.0.0)\n\t\t\t80: 6666 (default protocol: tcp)\n\n*   **`force`** (*optional*): Force (re)build container on each round.\n\n\t\tnote:\n\t\t\tUse this option if you edit any other parameter. Don't forget to disable it once a round has succeed.\n\n*   **`files`** (*optional*): list of persistent files\n\n\t\texample:\n\t\t\t/etc/nginx/nginx.conf : *content*\n\t\t\t/etc/my.cnf           : *content*\n\t\t\t\t"
             }
-        }, 
+        },
         "file": {
-            "distro": null, 
-            "module": "linux.file", 
+            "distro": null,
+            "module": "linux.file",
             "parameter": {
                 "absent": {
-                    "default": false, 
-                    "required": false, 
-                    "type": "bool", 
+                    "default": false,
+                    "required": false,
+                    "type": "bool",
                     "visible": true
-                }, 
+                },
                 "content": {
-                    "required": false, 
+                    "required": false,
                     "type": "text"
-                }, 
+                },
                 "group": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "mode": {
-                    "default": "0644", 
-                    "required": false, 
+                    "default": "0644",
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "path": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "remote_uri": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "user": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage a file\n\n### Parameters\n\n*   **`path`** (*required*): the file path\n\n\t\texample: /root/.ssh/known_hosts\n\n\t>note: This state ensures the specifed file is present with correposnding attributes and content. If the file is present, its attributes will be left unchanged, otherwise it will be created with the same attributed of the specified file itself.\n\n* **`user`** (*optional*): the user name of the file owner\n\n\t\texample: root\n\n\t>note: If specified, the file owner will be set to this user. Otherwise, the result depends on whether the file exists or not. If existed, the file owner will be left unchanged, otherwise default: root\n\n* **`group`** (*optional*): the group name of the file owner\n\n\t\texample: root\n\n\t>note: If specified, the file will be set to this group. Otherwise, the result depends on whether the file exists or not. If existed, the file group will be left unchanged; otherwise default: root\n\n* **`mode`** (*optional*): the file mode\n\n\t\texample: 0644\n\n\t>note: If specified, the file will be set to this mode. Otherwise, the result depends on whether the file exists or not. If existed, the file mode will be left unchanged\n\n* **`content`** (*optional*): the file content\n\n\t>note: If the specified file exists and its MD5 does not match with `content`'s, the file will be overwritten\n\n* **`remote_uri`** (*optional*): path where to get the content of the file (will overwrite the *content* parameter)\n\n\t>note: http, https and ftp protocols are supported\n\n\t>note: `Links` - @{...} - in files provided using a remote URI won't be rendered.\n\n* **`absent`** (*optional*): ensure the file is absent, by default ***`false`***\n\n\t>note: If True, all other parameters are ignored\n\t\t\t\t"
             }
-        }, 
+        },
         "filesystem": {
-            "distro": null, 
-            "module": "linux.mkfs", 
+            "distro": null,
+            "module": "linux.mkfs",
             "parameter": {
                 "device": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "fstype": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "label": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\ncreate a filesystem\n\n### Parameters\n\n*   **`device`** (*required*): the path of the device to format (/dev/xvd*)\n\n*   **`fstype`** (*required*): the filesystem type to use (ext2, ext3, ext4 or xfs)\n\n\t>note: on REHL 6, xfs requires a manual installation of the xfsprogs (yum pkg state)\n\n*   **`label`** (*optional*): label of the device\n\t\t\t\t"
             }
-        }, 
+        },
         "group": {
-            "distro": null, 
-            "module": "linux.group", 
+            "distro": null,
+            "module": "linux.group",
             "parameter": {
                 "gid": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "groupname": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "system-group": {
-                    "default": false, 
-                    "required": false, 
+                    "default": false,
+                    "required": false,
                     "type": "bool"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage a group\n\n### Parameters\n\n*   **`groupname`** (*required*): the group name\n\n*   **`gid`** (*optional*): the group id\n\n*   **`system-group`** (*optional*): whether to create a system group (see `groupadd(8)`) or not, by default `false`\n\t\t\t\t"
             }
-        }, 
+        },
         "lv": {
-            "distro": null, 
-            "module": "linux.lvm.lv", 
+            "distro": null,
+            "module": "linux.lvm.lv",
             "parameter": {
                 "allocation-policy": {
                     "option": [
-                        "anywhere", 
-                        "contiguous", 
-                        "cling", 
-                        "inherit", 
+                        "anywhere",
+                        "contiguous",
+                        "cling",
+                        "inherit",
                         "normal"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "autobackup": {
-                    "default": false, 
-                    "required": false, 
+                    "default": false,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "available": {
                     "option": [
-                        "y", 
-                        "ay", 
-                        "n", 
-                        "ey", 
-                        "en", 
-                        "ly", 
+                        "y",
+                        "ay",
+                        "n",
+                        "ey",
+                        "en",
+                        "ly",
                         "ln"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "chunk-size": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "contiguous": {
-                    "default": false, 
-                    "required": false, 
+                    "default": false,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "discards": {
-                    "default": "passdown", 
+                    "default": "passdown",
                     "option": [
-                        "ignore", 
-                        "nopassdown", 
+                        "ignore",
+                        "nopassdown",
                         "passdown"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "ignore-monitoring": {
-                    "default": true, 
-                    "required": false, 
+                    "default": true,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "le-number": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "le-size": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "minor-number": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "mirror-number": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "monitor": {
-                    "default": false, 
-                    "required": false, 
+                    "default": false,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "name": {
-                    "required": true, 
+                    "required": true,
                     "type": "line"
-                }, 
+                },
                 "no-udev-sync": {
-                    "default": false, 
-                    "required": false, 
+                    "default": false,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "path": {
-                    "required": false, 
-                    "type": "array", 
+                    "required": false,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "permission": {
                     "option": [
-                        "r", 
+                        "r",
                         "rw"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "persistent": {
-                    "default": false, 
-                    "required": false, 
+                    "default": false,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "pool metadata size": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "readahead": {
                     "option": [
-                        "ReadAheadSectors", 
-                        "auto", 
+                        "ReadAheadSectors",
+                        "auto",
                         "none"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "region-size": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "snapshot": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "stripe-number": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "stripe-size": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "tag": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "thinpool": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "type": {
                     "option": [
-                        "raid1", 
-                        "raid4", 
-                        "raid5", 
+                        "raid1",
+                        "raid4",
+                        "raid5",
                         "raid6"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "vg-name": {
-                    "required": true, 
+                    "required": true,
                     "type": "line"
-                }, 
+                },
                 "virtual-size": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "zero": {
-                    "default": true, 
-                    "required": false, 
+                    "default": true,
+                    "required": false,
                     "type": "bool"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage LVM logical volume (LV)\n\n### Parameters\n\n*   **`name`** (*required*): specify the name of the new LV\n\n\t>note: Without this option a default names of \"lvol#\" will be generated where # is the LVM internal number of the logical volume\n\n*\t**`vg-name`** (*required*): specify the volume group name which the new LV created from\n\n*   **`path`** (*optional*): a list of physical volume path\n\n\t\tExample: /dev/sdk1, /dev/sdk2\n\n\t>note: VolumeGroup{Name|Path}[/ThinPoolLogicalVolumeName]\n\t   [PhysicalVolumePath[:PE[-PE]]...]\n\n*   **`available`** (*optional*): specify the name of the new LV\n\n\t\tExample: y, ay, n, ey, en, ly, ln\n\n\t>note: Controls the availability of the Logical Volumes for immediate use after the command finishes running.  By default, new Logical Volumes are activated (-ay). If it is possible technically, -an will leave the new Logical Volume inactive. But for example, snapshots can only be created in the active state so -an cannot be used with --snapshot. Normally the --zero n argument has to be supplied too because zeroing (the default behaviour) also requires activation. If autoactivation option is used (-aay), the logical volume is activated only if it matches an item in the activation/auto_activation_volume_list set in lvm.conf. For autoactivated logical volumes, --zero n is always assumed and it can't be overridden. If clustered locking is enabled, -aey will activate exclusively on one node and -aly will activate only on the local node.\n\n*   **`chunk-size`** (*optional*): speicy the size of chunk for snapshot and thin pool LV\n\n\t>note: For snapshots the value must be power of 2 between 4KiB and 512KiB and the default value is 4. For thin pools the value must be between 64KiB and 1048576KiB and the default value starts with 64 and scales up to fit the pool metadata size within 128MB, if the poolmetadata size is not specified. Older dm thin pool target version (<1.4) requires the value to be power of 2. The newer version requires to be the multiple of 64KiB, however discard is not supported for non power of 2 values.  Default unit is in kilobytes.\n\n*   **`contiguous`** (*optional*): set or reset the contiguous allocation policy for LVs, by default ***`false`***\n\n\t>note: Default is no contiguous allocation based on a next free principle.\n\n*   **`discards`** (*optional*): specify the discards behavior, by default ***`passdown`***\n\n\t\tExample: ignore, nopassdown, passdown\n\n*   **`stripe-number`** (*optional*): specify the number of stripes\n\n\t>note: This is equal to the number of physical volumes to scatter the logical volume\n\n*   **`stripe-size`** (*optional*): specify the number of kilobytes for the granularity of the stripes.\n\n\t>note: size must be 2^n (n = 2 to 9) for metadata in LVM1 format. For metadata in LVM2 format, the stripe size may be a  larger power of 2 but must not exceed the physical extent size\n\n*   **`le-number`** (*optional*): specify the number of logical extents to allocate for the new LV\n\n\t>note: The number can also be expressed as a percentage of the total space in the Volume Group with the suffix %VG, as a percentage of the remaining free space in the Volume Group with the suffix %FREE, as a percentage of the remaining free space for the specified PhysicalVolume(s) with the suffix %PVS, or (for a snapshot) as a percentage of the total space in the Origin  Logical Volume with the suffix %ORIGIN\n\n*   **`le-size`** (*optional*): specify the size to allocate for the new LV\n\n\t>note: A size suffix of K for kilobytes, M for megabytes, G for gigabytes, T for terabytes, P for petabytes or E for exabytes is optional. Default unit is megabytes\n\n*   **`minor-number`** (*optional*): specify the minor number\n\n*   **`persistent`** (*optional*): whether to make the minor number specified persistent or not, by default ***`false`***\n\n*   **`mirror-number`** (*optional*): Create a mirrored LV with this number of copies\n\n\t>note: For example, specifying \"-m 1\" would result in a mirror with two- sides; that is, a linear volume plus one copy.\n\n\t>Specifying the optional argument --nosync will cause the creation of the mirror to skip the initial resynchronization. Any data written afterwards will be mirrored, but the original contents will not be copied. This is useful for skipping a potentially long and resource intensive initial sync of an empty device.\n\n    >The optional argument --mirrorlog specifies the type of log to be used. The default is disk, which is persistent and requires a small amount of storage space, usually on a separate device from the data being mirrored. Using core means the mirror is regenerated by copying the data from the first device again each time the device is activated, for example, after every reboot. Using \"mirrored\" will create a persistent log that is itself mirrored.\n\n\t>The optional argument --corelog is equivalent to --mirrorlog core\n\n*   **`no-udev-sync`** (*optional*): whether to disable udev synchronisation or not, by default ***`false`***\n\n\t>note: The process will not wait for notification from udev. It will continue irrespective of any possible udev processing in the background. You should only use this if udev is not running or has rules that ignore the devices LVM2 creates\n\n*   **`monitor`** (*optional*): whether to monitor a mirrored or snapshot LV with dmeventd or not, if it is installed, by default ***`false`***\n\n\t>note: If a device used by a monitored mirror reports an I/O error, the failure is handled according to mirror_image_fault_policy and mirror_log_fault_policy set in lvm.conf\n\n*   **`ignore-monitoring`** (*optional*): make no attempt to interact with dmeventd unless ***monitor*** is ***`true`*** ,by default ***`false`***\n\n*   **`permission`** (*optional*): specify the access permissions to read only or read and write, by default ***RW***\n\n\t\tExample: r, rw\n\n*   **`pool-metadata-size`** (*optional*): specify the size of thin pool's metadata LV\n\n\t>note: Supported value is in range between 2MiB and 16GiB. Default value is (Pool_LV_size / Pool_LV_chunk_size  *  64b).   Default unit is megabytes.\n\n*   **`region-size`** (*optional*):\n\n\t>note: A mirror is divided into regions of this size (in MB), and the mirror log uses this granularity to track which regions are in sync.\n\n*   **`readahead`** (*optional*): set read ahead sector count of this LV\n\n\t\tExample: ReadAheadSectors, auto, none\n\n\t>note: For volume groups with metadata in lvm1 format, this must be a value between 2 and 120. The default value is \"auto\" which allows the kernel to choose a suitable value automatically.  \"None\" is equivalent to specifying zero.\n\n*   **`snapshot`** (*optional*): create a snapshot logical volume (or snapshot) for an existing, so called original logical volume (or origin)\n\n\t>note: Snapshots provide a 'frozen image' of the contents of the origin while the origin can still be updated. They enable consistent backups and online recovery of removed/overwritten data/files. Thin snapshot is created when the origin is a thin  volume and the size is not specified. Thin snapshot shares same blocks within the thin pool volume. The snapshot with the specified size does not need the same amount of storage the origin has. In a typical scenario, 15-20% might be enough.  In case the snapshot runs out of storage, use lvextend(8) to grow it. Shrinking a snapshot is supported by lvreduce(8) as well. Run  lvdisplay(8) on the snapshot in order to check how much data is allocated to it. Note that a small amount of the space you allocate to the snapshot is used to track the locations of the chunks of data, so you should allocate slightly more space than  you actually need and monitor the rate at which the snapshot data is growing so you can avoid running out of space\n\n*   **`thinpool`** (*optional*): create thin pool or thin logical volume or both\n\n\t\tExample: ReadAheadSectors, auto, none\n\n\t>note: Specifying the optional argument --size will cause the creation of the thin pool logical volume. Specifying the optional argument --virtualsize will cause the creation of the thin logical volume from given thin pool volume. Specifying  both arguments will cause the creation of both thin pool and thin volume using this pool. Requires device mapper kernel driver for thin provisioning from kernel 3.2 or newer\n\n*   **`type`** (*optional*): create a logical volume that uses the specified segment type, (e.g. `raid5`, `mirror`, `snapshot`, `thin`, `thin-pool`)\n\n\t>note: Many segment types have a commandline switch alias that will enable their use (-s is an alias for --type snapshot).   However, this argument must be used when no existing commandline switch alias is available for the desired type, as is the  case with error, zero, raid1, raid4, raid5 or raid6\n\n*   **`virtual-size`** (*optional*): Create a sparse device of the given size (in MB by default) using a snapshot or thinly provisioned device when thin pool is specified.\n\n\t>note: Anything written to the device will be returned when reading from it. Reading from other areas of the device will return blocks of zeros. Virtual snapshot is implemented by creating a hidden virtual device of the requested size using the zero target. A suffix of _vorigin is used for this device.\n\n*   **`zero`** (*optional*): whether to set zero of the first KB of data in the new LV or not, by default ***`true`***\n\n\t>note: Volume will not be zeroed if read only flag is set.\n\n\t>Snapshot volumes are zeroed always.\n\n*   **`autobackup`** (*optional*): whether to metadata should be backed up automatically after a change or not, by default ***`true`***\n\n\t>note: You are strongly advised not to disable this! See vgcfgbackup(8)\n\n*   **`tag`** (*optional*): add the tag to this VG\n\n\t>note: A tag is a word that can be used to group LVM2 objects of the same type together. Tags can be given on the command line in place of PV, VG or LV arguments. Tags should be prefixed with @ to avoid ambiguity. Each tag is expanded by replacing  it with all objects possessing that tag which are of the type expected by its position on the command line. PVs can only possess tags while they are part of a Volume Group: PV tags are discarded if the PV is removed from the VG. As an example, you could tag some LVs as database and others as userdata and then activate the database ones with lvchange -ay @database. Objects can possess multiple  tags  simultaneously. Only the new LVM2 metadata format supports tagging: objects using the LVM1 metadata format cannot be tagged because the on-disk format does not support it. Characters allowed in tags are: A-Z a-z 0-9 _ + . - and as of version 2.02.78 the following characters are also accepted: / = ! : # &\n\n*   **`allocation-policy`** (*optional*): specify the allocation policy\n\n\t\tExample: contiguous, cling, normal, anywhere or inherit\n\n\t>note: When a command needs to allocate Physical Extents from the Volume Group, the allocation policy controls how they are chosen. Each Volume Group and Logical Volume has an allocation policy defined. The default for a Volume Group is normal which applies common-sense rules such as not placing parallel stripes on the same Physical Volume. The default for a Logical Volume is inherit which applies the same policy as for the Volume Group.  These policies can be changed using lvchange(8) and vgchange(8) or overridden on the command line of any command that performs allocation. The contiguous policy requires that new  Physical Extents be placed adjacent to existing Physical Extents. The cling policy places new Physical Extents on the same Physical Volume as existing Physical Extents in the same stripe of the Logical Volume. If there are sufficient free Physical Extents to satisfy an allocation request but normal doesn't use them, anywhere will - even if that reduces performance by placing two stripes on the same Physical Volume\n\t\t\t\t"
             }
-        }, 
+        },
         "mesos master": {
-            "module": "linux.mesos.master", 
+            "module": "linux.mesos.master",
             "parameter": {
                 "cluster_name": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "framework": {
                     "option": [
                         "marathon"
-                    ], 
-<<<<<<< HEAD
-                    "required": true, 
-=======
-                    "required": false, 
->>>>>>> develop
-                    "type": "array", 
+                    ],
+                    "required": false,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "hostname": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "master_ip": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": false
-                }, 
+                },
                 "masters_addresses": {
-                    "required": true, 
-                    "type": "dict", 
+                    "required": true,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "server_id": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
-<<<<<<< HEAD
-                "en": "\n### Description\nRuns a Mesos Master instance\n\n### Parameters\n\n*   **`cluster_name`** (*required*): Name of the Mesos cluster\n\n\t\texample:\n\t\t\tMesos Cluster\n\n*   **`server_id`** (*required*): ID of the Mesos Master server\n\n\t\texample:\n\t\t\t1\n\t\t\t2\n\n*   **`masters_addresses`** (*required*): IPs/hostnames of the Mesos Master servers. If no hostname is given, the ip address will be used by default as hostname.\n\n\t\texample:\n\t\t\t@{master1.PrivateIpAddress}:    master1\n\t\t\t@{master2.PrivateIpAddress}:    master2\n\t\t\t@{master3.PrivateIpAddress}:\n\n*   **`hostname`** (*optional*): Hostname of the Mesos Master server instance\n\n\t\texample:\n\t\t\tmaster1\n\n*   **`framework`** (*optional*): Framework to install on top of Mesos\n\n\t\texample:\n\t\t\tmarathon\n"
-=======
+                "cn": "",
                 "en": "\n### Description\nRuns a Mesos Master instance\n\n### Parameters\n\n*   **`cluster_name`** (*required*): Name of the Mesos cluster\n\n\t\texample:\n\t\t\tMesos Cluster\n\n*   **`server_id`** (*required*): ID of the Mesos Master server\n\n\t\texample:\n\t\t\t1\n\t\t\t2\n\n*   **`masters_addresses`** (*required*): IPs/hostnames of the Mesos Master servers. If no hostname is given, the ip address will be used by default as hostname.\n\n\t\texample:\n\t\t\t@{master1.PrivateIpAddress}:    master1\n\t\t\t@{master2.PrivateIpAddress}:    master2\n\t\t\t@{master3.PrivateIpAddress}:\n\n*   **`hostname`** (*optional*): Hostname of the Mesos Master server instance\n\n\t\texample:\n\t\t\tmaster1\n\n*   **`framework`** (*optional*): Framework to install on top of Mesos\n\n\t\texample:\n\t\t\tmarathon\n\t\t\t"
->>>>>>> develop
             }
-        }, 
+        },
         "mesos slave": {
-            "module": "linux.mesos.slave", 
+            "module": "linux.mesos.slave",
             "parameter": {
                 "attributes": {
-                    "required": true, 
-                    "type": "dict", 
+                    "required": true,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "masters_addresses": {
-                    "required": true, 
-                    "type": "dict", 
+                    "required": true,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "slave_ip": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": false
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nRuns a Mesos Slave instance\n\n### Parameters\n\n*   **`masters_addresses`** (*required*): IPs/hostnames of the Mesos Master servers. If no hostname is given, the ip address will be used by default as hostname.\n\n\t\texample:\n\t\t\t@{master1.PrivateIpAddress}:    master1\n\t\t\t@{master2.PrivateIpAddress}:    master2\n\t\t\t@{master3.PrivateIpAddress}:\n\n*   **`attributes`** (*required*): Mesos slave attributes (see Mesos documentation)\n\n\t\texample:\n\t\t\tsubnet: web\n\t\t\tpublic: true\n\t\t\track:   rack-5\n\t\t\tasg:    asg0\n\t\t\tzone:   all\n"
             }
-        }, 
+        },
         "mount": {
-            "distro": null, 
-            "module": "linux.mount", 
+            "distro": null,
+            "module": "linux.mount",
             "parameter": {
                 "device": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "dump": {
-                    "default": "0", 
-                    "required": false, 
+                    "default": "0",
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "filesystem": {
                     "option": [
-                        "ext2", 
-                        "ext3", 
-                        "ext4", 
-                        "btrfs", 
-                        "iso9660", 
-                        "ntfs", 
-                        "reiserfs", 
-                        "xfs", 
+                        "ext2",
+                        "ext3",
+                        "ext4",
+                        "btrfs",
+                        "iso9660",
+                        "ntfs",
+                        "reiserfs",
+                        "xfs",
                         "zfs"
-                    ], 
-                    "required": true, 
+                    ],
+                    "required": true,
                     "type": "line"
-                }, 
+                },
                 "fstab": {
-                    "default": "False", 
-                    "required": false, 
-                    "type": "bool", 
+                    "default": "False",
+                    "required": false,
+                    "type": "bool",
                     "visible": true
-                }, 
+                },
                 "opts": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "pass": {
-                    "default": "0", 
-                    "required": false, 
+                    "default": "0",
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "path": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage mount points\n\n### Parameters\n\n*   **`path`** (*required*): the path of the mount point\n\n*   **`device`** (*required*): the device name\n\n*   **`filesystem`** (*required*): the file system type of the device\n\n*   **`fstab`** (*optional*): whether to save in /etc/fstab or not, by default ***`false`***\n\n*   **`opts`** (*optional*): a list of options for /etc/fstab, see *`fstab(8)`*\n\n\t>note: this parameter applies only if `fstab is `true`\n\n*   **`dump`** (*optional*): the dump value in /etc/fstab, see *`fstab(8)`*\n\n\t>note: this parameter applies only if `fstab` is `true`\n\n*   **`pass`** (*optional*): the pass value in /etc/fstab, see *`fstab(8)`*\n\n\t>note: this parameter applies only if `fstab` is `true`\n\t\t\t\t"
             }
-        }, 
+        },
         "puppet agent": {
-            "distro": null, 
-            "module": "linux.puppet.agent", 
+            "distro": null,
+            "module": "linux.puppet.agent",
             "parameter": {
                 "arguments": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "server": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "version": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nRun Puppet agent. This module will connect to the server specified in `server` and act as a regular Puppet client. Note that, as Puppet require, you need to use the name of the server, not its IP address. You need to be able to resolve this name, either via DNS resolution or host file.\n\nThis module is useful if you already have a Puppet server running and you want to control the client recipe execution on your instance using VisualOps.\n\nNote: Puppet module is incompatible with CentOS 6.4\n\n### Parameters\n\n*   **`server`** (*required*): Server to connect to\n\n\t\texample:\n\t\t\ttags:       puppet.mydomain.com\n\n*   **`arguments`** (*optional*): Arguments to the round, passed to the puppet binary (see puppet documentation). You can use these arguments to specify a modules directory, or some specific classes to run, for example.\n\n\t\texample:\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version. Leave empty for latest version.\n\n\t\texample:\n\t\t\t3.7.3\n\t\t\t\t"
             }
-        }, 
+        },
         "puppet apply": {
-            "distro": null, 
-            "module": "linux.puppet.apply", 
+            "distro": null,
+            "module": "linux.puppet.apply",
             "parameter": {
                 "arguments": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "manifests": {
-                    "required": true, 
-                    "type": "array", 
+                    "required": true,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "version": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nApply a Puppet manifest. This module will run independently, and doesn't require to connect to any Puppet server.\n\n`puppet apply` will run the manifests files set in the `manifests` parameter.\n\nNote: Puppet module is incompatible with CentOS 6.4\n\n### Parameters\n\n*   **`manifests`** (*required*): Manifest(s) to run\n\n\t\texample:\n\t\t\t/path/to/manifest1\n\t\t\t/path/to/manifest2\n\n*   **`arguments`** (*optional*): Arguments to the manifest, passed to the Puppet binary (see Puppet documentation). You can use these arguments to specify a modules directory, or some specific classes to run, for example.\n\n\t\texample:\n\t\t\tmodulepath: /a/b/modules\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version to install. Leave empty for latest version.\n\n\t\texample:\n\t\t\t3.7.3\n\t\t\t\t"
             }
-        }, 
+        },
         "puppet run": {
-            "distro": null, 
-            "module": "linux.puppet.run", 
+            "distro": null,
+            "module": "linux.puppet.run",
             "parameter": {
                 "arguments": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "version": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nRun a Puppet round. This module is useful in case you already have a custom configuration for the puppet client, and simply want to run a round. No argument is required. If you don't have any specific requirement and want to apply a Puppet manifest or connect to a Puppet server, this module is probably not the one you want to use.\n\nNote: Puppet module is incompatible with CentOS 6.4\n\n### Parameters\n\n*   **`arguments`** (*optional*): Arguments to the round, passed to the Puppet binary (see Puppet documentation). You can use these arguments to specify a modules directory, or some specific classes to run, for example.\n\n\t\texample:\n\t\t\ttags:       basefiles::edit,apache::server\n\n*   **`version`** (*optional*): Puppet version. Leave empty for latest version.\n\n\t\texample:\n\t\t\t3.7.3\n\t\t\t\t"
             }
-        }, 
+        },
         "pv": {
-            "distro": null, 
-            "module": "linux.lvm.pv", 
+            "distro": null,
+            "module": "linux.lvm.pv",
             "parameter": {
                 "data-alignment": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "data-alignment-offset": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "force": {
-                    "default": false, 
-                    "required": false, 
+                    "default": false,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "label-sector": {
-                    "default": "LVM2", 
-                    "required": false, 
+                    "default": "LVM2",
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "metadata-copies": {
                     "option": [
-                        "0", 
-                        "1", 
+                        "0",
+                        "1",
                         "2"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "metadata-ignore": {
-                    "dfault": false, 
-                    "required": false, 
+                    "dfault": false,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "metadata-size": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "metadata-type": {
-                    "default": "lvm2", 
+                    "default": "lvm2",
                     "option": [
-                        "lvm1", 
+                        "lvm1",
                         "lvm2"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "no-restore-file": {
-                    "default": true, 
-                    "required": false, 
+                    "default": true,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "path": {
-                    "required": true, 
-                    "type": "array", 
+                    "required": true,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "pv-size": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "restore-file": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "uuid": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "zero": {
-                    "default": true, 
-                    "required": false, 
+                    "default": true,
+                    "required": false,
                     "type": "bool"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage LVM physical volume (PV)\n\n### Parameters\n\n*   **`path`** (*required*): the path of the device or partition\n`\n\t\tExample: /dev/sdc4, /dev/sde\n\n*   **`force`** (*optional*): force to create the PV without any confirmation, by default ***`false`***\n\n\t>note: You can not recreate (reinitialize) a PV belonging to an existing volume group.\n\n\n*   **`uuid`** (*optional*): specify the uuid for the device\n\n\t>note: Without this option, a random uuid will be generated. All of your PVs must have unique uuids. You need to use this option before restoring a backup of LVM metadata onto a replacement device - see vgcfgrestore(8). As such, use of restore file is compulsory unless the norestorefile is used.\n\n\n*   **`zero`** (*optional*): whether or the first 4 sectors (2048 bytes) of the device should be wiped or not, by default ***`true`***\n\n\t>note: If this option is not given, the default is to wipe these sectors unless either or both of the --restorefile or --uuid options were specified.\n\n*   **`data-alignment`** (*optional*): align the start of the data to a multiple of this number\n\n\t>note: You should also specify an appropriate \"PV size\" when creating the Volume Group (VG). To see the location of the first Physical Extent of an existing Physical Volume use pvs -o +pe_start. It will be a multiple of the requested alignment. In addition it may be shifted by alignment_offset from data_alignment_offset_detection (if enabled in lvm.conf(5)) or --dataalignmentoffset.\n\n*   **`data-alignment-offset`** (*optional*): shift the start of the data area by this additional number\n\n*   **`metadata-size`** (*optional*): the approximate amount of space to be set aside for each metadata area\n\n\t>note: The size you specify may get rounded\n\n*   **`metadata-type`** (*optional*): specify which type of on-disk metadata to use, by default ***`lvm2`***\n\n\t\tExample: lvm1, lvm2, 1, 2\n\n\t>note: lvm1 or lvm2 can be abbreviated to 1 or 2 respectively. The default (lvm2) can be changed by setting format in the global section of the config file.\n\n*   **`metadata-copies`** (*optional*): the number of metadata areas to set aside on each PV\n\n\t\tExample: currently this can be 0, 1 or 2\n\n\t>note: If set to 2, two copies of the volume group metadata are held on the PV, one at the front of the PV and one at the end. If set to 1 (the default), one copy is kept at the front of the PV (starting in the 5th sector). If set to 0, no copies are kept on this PV - you might wish to use this with VGs containing large numbers of PVs. But if you do this and then later use vgsplit(8) you must ensure that each VG is still going to have a suitable number of copies of the metadata after the split!\n\n*   **`metadata-ignore`** (*optional*): whether to ignore metadata areas on this PV or not, by default ***`false`***\n\n\t>note: This setting can be changed with pvchange. If metadata areas on a physical volume are ignored, LVM will not store metadata in the metadata areas present on this Physical Volume. Metadata areas cannot be created or extended after Logical Volumes have been allocated on the device. If you do not want to store metadata on this device, it is still wise always to allocate a metadata area in case you need it in the future and to use this option to instruct LVM2 to ignore it.\n\n*   **`restore-file`** (*optional*):\n\n\t>note: In conjunction with \"uuid\", this extracts the location and size of the data on the PV from the file (produced  by  vgcfgbackup) and ensures that the metadata that the program produces is consistent with the contents of the file i.e. the physical extents will be in the same place and not get overwritten by new metadata. This provides a mechanism to upgrade the metadata format or to add/remove metadata areas. Use with care. See also vgconvert(8).\n\n*   **`no-restore-file`** (*optional*):\n\n\t>note: In conjunction with \"uuid\", this allows a uuid to be specified without also requiring that a backup of the metadata be provided.\n\n*   **`label-sector`** (*optional*):\n\n\t>note: By default the PV is labelled with an LVM2 identifier in its second sector (sector 1). This lets you use a different sector near the start of the disk (between 0 and 3 inclusive - see LABEL_SCAN_SECTORS in the source). Use with care.\n\n*   **`pv-size`** (*optional*):\n\n\t>>note: Overrides the automatically-detected size of the PV, use with care\n\t\t\t\t"
             }
-        }, 
+        },
         "raid": {
-            "distro": null, 
-            "module": "linux.raid", 
+            "distro": null,
+            "module": "linux.raid",
             "parameter": {
                 "arguments": {
-                    "required": false, 
-                    "type": "dict", 
+                    "required": false,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "device-name": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "devices": {
-                    "required": true, 
-                    "type": "array", 
+                    "required": true,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "level": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nCreate and ensure a Raid array is present.\n\nSee `mdadm` documentation for more details.\n\n### Parameters\n\n*   **`device-name`** (*required*): Name of the raid array\n\n\t\texample:\n\t\t\t/dev/md0\n\n*   **`level`** (*required*): The RAID level to use when creating the raid. Options are: linear, raid0, 0, stripe, raid1, 1, mirror, raid4, 4, raid5, 5, raid6, 6, raid10, 10, multipath, mp, faulty, container. Obviously some of these are synonymous.\n\n\t\texample:\n\t\t\traid1\n\n*   **`devices`** (*required*): A list of devices used to build the array.\n\n\t\texample:\n\t\t\t/dev/xvdf, /dev/xvdg\n\n*   **`arguments`** (*optional*): Additional arguments passed to the mdadm binary (see mdadm documentation). You can use these arguments to specify chunk size, for example.\n\n\t\texample:\n\t\t\tchunk:\t256\n\t\t\t\t"
             }
-        }, 
+        },
         "rpm key": {
             "distro": [
-                "amazon", 
-                "redhat", 
+                "amazon",
+                "redhat",
                 "centos"
-            ], 
-            "module": "linux.rpm.key", 
+            ],
+            "module": "linux.rpm.key",
             "parameter": {
                 "path": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage a rpm key\n\n### Parameters\n\n* **`path`** (*required*): the location of the key\n\n\t\texample: /path/to/YOUR-RPM-GPG-KEY\n\t\t\t\t"
             }
-        }, 
+        },
         "service": {
-            "distro": null, 
-            "module": "linux.service", 
+            "distro": null,
+            "module": "linux.service",
             "parameter": {
                 "name": {
-                    "required": true, 
-                    "type": "dict", 
+                    "required": true,
+                    "type": "dict",
                     "visible": true
-                }, 
+                },
                 "watch": {
-                    "required": false, 
-                    "type": "array", 
+                    "required": false,
+                    "type": "array",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nensure the specified services are running, and trigger service restart if necessary\n\n### Parameters\n\n*   **`name`** (*required*): the list of the service names to be run. The value represents the action if one of the watched file has changed (if applicable):\n\n\t- ***`<null>`*** *`default`*: try to reload the service. If reload fails, restart the service.\n\t- ***`<command>`***: path to a command to execute\n\t- ***`reload`***: 'reload' the service\n\t- ***`restart`***: 'restart' the service\n\n\n\t\texample: httpd: bash /opt/scripts/nginx_mysql_restart.sh, mysqld: restart\n\n\n*   **`watch`** (*optional*): watch a list of files, execute action if any of them is modified\n\n\t\texample: /etc/nginx/nginx.conf, /etc/my.cnf\n\t\t\t\t"
             }
-        }, 
+        },
         "supervisord": {
-            "distro": null, 
-            "module": "linux.supervisord", 
+            "distro": null,
+            "module": "linux.supervisord",
             "parameter": {
                 "config": {
-                    "required": true, 
+                    "required": true,
                     "type": "line"
-                }, 
+                },
                 "name": {
-                    "required": true, 
-                    "type": "array", 
+                    "required": true,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "watch": {
-                    "required": false, 
-                    "type": "array", 
+                    "required": false,
+                    "type": "array",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nensure supervisord and the specified services are running, and trigger supervisord to restart the services if necessary\n\n### Parameters\n\n*   **`config`** (*required*): the path of supervisord configuration file\n\n\t\texample: /etc/supervisord.conf\n\n\t\t>note: When this file is modified, supervisord will be restarted, which causes all managed services to be restarted\n\n*   **`name`** (*required*): the name list of the services to be running (see below)\n\n\t\texample: httpd, mysqld\n\n*   **`watch`** (*optional*): watch a list of files, restart the service if any of them is modified\n\n\t\texample: /etc/nginx/nginx.conf\n\t\t\t\t"
             }
-        }, 
+        },
         "symlink": {
-            "distro": null, 
-            "module": "linux.symlink", 
+            "distro": null,
+            "module": "linux.symlink",
             "parameter": {
                 "absent": {
-                    "default": false, 
-                    "required": false, 
-                    "type": "bool", 
+                    "default": false,
+                    "required": false,
+                    "type": "bool",
                     "visible": true
-                }, 
+                },
                 "group": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "source": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "target": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "user": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage a symbolic link\n\n### Parameters\n\n*   **`source`** (*required*): the path to link to\n\n\t\texample: /data/\n\n* **`target`** (*required*): the path of the symlink\n\n\t\texample: /mnt/data\n\n\t>note: If the target's parent path does not exist, this state will fail.\n\n* **`user`** (*optional*): the user name of the link owner\n\n\t\texample: root\n\n\t>note: If specified, the link owner will be set to this user. Otherwise, the result depends on whether the link exists or not. If existed, the link owner will be left unchanged, otherwise default: root\n\n* **`group`** (*optional*): the group name of the link owner\n\n\t\texample: root\n\n\t>note: If specified, the link will be set to this group. Otherwise, the result depends on whether the link exists or not. If existed, the link group will be left unchanged; otherwise default: root\n\n* **`mode`** (*optional*): the link mode\n\n\t\texample: 0777\n\n\t>note: If specified, the link will be set to this mode. Otherwise, the result depends on whether the link exists or not. If existed, the link mode will be left unchanged, otherwise default: 0777\n\n* **`absent`** (*optional*): ensure the link is absent, by default ***`false`***\n\n\t>note: If True, all other parameters are ignored\n\t\t\t\t"
             }
-        }, 
+        },
         "user": {
-            "distro": null, 
-            "module": "linux.user", 
+            "distro": null,
+            "module": "linux.user",
             "parameter": {
                 "fullname": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "gid": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "groups": {
-                    "required": false, 
+                    "required": false,
                     "type": "array"
-                }, 
+                },
                 "home": {
-                    "default": "/home/$username", 
-                    "required": false, 
-                    "type": "line", 
+                    "default": "/home/$username",
+                    "required": false,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "no-login": {
-                    "default": false, 
-                    "required": false, 
-                    "type": "bool", 
+                    "default": false,
+                    "required": false,
+                    "type": "bool",
                     "visible": true
-                }, 
+                },
                 "password": {
-                    "required": true, 
+                    "required": true,
                     "type": "line"
-                }, 
+                },
                 "system-account": {
-                    "default": false, 
-                    "required": false, 
-                    "type": "bool", 
+                    "default": false,
+                    "required": false,
+                    "type": "bool",
                     "visible": true
-                }, 
+                },
                 "uid": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "username": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage a user\n\n### Parameters\n\n*   **`username`** (*required*): the user name\n\n*   **`password`** (*required*): the encrypted password\n\n\t>note: use `openssl passwd -salt <salt> -1 <plaintext>` to generate the password hash\n\n*   **`fullname`** (*optional*): the user's full name\n\n*   **`uid`** (*optional*): the user id\n\n*   **`gid`** (*optional*): the group id\n\n*   **`home`** (*optional*): the user's home directory, by default `/home/$username`\n\n\t>note: if the directory already exists, the uid and gid of the directory will be set to this user; otherwise, the directory (and its parent directories) will be created, with the uid and gid\n\n*   **`system-account`** (*optional*): whether to create a system account or not (see `useradd(8)`), by default: `false`\n\n*   **`no-login`** (*optional*): whether to allow user to login or not, by default `false`\n\n*   **`groups`** (*optional*): a list of groups of the user\n\n\t>note: if pass in an empty list, all groups of the user will be removed except the defaut one\n\t\t\t\t"
             }
-        }, 
+        },
         "vg": {
-            "distro": null, 
-            "module": "linux.lvm.vg", 
+            "distro": null,
+            "module": "linux.lvm.vg",
             "parameter": {
                 "allocation-policy": {
                     "option": [
-                        "anywhere", 
-                        "contiguous", 
-                        "cling", 
-                        "inherit", 
+                        "anywhere",
+                        "contiguous",
+                        "cling",
+                        "inherit",
                         "normal"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "autobackup": {
-                    "default": false, 
-                    "required": false, 
+                    "default": false,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "clustered": {
-                    "default": true, 
-                    "required": false, 
+                    "default": true,
+                    "required": false,
                     "type": "bool"
-                }, 
+                },
                 "max-lv-number": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "max-pv-number": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "metadata-copies": {
                     "option": [
-                        "unmanaged", 
+                        "unmanaged",
                         "all"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "metadata-type": {
-                    "default": "lvm2", 
+                    "default": "lvm2",
                     "option": [
-                        "lvm1", 
+                        "lvm1",
                         "lvm2"
-                    ], 
-                    "required": false, 
+                    ],
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "name": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "path": {
-                    "required": true, 
-                    "type": "array", 
+                    "required": true,
+                    "type": "array",
                     "visible": true
-                }, 
+                },
                 "pe-size": {
-                    "default": "4m", 
-                    "required": false, 
+                    "default": "4m",
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "tag": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage LVM volume group (VG)\n\n### Parameters\n\n\n*   **`name`** (*required*): the VG name\n\n*   **`path`** (*required*): a list of block special devices\n\n\t\tExample: /dev/sdk1, /dev/sdl1\n\n*   **`clustered`** (*optional*): whether to enable the clustered locking on the VG or not, by default ***`true`***\n\n\t>note: If the new VG is shared with other nodes in the cluster, need to enable this option. If the new VG contains only local disks that are not visible on the other nodes, this option must be turned off. If the cluster infrastructure is unavailable on a particular node at a particular time, you may still be able to use such VGs\n\n*   **`max-lv-number`** (*optional*): specify the maximum number of LVs allowed in this VG\n\n\t>note: For VGs with  metadata in lvm1 format, the limit and default value is 255. If the metadata uses lvm2 format, the default value is 0 which removes this restriction: there is then no limit\n\n*   **`max-pv-number`** (*optional*): specify the maximum number of PVs that can belong to this VG\n\n\t>note: For VGs with metadata in lvm1 format, the limit and default value is 255. If the metadata uses lvm2 format, the value 0 removes this restriction: there is then no limit\n\n*   **`metadata-type`** (*optional*): specify which type of on-disk metadata to use, by default ***`lvm2`***\n\n\t\tExample: lvm1, lvm2, 1, 2\n\n\t>note:\n\t\t\tlvm1 or lvm2 can be abbreviated to 1 or 2 respectively. The default (lvm2) can be changed by setting format\n\t\t\tin the global section of the config file.\n\n*   **`metadata-copies`** (*optional*): specify the desired number of metadata copies in the VG\n\n\t\tExample: unmanaged, all\n\n\t>note: If set to a non-zero value, LVM will automatically manage the 'metadata ignore' option on the PVs (see pvcreate(8) or pvchange --metadataignore) in order to achieve the copies of metadata. If set to unmanaged, LVM will not automatically manage the 'metadata ignore' option. If set to all, LVM will first clear all of the 'metadata ignore' option on all metadata areas in the VG, then set the value to unmanaged. This option is useful for VGs containing large numbers of PVs  with metadata  as it may be used to minimize metadata read and write overhead. The default value is unmanaged\n\n*   **`pe-size`** (*optional*): specify the physical extent size on PVs of this VG\n\n\t\tExample: bBsSkKmMgGtTpPeE\n\n   \t>note: A size suffix (k for kilobytes up to t for terabytes) is optional, megabytes is the default if no suffix is present. The default is 4 MiB and it must be at least 1 KiB and a power of 2.\n\n\t>Once this value has been set, it is difficult to change it without recreating the volume group which would involve  backing up and restoring data on any logical volumes. However, if no extents need moving for the new value to apply, it can be altered using vgchange -s.\n\n\t>If the volume group metadata uses lvm1 format, extents can vary in size from 8KiB to 16GiB and there is a limit of 65534 extents in each logical volume. The default of 4 MiB leads to a maximum logical volume size of around 256GiB.\n\n\t>If the volume group metadata uses lvm2 format those restrictions do not apply, but having a large number of extents will slow down the tools but have no impact on I/O performance to the logical volume. The smallest PE is 1KiB\n\n\t>The 2.4 kernel has a limitation of 2TiB per block device.\n\n*   **`autobackup`** (*optional*): whether to metadata should be backed up automatically after a change or not, by default ***`true`***\n\n\t>note: You are strongly advised not to disable this! See vgcfgbackup(8)\n\n*   **`tag`** (*optional*): add the tag to this VG\n\n\t>note: A tag is a word that can be used to group LVM2 objects of the same type together. Tags can be given on the command line in place of PV, VG or LV arguments. Tags should be prefixed with  @ to avoid ambiguity. Each tag is expanded by replacing it with all objects possessing that tag which are of the type expected by its position on the command line. PVs can only possess tags while they are part of a Volume Group: PV tags are discarded if the PV is removed from the VG. As an example, you could tag some LVs as database and others as userdata and then activate the  database  ones  with  lvchange  -ay @database. Objects can possess multiple tags simultaneously. Only the new LVM2 metadata format supports tagging: objects using the LVM1 metadata format cannot be tagged because the on-disk format does not support it. Characters allowed in tags are: A-Z a-z 0-9 _ + . - and as of version 2.02.78 the following characters are also accepted: / = ! : # &\n\n*   **`allocation-policy`** (*optional*): specify the allocation policy\n\n\t\tExample: contiguous, cling, normal, anywhere or inherit\n\n\t>note: When a command needs to allocate Physical Extents from the Volume Group, the allocation policy controls how they are chosen. Each Volume Group and Logical Volume has an allocation policy defined. The default for a Volume Group is normal which applies common-sense rules such as not placing parallel stripes on the same Physical Volume. The default for a Logical Volume is inherit which applies the same policy as for the Volume Group. These policies can be changed using lvchange(8) and vgchange(8) or overridden on the command line of any command that performs allocation. The contiguous policy requires that new Physical Extents be placed adjacent to existing Physical Extents. The cling policy places new Physical Extents on the same Physical Volume as existing Physical Extents in the same stripe of the Logical Volume. If there are sufficient free Physical Extents to satisfy an allocation request but normal doesn't use them, anywhere will - even if that reduces performance by placing two stripes on the same Physical Volume.\n\t\t\t\t"
             }
-        }, 
+        },
         "yum pkg": {
             "distro": [
-                "amazon", 
-                "redhat", 
+                "amazon",
+                "redhat",
                 "centos"
-            ], 
-            "module": "linux.yum.package", 
+            ],
+            "module": "linux.yum.package",
             "parameter": {
                 "name": {
-                    "default": "", 
-                    "required": true, 
-                    "type": "dict", 
+                    "default": "",
+                    "required": true,
+                    "type": "dict",
                     "value": [
-                        "latest", 
+                        "latest",
                         "removed"
-                    ], 
+                    ],
                     "visible": true
-                }, 
+                },
                 "repo": {
-                    "required": false, 
+                    "required": false,
                     "type": "line"
-                }, 
+                },
                 "verify-gpg": {
-                    "default": true, 
-                    "required": false, 
+                    "default": true,
+                    "required": false,
                     "type": "bool"
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage yum packages\n\n### Parameters\n\n*\t**`name`** (*required*): the package names and versions. You can specify multiple pakages. The following values can be used for package version:\n\t- ***`<null>`*** *`default`*: ensure the package is installed. If not, it will install the latest version available of all YUM repos available\n\t- ***`<version>`***: ensure the package is installed, at the version specified. If the version in unavailable of all YUM repos available on the host, the state will fail\n\t- **`<uri>`**: ensure the package will be fetched from the following uri. Warning: if one uri is specified, only packages with uri specified will be installed. *uri* can be a remote or local path to a rpm package.\n\t- **`latest`**: ensure the package is installed at the latest version. If a newer version is available of all YUM repos available on the host, will do upgrade automatically\n\t- **`removed`**: ensure the package is absent\n\t- **`purged`**: ensure the package is absent, and also delete all related configuration data of the package\n\n* **`repo`** (*optional*): the repo name, which you want to use for installing the packages\n\n\t\texample: epel\n\n* **`verify-gpg`** (*optional*): verify the package's GPG siganature, by default ***`true`***\n\t\t\t\t"
             }
-        }, 
+        },
         "yum repo": {
             "distro": [
-                "amazon", 
-                "redhat", 
+                "amazon",
+                "redhat",
                 "centos"
-            ], 
-            "module": "linux.yum.repo", 
+            ],
+            "module": "linux.yum.repo",
             "parameter": {
                 "content": {
-                    "required": false, 
+                    "required": false,
                     "type": "text"
-                }, 
+                },
                 "name": {
-                    "required": true, 
-                    "type": "line", 
+                    "required": true,
+                    "type": "line",
                     "visible": true
-                }, 
+                },
                 "rpm-url": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nmanage a yum repo\n\n### Parameters\n\n* **`name`** (*required*): the repo name\n\n\t\t example: epel\n\n* **`content`** (*optional*): the content of the repo configuration file\n\n\t\texample:\n\t\t\t[10gen]\n\t\t\tname=10gen Repository\n\t\t\tbaseurl=http://downloads-distro.mongodb.org/repo/redhat/os/i686\n\t\t\tgpgcheck=0\n\t\t\tenabled=1\n\n* **`rpm-url`** (*optional*): the repo rpm url (if no content specified)\n\n\t\texample: http://mirrors.hustunique.com/epel/6/i386/epel-release-6-8.noarch.rpm\n\t\t\t\t"
             }
         }
-    }, 
+    },
     "meta": {
         "#": {
-            "module": "meta.comment", 
+            "module": "meta.comment",
             "parameter": {
                 "comment": {
-                    "required": false, 
-                    "type": "line", 
+                    "required": false,
+                    "type": "line",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\n\tUsed for comments\n\t\t\t\t"
             }
-        }, 
+        },
         "wait": {
-            "module": "meta.wait", 
+            "module": "meta.wait",
             "parameter": {
                 "state": {
-                    "required": true, 
-                    "type": "state", 
+                    "required": true,
+                    "type": "state",
                     "visible": true
                 }
-            }, 
+            },
             "reference": {
-                "cn": "", 
+                "cn": "",
                 "en": "\n### Description\nwait for remote state(s) to complete. If any is not done yet, it will block the host on the waiting state.\n\n### Parameters\n\n*   **`state`** (*required*): one or multiple remote states to be waited\n\n\t\texample:\n\t\t\t@{host.state.1}\n\t\t\t\t\t"
             }
         }
-    }, 
+    },
     "windows": {}
 }
