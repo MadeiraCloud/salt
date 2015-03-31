@@ -176,10 +176,10 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname
         "content":master_ip,
     },{
         "name":"/etc/marathon/conf/master",
-        "content":me_zk+"/mesos",
+        "content":ma_zk+"/mesos",
     },{
         "name":"/etc/marathon/conf/zk",
-        "content":me_zk+"/marathon",
+        "content":ma_zk+"/marathon",
     },{
         "name":"/etc/hostname",
         "content":hostname,
