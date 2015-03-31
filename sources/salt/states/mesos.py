@@ -84,8 +84,8 @@ def set_files(files):
     return res,comment
 
 # run a command
-def run_cmd(cmd, if_absent):
-    if os.path.exists(if_absent):
+def run_cmd(cmd, if_absent=None):
+    if if_absent and os.path.exists(if_absent):
         return _valid()
     act = __salt__['cmd.run_stdall']
     try:
