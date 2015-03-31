@@ -167,7 +167,7 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname
         "content":master_ip,
     },{
         "name":"/etc/mesos-master/hostname",
-        "content":master_hostname,
+        "content":hostname,
     },{
         "name":"/etc/mesos-master/cluster",
         "content":cluster_name,
