@@ -113,7 +113,7 @@ def run_service(name, watch_list, state_id):
     for watch in watch_list:
         cs = Checksum(watch,state_id,WATCH_PATH)
         if cs.update(edit=False,tfirst=True):
-            ret = service.mod_watch(name)
+            ret = service.mod_watch(name,restart=True)
             if not ret.get("result"):
                 comment += "Unable to restart service %s after change triggered on file %s"%(name,watch)
                 return False,comment
