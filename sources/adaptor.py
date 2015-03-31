@@ -1140,9 +1140,9 @@ class StateAdaptor(object):
                 if 'require_in' in self.mod_map[module]:
                     req_in_state = self.__get_require_in(self.mod_map[module]['require_in'], parameter)
                     if req_in_state:
-                        for req_in_tag, req_in_value in req_in_state.iteritems():
-                            salt_states.append(dict(req_in_tag, req_in_value))
-                            # require_in.append({ next(iter(req_in_value)) : req_in_tag })
+                        salt_states.append(req_in_state)
+                        # for req_in_tag, req_in_value in req_in_state.iteritems():
+                        #     require_in.append({ next(iter(req_in_value)) : req_in_tag })
 
         except Exception, e:
             utils.log("DEBUG", "Generate salt states of id %s module %s exception:%s" % (step, module, str(e)), ("__salt", self))
@@ -1768,8 +1768,8 @@ class StateAdaptor(object):
             utils.log("DEBUG", "Expand states exception: %s" % str(e), ("__expand", self))
             raise StateException(str(e))
 
-        state_list.append(self.states)
-        self.states = state_list
+        # state_list.append(self.states)
+        # self.states = state_list
 
     def __get_tag(self, module, uid=None, step=None, name=None, state=None):
         """
@@ -1827,7 +1827,7 @@ class StateAdaptor(object):
                     the_require_state = self.__salt('require', module, parameter)
 
                     if the_require_state:
-                        require_state.append(the_require_state)
+                        require_state += the_require_state
         except Exception, e:
             utils.log("DEBUG", "Generate salt requisities exception: %s" % str(e), ("__get_require", self))
             raise StateException(str(e))
