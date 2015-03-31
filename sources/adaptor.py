@@ -1820,9 +1820,7 @@ class StateAdaptor(object):
                     the_require_state = self.__salt('require', module, parameter)
 
                     if the_require_state:
-                        # require_state.append(the_require_state)
-                        require_state += the_require_state
-
+                        require_state.append(the_require_state)
         except Exception, e:
             utils.log("DEBUG", "Generate salt requisities exception: %s" % str(e), ("__get_require", self))
             raise StateException(str(e))
