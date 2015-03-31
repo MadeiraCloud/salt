@@ -1005,7 +1005,7 @@ class StateAdaptor(object):
         i = 1
         for s_module, s_parameter in split_states:
             try:
-                self.states = {}
+                self.states = []
                 utils.log("INFO", "Begin to check module %s parameter %s" % (s_module, str(s_parameter)), ("convert", self))
                 s_module, s_parameter = self.__check_module(s_module, s_parameter)
 
@@ -1091,7 +1091,7 @@ class StateAdaptor(object):
 
                 # add require
                 utils.log("DEBUG", "Begin to generate requirity ...", ("__salt", self))
-                require = []
+                # require = []
                 if 'require' in self.mod_map[module]:
                     req_state = self.__get_require(self.mod_map[module]['require'], module, parameter)
                     if req_state:
@@ -1100,16 +1100,6 @@ class StateAdaptor(object):
                         #     for req_tag, req_value in item.iteritems():
                         #         salt_state[req_tag] = req_value
                         #         require.append({ next(iter(req_value)) : req_tag })
-
-                # add require in
-                utils.log("DEBUG", "Begin to generate require-in ...", ("__salt", self))
-                require_in = []
-                if 'require_in' in self.mod_map[module]:
-                    req_in_state = self.__get_require_in(self.mod_map[module]['require_in'], parameter)
-                    if req_in_state:
-                        for req_in_tag, req_in_value in req_in_state.iteritems():
-                            salt_state[req_in_tag] = req_in_value
-                            require_in.append({ next(iter(req_in_value)) : req_in_tag })
 
                 ## add watch, todo
                 utils.log("DEBUG", "Begin to generate watch ...",("__salt", self))
@@ -1126,8 +1116,8 @@ class StateAdaptor(object):
                 if addin:
                     module_state.append(addin)
 
-                if require:     module_state.append({ 'require' : require })
-                if require_in:  module_state.append({ 'require_in' : require_in })
+                # if require:     module_state.append({ 'require' : require })
+                # if require_in:  module_state.append({ 'require_in' : require_in })
 
                 # tag
                 uid = hashlib.md5(str(addin)).hexdigest()
@@ -1137,12 +1127,23 @@ class StateAdaptor(object):
                     self.mod_map[module]['type'] : module_state
                 }
 
-                # add env and sls
-                if 'require_in' in self.mod_map[module]:
-                    salt_state[tag]['__env__'] = 'base'
-                    salt_state[tag]['__sls__'] = 'visualops'
+                # # add env and sls
+                # if 'require_in' in self.mod_map[module]:
+                #     salt_state[tag]['__env__'] = 'base'
+                #     salt_state[tag]['__sls__'] = 'visualops'
 
                 salt_states.append(salt_state)
+
+                # add require in
+                utils.log("DEBUG", "Begin to generate require-in ...", ("__salt", self))
+                # require_in = []
+                if 'require_in' in self.mod_map[module]:
+                    req_in_state = self.__get_require_in(self.mod_map[module]['require_in'], parameter)
+                    if req_in_state:
+                        for req_in_tag, req_in_value in req_in_state.iteritems():
+                            salt_states.append(dict(req_in_tag, req_in_value))
+                            # require_in.append({ next(iter(req_in_value)) : req_in_tag })
+
         except Exception, e:
             utils.log("DEBUG", "Generate salt states of id %s module %s exception:%s" % (step, module, str(e)), ("__salt", self))
             raise StateException("Generate salt states exception")
@@ -1683,79 +1684,85 @@ class StateAdaptor(object):
         state_list = []
 
         try:
-            for tag, state in self.states.iteritems():
-                for module, chunk in state.iteritems():
+            for idx, state_chunk in enumerate(self.states):
+                for tag, state in state_chunk.iteritems():
+                    for module, chunk in state.iteritems():
 
-                    if module == 'gem':
-                        name_list = None
-                        for item in chunk:
-                            if isinstance(item, dict) and 'names' in item:  name_list = item['names']
+                        if module == 'gem':
+                            name_list = None
+                            for item in chunk:
+                                if isinstance(item, dict) and 'names' in item:  name_list = item['names']
 
-                        if not name_list:   continue
-                        for name in name_list:
-                            if '==' in name:
-                                the_build_up = [ i for i in chunk if 'names' not in i ]
+                            if not name_list:   continue
+                            for name in name_list:
+                                if '==' in name:
+                                    the_build_up = [ i for i in chunk if 'names' not in i ]
 
-                                # remove the name from origin
-                                name_list.remove(name)
+                                    # remove the name from origin
+                                    name_list.remove(name)
 
-                                pkg_name, pkg_version = name.split('==')
+                                    pkg_name, pkg_version = name.split('==')
 
-                                the_build_up.append({
-                                    "name"      : pkg_name,
-                                    "version"   : pkg_version
-                                })
+                                    the_build_up.append({
+                                        "name"      : pkg_name,
+                                        "version"   : pkg_version
+                                    })
 
-                                # build up the special package state
-                                the_tag = tag + '_' + name
-                                the_state = {
-                                    the_tag : {
-                                        "gem" : the_build_up
+                                    # build up the special package state
+                                    the_tag = tag + '_' + name
+                                    the_state = {
+                                        the_tag : {
+                                            "gem" : the_build_up
+                                        }
                                     }
-                                }
 
-                                # get the state's require and require-in
-                                req_list = [ item[next(iter(item))] for item in chunk if isinstance(item, dict) and any(['require' in item, 'require_in' in item]) ]
+                                    # # get the state's require and require-in
+                                    # req_list = [ item[next(iter(item))] for item in chunk if isinstance(item, dict) and any(['require' in item, 'require_in' in item]) ]
 
-                                for req in req_list:
-                                    if isinstance(req, list):
-                                        for r in req:
-                                            for r_tag in r.values():
-                                                if r_tag in self.states:
-                                                    the_state[r_tag] = self.states[r_tag]
+                                    # for req in req_list:
+                                    #     if isinstance(req, list):
+                                    #         for r in req:
+                                    #             for r_tag in r.values():
+                                    #                 if r_tag in self.states:
+                                    #                     the_state[r_tag] = self.states[r_tag]
 
-                                if len(name_list)==0:
-                                    self.states[tag] = the_state[the_tag]
-                                else:
-                                    state_list.append(the_state)
+                                    if len(name_list)==0:
+                                        # remove the old one
+                                        del self.states[idx]
+                                        # insert new state list
+                                        for i, state in enumerate(state_list):
+                                            self.states.insert((idx+i), state)
 
-                    ## update rubugems to rubygems-integration in ubuntu 14.04
-                    elif module == 'pkg':
-                        if self.os_type.upper() == 'UBUNTU' and float(self.os_release)>14 and "installed" in chunk:
-                            for idx, item in enumerate(chunk):
-                                if isinstance(item, dict) and 'pkgs' in item.keys() and 'rubygems' in item['pkgs']:
-                                    item['pkgs'][item['pkgs'].index("rubygems")] = "rubygems-integration"
+                                    else:
+                                        state_list.append(the_state)
 
-                    # deal with docker service dependence
-                    elif module == 'docker':
-                        req_list = [ i['require'] for i in chunk if 'require' in i ]
-                        if req_list:
-                            req_list = req_list[0]
+                        ## update rubugems to rubygems-integration in ubuntu 14.04
+                        elif module == 'pkg':
+                            if self.os_type.upper() == 'UBUNTU' and float(self.os_release)>14 and "installed" in chunk:
+                                for idx, item in enumerate(chunk):
+                                    if isinstance(item, dict) and 'pkgs' in item.keys() and 'rubygems' in item['pkgs']:
+                                        item['pkgs'][item['pkgs'].index("rubygems")] = "rubygems-integration"
 
-                            req_pkg = []
-                            the_srv = None
-                            for r in req_list:
-                                for type, tag in r.iteritems():
-                                    if type == 'pkg':
-                                        req_pkg.append(tag)
-                                    elif type == 'service':
-                                        the_srv = tag
+                        # deal with docker service dependence
+                        elif module == 'docker':
+                            req_list = [ i['require'] for i in chunk if 'require' in i ]
+                            if req_list:
+                                req_list = req_list[0]
 
-                            if the_srv and len(req_pkg)>0:
-                                req = {'require':[]}
-                                for pkg_tag in req_pkg:
-                                    req['require'].append({'pkg':pkg_tag})
-                                self.states[the_srv]['service'].append(req)
+                                req_pkg = []
+                                the_srv = None
+                                for r in req_list:
+                                    for type, tag in r.iteritems():
+                                        if type == 'pkg':
+                                            req_pkg.append(tag)
+                                        elif type == 'service':
+                                            the_srv = tag
+
+                                if the_srv and len(req_pkg)>0:
+                                    req = {'require':[]}
+                                    for pkg_tag in req_pkg:
+                                        req['require'].append({'pkg':pkg_tag})
+                                    self.states[the_srv]['service'].append(req)
 
         except Exception, e:
             utils.log("DEBUG", "Expand states exception: %s" % str(e), ("__expand", self))
