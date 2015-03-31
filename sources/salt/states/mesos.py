@@ -84,8 +84,8 @@ def set_files(files):
     return res,comment
 
 # run a command
-def run_cmd(cmd, if_absent):
-    if os.path.exists(if_absent):
+def run_cmd(cmd, if_absent=None):
+    if if_absent and os.path.exists(if_absent):
         return _valid()
     act = __salt__['cmd.run_stdall']
     try:
@@ -113,7 +113,7 @@ def run_service(name, watch_list, state_id):
     for watch in watch_list:
         cs = Checksum(watch,state_id,WATCH_PATH)
         if cs.update(edit=False,tfirst=True):
-            ret = service.mod_watch(name)
+            ret = service.mod_watch(name,restart=True)
             if not ret.get("result"):
                 comment += "Unable to restart service %s after change triggered on file %s"%(name,watch)
                 return False,comment
@@ -161,19 +161,19 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname
         "content":me_zk+"/mesos",
     },{
         "name":"/etc/mesos-master/quorum",
-        "content":(i/2)+1,
+        "content":((i-1)/2)+(1 if ((i-1)/2)*2 < i else 0),
     },{
         "name":"/etc/mesos-master/ip",
         "content":master_ip,
     },{
         "name":"/etc/mesos-master/hostname",
-        "content":hostname,
+        "content":master_ip,
     },{
         "name":"/etc/mesos-master/cluster",
         "content":cluster_name,
     },{
         "name":"/etc/marathon/conf/hostname",
-        "content":hostname,
+        "content":master_ip,
     },{
         "name":"/etc/marathon/conf/master",
         "content":ma_zk+"/mesos",
@@ -192,6 +192,10 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname
     }])
     gl_comment += comment
     if not res: return _invalid(comment=gl_comment)
+
+    ret = run_cmd("hostname $(cat /etc/hostname)")
+    gl_comment += ret.get("comment","")
+    if not ret.get("result"): return _invalid(comment=gl_comment)
 
     res, comment = run_service("zookeeper", [
         "/var/lib/zookeeper/myid",
