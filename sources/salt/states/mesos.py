@@ -161,7 +161,7 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname
         "content":me_zk+"/mesos",
     },{
         "name":"/etc/mesos-master/quorum",
-        "content":(i/2)+1,
+        "content":(i/2)+(1 if (i/2)*2 < i else 0),
     },{
         "name":"/etc/mesos-master/ip",
         "content":master_ip,
