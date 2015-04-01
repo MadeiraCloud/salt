@@ -913,6 +913,7 @@ class StateAdaptor(object):
             'require' : [
                 {'linux.cmd' : { 'cmd' : "apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF", 'os': ["ubuntu","debian"] }},
                 {'linux.apt.repo' : { 'content' : "deb http://repos.mesosphere.io/ubuntu trusty main", 'name': "mesos", 'os': ["ubuntu","debian"] }},
+                {'linux.cmd' : { 'cmd' : "apt-get -q update", 'os': ["ubuntu","debian"] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':"mesosphere"},
                     {'key':"openjdk-7-jre-headless"},
@@ -937,6 +938,7 @@ class StateAdaptor(object):
                 {'linux.apt.repo' : { 'content' : "deb https://get.docker.com/ubuntu docker main", 'name': "docker", 'os': ["ubuntu","debian"] }},
                 {'linux.apt.repo' : { 'content' : "deb http://repos.mesosphere.io/ubuntu trusty main", 'name': "mesos", 'os': ["ubuntu","debian"] }},
                 {'linux.file': { "path": "/etc/haproxy/haproxy.cfg", "content": get_file_content(os.path.join(CONFIG_PATH,"mesos-apt","haproxy.cfg")) }},
+                {'linux.cmd' : { 'cmd' : "apt-get -q update", 'os': ["ubuntu","debian"] }},
                 {'linux.apt.package' : { 'name' : [
                     {'key':"mesos"},
                     {'key':"zookeeper","value":"purged"},
