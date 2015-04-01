@@ -2757,6 +2757,7 @@ Runs a Mesos Slave instance
 
 *   **`masters_addresses`** (*required*): IPs/hostnames of the Mesos Master servers. If no hostname is given, the ip address will be used by default as hostname.
 
+
 		example:
 			@{master1.PrivateIpAddress}:    master1
 			@{master2.PrivateIpAddress}:    master2
