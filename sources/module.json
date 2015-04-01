@@ -1151,11 +1151,7 @@
                     "option": [
                         "marathon"
                     ], 
-<<<<<<< HEAD
-                    "required": true, 
-=======
                     "required": false, 
->>>>>>> develop
                     "type": "array", 
                     "visible": true
                 }, 
@@ -1182,11 +1178,7 @@
             }, 
             "reference": {
                 "cn": "", 
-<<<<<<< HEAD
-                "en": "\n### Description\nRuns a Mesos Master instance\n\n### Parameters\n\n*   **`cluster_name`** (*required*): Name of the Mesos cluster\n\n\t\texample:\n\t\t\tMesos Cluster\n\n*   **`server_id`** (*required*): ID of the Mesos Master server\n\n\t\texample:\n\t\t\t1\n\t\t\t2\n\n*   **`masters_addresses`** (*required*): IPs/hostnames of the Mesos Master servers. If no hostname is given, the ip address will be used by default as hostname.\n\n\t\texample:\n\t\t\t@{master1.PrivateIpAddress}:    master1\n\t\t\t@{master2.PrivateIpAddress}:    master2\n\t\t\t@{master3.PrivateIpAddress}:\n\n*   **`hostname`** (*optional*): Hostname of the Mesos Master server instance\n\n\t\texample:\n\t\t\tmaster1\n\n*   **`framework`** (*optional*): Framework to install on top of Mesos\n\n\t\texample:\n\t\t\tmarathon\n"
-=======
                 "en": "\n### Description\nRuns a Mesos Master instance\n\n### Parameters\n\n*   **`cluster_name`** (*required*): Name of the Mesos cluster\n\n\t\texample:\n\t\t\tMesos Cluster\n\n*   **`server_id`** (*required*): ID of the Mesos Master server\n\n\t\texample:\n\t\t\t1\n\t\t\t2\n\n*   **`masters_addresses`** (*required*): IPs/hostnames of the Mesos Master servers. If no hostname is given, the ip address will be used by default as hostname.\n\n\t\texample:\n\t\t\t@{master1.PrivateIpAddress}:    master1\n\t\t\t@{master2.PrivateIpAddress}:    master2\n\t\t\t@{master3.PrivateIpAddress}:\n\n*   **`hostname`** (*optional*): Hostname of the Mesos Master server instance\n\n\t\texample:\n\t\t\tmaster1\n\n*   **`framework`** (*optional*): Framework to install on top of Mesos\n\n\t\texample:\n\t\t\tmarathon\n\t\t\t"
->>>>>>> develop
             }
         }, 
         "mesos slave": {
@@ -1210,7 +1202,7 @@
             }, 
             "reference": {
                 "cn": "", 
-                "en": "\n### Description\nRuns a Mesos Slave instance\n\n### Parameters\n\n*   **`masters_addresses`** (*required*): IPs/hostnames of the Mesos Master servers. If no hostname is given, the ip address will be used by default as hostname.\n\n\t\texample:\n\t\t\t@{master1.PrivateIpAddress}:    master1\n\t\t\t@{master2.PrivateIpAddress}:    master2\n\t\t\t@{master3.PrivateIpAddress}:\n\n*   **`attributes`** (*required*): Mesos slave attributes (see Mesos documentation)\n\n\t\texample:\n\t\t\tsubnet: web\n\t\t\tpublic: true\n\t\t\track:   rack-5\n\t\t\tasg:    asg0\n\t\t\tzone:   all\n"
+                "en": "\n### Description\nRuns a Mesos Slave instance\n\n### Parameters\n\n*   **`masters_addresses`** (*required*): IPs/hostnames of the Mesos Master servers. If no hostname is given, the ip address will be used by default as hostname.\n\n\n\t\texample:\n\t\t\t@{master1.PrivateIpAddress}:    master1\n\t\t\t@{master2.PrivateIpAddress}:    master2\n\t\t\t@{master3.PrivateIpAddress}:\n\n*   **`attributes`** (*required*): Mesos slave attributes (see Mesos documentation)\n\n\t\texample:\n\t\t\tsubnet: web\n\t\t\tpublic: true\n\t\t\track:   rack-5\n\t\t\tasg:    asg0\n\t\t\tzone:   all\n"
             }
         }, 
         "mount": {
