@@ -36,6 +36,9 @@ service, then set the reload value to True:
           - pkg: redis
 '''
 
+import time
+
+CHECK_PAUSE=2
 
 def __virtual__():
     '''
@@ -292,6 +295,8 @@ def running(name, enable=None, sig=None, **kwargs):
         return ret
 
     changes = {name: __salt__['service.start'](name, state_ret=ret)}
+
+    time.sleep(CHECK_PAUSE)
 
     # to check service status
     if not __salt__['service.status'](name, sig or name):
