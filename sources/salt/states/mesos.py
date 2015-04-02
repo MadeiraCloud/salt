@@ -235,9 +235,9 @@ def slave(name, masters_addresses, attributes, slave_ip):
     service.__pillar__ = __pillar__
     if not attributes:
         attributes = {}
-        az = get_az()
-        if az:
-            attributes.append({"key":"az","value":az})
+    az = get_az()
+    if az:
+        attributes.append({"key":"az","value":az})
     attributes_line = ";".join([ "%s:%s"%(item["key"],item.get("value","")) for item in attributes ])
     gl_comment = set_hosts(masters_addresses)
 
