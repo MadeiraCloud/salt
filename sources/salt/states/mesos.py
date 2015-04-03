@@ -207,6 +207,8 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, user=Non
     gl_comment += comment
     if not res: return _invalid(comment=gl_comment)
 
+    ret = run_cmd("sleep 10")
+
     res, comment = run_service("mesos-master", [
         "/etc/mesos/zk",
         "/etc/mesos-master/quorum",
