@@ -181,9 +181,6 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, user=Non
         "name":"/etc/marathon/conf/zk",
         "content":ma_zk+"/marathon",
     },{
-        "name":"/etc/marathon/conf/http_credentials",
-        "content":("%s:%s"%(user,password) if user and password else ""),
-    },{
         "name":"/etc/hostname",
         "content":hostname,
     },{
@@ -195,6 +192,14 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, user=Non
     }])
     gl_comment += comment
     if not res: return _invalid(comment=gl_comment)
+
+    if user and password:
+        res,comment = set_files([{
+            "name":"/etc/marathon/conf/http_credentials",
+            "content":("%s:%s"%(user,password) if user and password else ""),
+        }])
+        gl_comment += comment
+        if not res: return _invalid(comment=gl_comment)
 
     ret = run_cmd("hostname $(cat /etc/hostname)")
     gl_comment += ret.get("comment","")
