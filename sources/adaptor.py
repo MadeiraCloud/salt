@@ -907,6 +907,8 @@ class StateAdaptor(object):
                 "hostname": "hostname",
                 "framework": "framework",
                 "master_ip": "master_ip",
+                "marathon username": "user",
+                "marathon password": "password",
             },
             'states' : ['master'],
             'type' : 'mesos',

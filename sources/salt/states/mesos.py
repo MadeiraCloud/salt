@@ -123,7 +123,7 @@ def run_service(name, watch_list, state_id):
 
 
 # Create Mesos Master
-def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname=None, framework=None):
+def master(name, cluster_name, server_id, masters_addresses, master_ip, user=None, password=None, hostname=None, framework=None):
     service.__salt__ = __salt__
     service.__opts__ = __opts__
     service.__grains__ = __grains__
@@ -181,6 +181,9 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname
         "name":"/etc/marathon/conf/zk",
         "content":ma_zk+"/marathon",
     },{
+        "name":"/etc/marathon/conf/http_credentials",
+        "content":("%s:%s"%(user,password) if user and password else ""),
+    },{
         "name":"/etc/hostname",
         "content":hostname,
     },{
@@ -219,6 +222,7 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname
             "/etc/marathon/conf/hostname",
             "/etc/marathon/conf/master",
             "/etc/marathon/conf/zk",
+            "/etc/marathon/conf/http_credentials",
         ], name)
         gl_comment += comment
         if not res: return _invalid(comment=gl_comment)
