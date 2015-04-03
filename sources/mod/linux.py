@@ -2707,58 +2707,43 @@ Runs a Mesos Master instance
 
 		example:
 			marathon
-
-*   **`marathon username`** (*optional*): Username for access to Marathon (if selected as framework)
-
-		example:
-			user
-
-*   **`marathon password`** (*required*): Password for access to Marathon (if selected as framework)
-
-		example:
-			pass
 			"""
 			},
 			"parameter" : {
-                            "server_id" : {
-                                "type" 		: "line",
-                                "required"	: True,
-                                "visible"	: True,
-                            },
-                            "masters_addresses" : {
-                                "type"		: "dict",
-                                "required"	: True,
-                                "visible"	: True,
-                            },
-                            "hostname" : {
-                                "type"		: "line",
-                                "required"	: False,
-                                "visible"	: True,
-                            },
-                            "framework"	: {
-                                "type"		: "array",
-                                "required"	: False,
-                                "visible"	: True,
-                                "option"	: [
-                                    "marathon",
-                                ],
-                            },
-                            "marathon username" : {
-                                "type" 		: "line",
-                                "required"	: False,
-                                "visible"	: True,
-                            },
-                            "marathon password" : {
-                                "type" 		: "line",
-                                "required"	: False,
-                                "visible"	: True,
-                            },
-                            "master_ip" : {
-                                "type"		: "line",
-                                "required"	: True,
-                                "visible"	: False,
-                            },
-                    },
+				"cluster_name" : {
+					"type" 		: "line",
+					"required"	: True,
+					"visible"	: True,
+				},
+				"server_id" : {
+					"type" 		: "line",
+					"required"	: True,
+					"visible"	: True,
+				},
+				"masters_addresses" : {
+					"type"		: "dict",
+					"required"	: True,
+					"visible"	: True,
+				},
+				"hostname" : {
+					"type"		: "line",
+					"required"	: False,
+					"visible"	: True,
+				},
+				"framework"	: {
+					"type"		: "array",
+					"required"	: False,
+					"visible"	: True,
+					"option"	: [
+						"marathon",
+					],
+				},
+				"master_ip" : {
+					"type"		: "line",
+					"required"	: True,
+					"visible"	: False,
+				},
+			},
 		},
 		"mesos slave": {
 			"module": "linux.mesos.slave",

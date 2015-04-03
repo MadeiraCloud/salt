@@ -123,7 +123,7 @@ def run_service(name, watch_list, state_id):
 
 
 # Create Mesos Master
-def master(name, cluster_name, server_id, masters_addresses, master_ip, user=None, password=None, hostname=None, framework=None):
+def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname=None, framework=None):
     service.__salt__ = __salt__
     service.__opts__ = __opts__
     service.__grains__ = __grains__
@@ -193,14 +193,6 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, user=Non
     gl_comment += comment
     if not res: return _invalid(comment=gl_comment)
 
-    if user and password:
-        res,comment = set_files([{
-            "name":"/etc/marathon/conf/http_credentials",
-            "content":("%s:%s"%(user,password) if user and password else ""),
-        }])
-        gl_comment += comment
-        if not res: return _invalid(comment=gl_comment)
-
     ret = run_cmd("hostname $(cat /etc/hostname)")
     gl_comment += ret.get("comment","")
     if not ret.get("result"): return _invalid(comment=gl_comment)
@@ -211,8 +203,6 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, user=Non
     ], name)
     gl_comment += comment
     if not res: return _invalid(comment=gl_comment)
-
-    ret = run_cmd("sleep 10")
 
     res, comment = run_service("mesos-master", [
         "/etc/mesos/zk",
@@ -229,14 +219,9 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, user=Non
             "/etc/marathon/conf/hostname",
             "/etc/marathon/conf/master",
             "/etc/marathon/conf/zk",
-            "/etc/marathon/conf/http_credentials",
         ], name)
         gl_comment += comment
         if not res: return _invalid(comment=gl_comment)
-    else:
-        ret = service.running("marathon",enable=False)
-        if not ret.get("result"):
-            gl_comment += "Unable to disable service Marathon"
 
     return _valid(comment=gl_comment)
 
