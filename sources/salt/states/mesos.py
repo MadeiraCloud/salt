@@ -222,6 +222,10 @@ def master(name, cluster_name, server_id, masters_addresses, master_ip, hostname
         ], name)
         gl_comment += comment
         if not res: return _invalid(comment=gl_comment)
+    else:
+        ret = service.running("marathon",enable=False)
+        if not ret.get("result"):
+            gl_comment += "Unable to disable service Marathon"
 
     return _valid(comment=gl_comment)
 
