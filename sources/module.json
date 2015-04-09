@@ -26,7 +26,8 @@
             "parameter": {
                 "description":{
                     "required": true,
-                    "type": "line"
+                    "type": "line",
+                    "visible": true
                 },
                 "when": {
                     "required": true,
@@ -35,8 +36,7 @@
                 "then": {
                     "required": false,
                     "default": "alert()",
-                    "type": "line",
-                    "visible": true
+                    "type": "line"
                 }
             },
             "reference": {
