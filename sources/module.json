@@ -1,5 +1,45 @@
 {
     "common": {
+        "global":{
+            "distro": null,
+            "module": "cloudfielder.global",
+            "parameter": {
+                "scan_interval": {
+                    "required": true,
+                    "default": "30",
+                    "type": "line",
+                    "visible": true
+                },
+                "parameters": {
+                    "required": false,
+                    "type": "text"
+                }
+            },
+            "reference": {
+                "cn": "",
+                "en": ""
+            }
+        },
+        "rule":{
+            "distro": null,
+            "module": "cloudfielder.rule",
+            "parameter": {
+                "when": {
+                    "required": true,
+                    "type": "text"
+                },
+                "then": {
+                    "required": true,
+                    "default": "alert()",
+                    "type": "line",
+                    "visible": true
+                }
+            },
+            "reference": {
+                "cn": "",
+                "en": ""
+            }
+        },
         "archive": {
             "distro": null, 
             "module": "common.archive", 
@@ -1759,47 +1799,5 @@
             }
         }
     }, 
-    "windows": {},
-    "cloudfielder" : {
-        "global":{
-            "distro": null,
-            "module": "cloudfielder.global",
-            "parameter": {
-                "scan_interval": {
-                    "required": true,
-                    "default": "30",
-                    "type": "line",
-                    "visible": true
-                },
-                "parameters": {
-                    "required": false,
-                    "type": "text"
-                }
-            },
-            "reference": {
-                "cn": "",
-                "en": ""
-            }
-        },
-        "rule":{
-            "distro": null,
-            "module": "cloudfielder.rule",
-            "parameter": {
-                "when": {
-                    "required": true,
-                    "type": "text"
-                },
-                "then": {
-                    "required": true,
-                    "default": "alert()",
-                    "type": "line",
-                    "visible": true
-                }
-            },
-            "reference": {
-                "cn": "",
-                "en": ""
-            }
-        }
-    }
+    "windows": {}
 }
