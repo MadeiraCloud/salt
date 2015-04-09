@@ -24,6 +24,10 @@
             "distro": null,
             "module": "cloudfielder.rule",
             "parameter": {
+                "description":{
+                    "required": true,
+                    "type": "line"
+                },
                 "when": {
                     "required": true,
                     "type": "text"
