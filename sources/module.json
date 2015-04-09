@@ -29,7 +29,7 @@
                     "type": "text"
                 },
                 "then": {
-                    "required": true,
+                    "required": false,
                     "default": "alert()",
                     "type": "line",
                     "visible": true
