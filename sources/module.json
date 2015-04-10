@@ -24,17 +24,17 @@
             "distro": null,
             "module": "cloudfielder.rule",
             "parameter": {
-                "description":{
+                "name":{
                     "required": true,
                     "type": "line",
                     "visible": true
                 },
-                "filter": {
+                "where": {
                     "required": true,
                     "type": "text"
                 },
                 "action": {
-                    "required": false,
+                    "required": true,
                     "default": "alert()",
                     "type": "line"
                 }
