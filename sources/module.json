@@ -29,11 +29,11 @@
                     "type": "line",
                     "visible": true
                 },
-                "when": {
+                "filter": {
                     "required": true,
                     "type": "text"
                 },
-                "then": {
+                "action": {
                     "required": false,
                     "default": "alert()",
                     "type": "line"
