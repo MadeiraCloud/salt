@@ -12,43 +12,34 @@
           }
         },
         {
-          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1G",
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
           "_": "2 [prepare] setup npm from epel - True|False",
           "module": "linux.yum.package",
           "parameter": {
-              "name": [
-                  {
-                      "key":"npm"
-                  },
-                  {
-                      "key":"enablerepo",
-                      "value":"epel"
-                  }
-              ]
+            "name": {
+              "npm": "",
+              "enablerepo": "epel"
+            }
           }
         },
         {
-          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1H",
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
           "_": "3 [prepare] setup npm from epel - True",
           "module": "linux.apt.package",
           "parameter": {
-              "name": [
-                  {
-                      "key":"npm"
-                  }
-              ]
+            "name": {
+              "npm": ""
+            }
           }
         },
         {
-          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1I",
+          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1F",
           "_": "4 [test1] install express from npm - True",
           "module": "common.npm.package",
           "parameter": {
-              "name": [
-                  {
-                      "key":"express"
-                  }
-              ]
+            "name": {
+              "express": ""
+            }
           }
         }
       ]

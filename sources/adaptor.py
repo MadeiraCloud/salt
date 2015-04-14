@@ -6,7 +6,6 @@ VisualOps OpsAgent states adaptor
 
 # System imports
 import os
-import sys
 import urllib2
 import hashlib
 from string import Template
@@ -53,7 +52,7 @@ class StateAdaptor(object):
     # watch addin parameters
     mod_watch_param = {
         'linux.service': {
-#            'full_restart': True,
+            'full_restart': True,
         },
         'linux.supervisord': {
             'restart': True,
@@ -344,7 +343,6 @@ class StateAdaptor(object):
         'linux.service' : {
             'attributes' : {
                 'name' : 'names',
-                'actions' : 'actions',
                 # 'watch' : ''
             },
             'states' : ['running', 'mod_watch'],
@@ -879,16 +877,6 @@ class StateAdaptor(object):
                 {'linux.cmd' : chef_req},
             ]
         },
-        'linux.raid' : {
-            'attributes' : {
-                "device-name": "name",
-                "level": "level",
-                "devices": "devices",
-                "arguments": "arguments",
-            },
-            'states' : ['present'],
-            'type' : 'raid',
-        },
     }
 
 
@@ -1194,10 +1182,6 @@ class StateAdaptor(object):
                                 'cmd' : 'which {0}'.format(cmd_name)
                             }
                         }]
-
-                        # ## update ssl and install pip in centos/rhel
-                        # if cmd_name.upper() == 'PIP' and self.os_type.upper() in ['CENTOS', 'RHEL']:
-                        #     self.__preinstall_pip()
 
                 if module == 'common.npm.package':
                     if self.os_type in ['redhat', 'centos'] and float(self.os_release) >= 7.0 or self.os_type == 'debian':
@@ -1588,18 +1572,6 @@ class StateAdaptor(object):
                     addin.pop("watch")
                     addin["force"] = True
                 utils.log("DEBUG", "Docker built addin: %s"%(addin), ("__build_up", self))
-            elif module in ["linux.service"]:
-                addin["actions"] = {}
-                services_list = []
-                for item in addin.get("names",[]):
-                    key = item.get("key")
-                    if not key: continue
-                    addin["actions"][key] = (item["value"] if item.get("value") else None)
-                    services_list.append(key)
-                addin["names"] = services_list
-            elif module in ["linux.raid"]:
-                addin["force"] = True
-                addin["run"] = True
 
         except Exception, e:
             utils.log("DEBUG", "Build up module %s exception: %s" % (module, str(e)), ("__build_up", self))
@@ -1904,30 +1876,16 @@ class StateAdaptor(object):
             utils.log("ERROR", "Check command %s excpetion: %s" % (cmd_name, str(e)), ("__check_cmd", self))
             return False
 
-    # def __preinstall_pip(self):
-    #     """
-    #         Preinstall pip on centos/rhel.
-    #     """
-    #     try:
-    #         import subprocess
+    # def __check_state(self, module, state):
+    #   """
+    #       Check supported state.
+    #   """
 
-    #         cmd = 'yum upgrade -y ca-certificates --disablerepo=epel; pip install pip --upgrade'
-    #         process = subprocess.Popen(
-    #             cmd,
-    #             shell=True,
-    #             stdout=subprocess.PIPE,
-    #             stderr=subprocess.PIPE)
+    #   if state not in self.mod_map[module]['states']:
+    #       print "not supported state %s in module %s" % (state, module)
+    #       return 1
 
-    #         out, err = process.communicate()
-
-    #         if process.returncode != 0:
-    #             utils.log("ERROR", "Execute command %s failed..."%cmd_name, ("__preinstall_pip", self))
-    #             return False
-
-    #         return True
-    #     except Exception, e:
-    #         utils.log("ERROR", "Execute command %s excpetion: %s" % (cmd, str(e)), ("__preinstall_pip", self))
-    #         return False
+    #   return 0
 
     def __preinstall_npm(self):
         """
@@ -2006,15 +1964,10 @@ def __log(lvl, f=None):
 
 # ===================== UT =====================
 def ut():
-    #    __log('DEBUG')
-
-    if len(sys.argv) > 1:
-        state_file = sys.argv[1]
-    else:
-        state_file = '/opt/visualops/bootstrap/salt/tests/state.json'
+#    __log('DEBUG')
 
     import json
-    pre_states = json.loads(open(state_file).read())
+    pre_states = json.loads(open('/opt/visualops/bootstrap/salt/tests/state.json').read())
 
     # salt_opts = {
     #   'file_client':       'local',

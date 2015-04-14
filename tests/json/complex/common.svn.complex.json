@@ -7,23 +7,19 @@
           "_": "1 [prepare] install subversion with yum - True|False",
           "module": "linux.yum.package",
           "parameter": {
-              "name": [
-                  {
-                      "key":"subversion"
-                  }
-              ]
+            "name": {
+              "subversion": ""
+            }
           }
         },
         {
-          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1G",
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
           "_": "2 [prepare] install subversion with apt - True|False",
           "module": "linux.apt.package",
           "parameter": {
-              "name": [
-                  {
-                      "key":"subversion"
-                  }
-              ]
+            "name": {
+              "subversion": ""
+            }
           }
         },
         {
@@ -39,12 +35,13 @@
         },
         {
           "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1F",
-          "_": "4 [test1] clone pysa with subversion - True",
+          "_": "4 [test1] clone pyse with subversion - True",
           "module": "common.svn",
           "parameter": {
             "repo": "https://github.com/VisualOps/pysa",
             "path": "/tmp/test/svn",
-            "force": true
+            "force": true,
+            "revision": "trunk"
           }
         }
       ]

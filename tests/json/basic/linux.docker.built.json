@@ -6,7 +6,7 @@
           "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300000",
           "module": "linux.docker.built",
           "parameter": {
-            "tag": "visualops/ubuntu_httpd",
+            "image": "visualops/ubuntu_httpd",
             "containers": ["my_ubuntu_httpd"],
             "path": "/opt/docker/images/ubuntu_httpd"
           }

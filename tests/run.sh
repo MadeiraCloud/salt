@@ -73,8 +73,8 @@ function do_all_module_test(){
     if [ -f json/${JSON_TYPE}/${line}.json ]
     then
       cp json/${JSON_TYPE}/${line}.json ./state.json
-      ${PY_BIN} ${EXE_BIN} ${PWD}/state.json 1>./log/${JSON_TYPE}/${line}.out 2>./log/${JSON_TYPE}/${line}.err
-
+      ${PY_BIN} ${EXE_BIN} 1>./log/${JSON_TYPE}/${line}.out 2>./log/${JSON_TYPE}/${line}.err
+    
       END_TIME=`date '+%s'`
       #check result
       OUT_=`cat ./log/${JSON_TYPE}/${line}.out|wc -l`

@@ -6,11 +6,9 @@
           "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
           "module": "linux.yum.package",
           "parameter": {
-              "name": [
-                  {
-                      "key": "mysql-server"
-                  }
-              ]
+            "name": {
+              "mysql-server": ""
+            }
           }
         },
         {

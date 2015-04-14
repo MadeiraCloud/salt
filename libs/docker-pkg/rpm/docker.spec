@@ -6,7 +6,7 @@
 ##
 
 Name:           docker
-Version:        1.5.0
+Version:        1.4.1
 Release:        1
 Summary:        An open source project to pack, ship and run any application as a lightweight container
 
@@ -107,8 +107,6 @@ fi
 
 
 %changelog
-* Thu Mar 19 2015 Thibault Bronchain <thibault@visualops.io> - 1.5.0
-- Update to v1.5.0
 * Tue Jan 6 2015 Thibault Bronchain <thibault@visualops.io> - 1.4.1
 - Update to v1.4.1
 * Mon Nov 17 2014 Thibault Bronchain <thibault@visualops.io> - 1.3.1

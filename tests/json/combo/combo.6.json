@@ -6,11 +6,9 @@
           "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
           "module": "linux.apt.package",
           "parameter": {
-              "name": [
-                  {
-                      "key":"subversion"
-                  }
-              ]
+            "name": {
+              "subversion": ""
+            }
           }
         },
         {
@@ -19,7 +17,8 @@
           "parameter": {
             "repo": "https://github.com/VisualOps/pysa",
             "path": "/tmp/svn/test/",
-            "force": true
+            "force": true,
+            "revision": "trunk"
           }
         }
       ]

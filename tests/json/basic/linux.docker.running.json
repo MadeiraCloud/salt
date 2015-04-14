@@ -6,8 +6,8 @@
           "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300000",
           "module": "linux.docker.running",
           "parameter": {
-            "container": "my_ubuntu_httpd",
-            "image": "visualops/ubuntu_httpd"
+            "name": "my_ubuntu_httpd",
+            "image": "visualops/ubuntu_httpd",
           }
         }
       ]

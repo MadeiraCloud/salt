@@ -33,11 +33,9 @@
           "_": "3 [prepare] setup pip - True",
           "module": "linux.yum.package",
           "parameter": {
-              "name": [
-                  {
-                      "key":"python-pip"
-                  }
-              ]
+            "name": {
+              "python-pip": ""
+            }
           }
         },
         {
@@ -45,11 +43,9 @@
           "_": "4 [prepare] setup supervisor - True",
           "module": "common.pip.package",
           "parameter": {
-              "name": [
-                  {
-                      "key": "supervisor"
-                  }
-              ]
+            "name": {
+              "supervisor": ""
+            }
           }
         },
         {

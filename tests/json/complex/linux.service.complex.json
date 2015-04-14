@@ -88,6 +88,14 @@
             "watch": true,
             "name": ["food"]
           }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632A65",
+          "module": "linux.cmd",
+          "_": "11 [test2] Set run number - True",
+          "parameter": {
+            "cmd": "cat /tmp/food | grep restart"
+          }
         }
       ]
     }

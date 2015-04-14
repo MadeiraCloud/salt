@@ -1363,7 +1363,7 @@ def tag(image, repository, tag=None, force=False, *args, **kwargs):
     return status
 
 
-def get_images(name=None, quiet=False, all=True, filters=None, *args, **kwargs):
+def get_images(name=None, quiet=False, all=True, *args, **kwargs):
     '''
     List docker images
 
@@ -1388,7 +1388,7 @@ def get_images(name=None, quiet=False, all=True, filters=None, *args, **kwargs):
     client = _get_client()
     status = base_status.copy()
     try:
-        infos = client.images(name=name, quiet=quiet, all=all, filters=filters)
+        infos = client.images(name=name, quiet=quiet, all=all)
         for i in range(len(infos)):
             inf = _set_id(infos[i])
             try:
@@ -1411,29 +1411,6 @@ def get_images(name=None, quiet=False, all=True, filters=None, *args, **kwargs):
         valid(status, out=infos)
     except Exception:
         invalid(status, out=traceback.format_exc(), comment="Unable to list Docker images")
-    return status
-
-
-def clean_images(name=None, quiet=False, all=True, *args, **kwargs):
-    '''
-    Clean old docker images
-    '''
-    client = _get_client()
-    status = base_status.copy()
-    comment = ""
-    try:
-        infos = client.images(name=name, quiet=quiet, all=all, filters={"dangling":True})
-        for img in infos:
-            img = _set_id(img)
-            iid = img.get("id",None)
-            if not iid:
-                continue
-            ret = remove_image(iid)
-            if ret.get("comment"):
-                comment += "%s\n"%ret["comment"]
-        valid(status, out=None, comment=comment)
-    except Exception:
-        invalid(status, out=traceback.format_exc(), comment="%sUnable to clean properly Docker images"%comment)
     return status
 
 
@@ -1533,7 +1510,7 @@ def remove_image(image, *args, **kwargs):
                         comment=(
                             'Image marked to be deleted but not deleted yet'))
             except Exception:
-                valid(status, id=image, comment='Image deleted %s'%(image))
+                valid(status, id=image, comment='Image deleted')
         else:
             invalid(status)
     except Exception:
@@ -1811,7 +1788,7 @@ def push(repo, tag=None, username=None, password=None, email=None, *args, **kwar
                 return status
 
         registry, repo_name = docker.auth.resolve_repository_name(repo)
-        ret = client.push(repository)
+        ret = client.push(repo, tag)
         logs, infos = _parse_image_multilogs_string(ret, repo_name)
 #        # DEBUG
 #        print "RET=%s"%ret

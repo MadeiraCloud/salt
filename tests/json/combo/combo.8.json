@@ -6,22 +6,18 @@
           "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
           "module": "linux.apt.package",
           "parameter": {
-              "name": [
-                  {
-                      "key": "npm"
-                  }
-              ]
+            "name": {
+              "npm": ""
+            }
           }
         },
         {
-          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1G",
+          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1F",
           "module": "common.npm.package",
           "parameter": {
-              "name": [
-                  {
-                      "key": "express"
-                  }
-              ]
+            "name": {
+              "express": ""
+            }
           }
         }
       ]

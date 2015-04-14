@@ -31,19 +31,11 @@
             "system" : false
           }
         },
-        {
-          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F11D325500",
-          "_": "4 [prepare] create diretory - True",
-          "module": "linux.dir",
-          "parameter": {
-            "path": ["/tmp/test/user"]
-          }
-        },
 
 
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324100",
-          "_": "5 [test1] create user with required parameter - True",
+          "_": "4 [test1] create user with required parameter - True",
           "module": "linux.user",
           "parameter": {
             "username": "InstantForge1",
@@ -52,7 +44,7 @@
         },
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324101",
-          "_": "6 [test1] assert user exist - True",
+          "_": "5 [test1] assert user exist - True",
           "module": "linux.cmd",
           "parameter": {
             "timeout": "1000",
@@ -63,7 +55,7 @@
 
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324200",
-          "_": "7 [test2] delete user - True",
+          "_": "6 [test2] delete user - True",
           "module": "linux.cmd",
           "parameter": {
             "timeout": "1000",
@@ -72,7 +64,7 @@
         },
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324201",
-          "_": "8 [test2] create user with full parameter - True",
+          "_": "7 [test2] create user with full parameter - True",
           "module": "linux.user",
           "parameter": {
             "password": "instant",
@@ -90,7 +82,7 @@
         },
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324202",
-          "_": "9 [test2] assert user exist - True",
+          "_": "8 [test2] assert user exist - True",
           "module": "linux.cmd",
           "parameter": {
             "timeout": "1000",
@@ -101,7 +93,7 @@
 
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324200",
-          "_": "10 [test3] delete user - True|False",
+          "_": "9 [test3] delete user - True|False",
           "module": "linux.cmd",
           "parameter": {
             "timeout": "1000",
@@ -110,7 +102,7 @@
         },
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324301",
-          "_": "11 [test3] create user: test nologin parameter - True",
+          "_": "10 [test3] create user: test nologin parameter - True",
           "module": "linux.user",
           "parameter": {
             "password": "instant",
@@ -120,7 +112,7 @@
         },
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324302",
-          "_": "12 [test3] assert user exist - True",
+          "_": "11 [test3] assert user exist - True",
           "module": "linux.cmd",
           "parameter": {
             "timeout": "1000",
@@ -131,7 +123,7 @@
 
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324200",
-          "_": "13 [test2] delete user - True|False",
+          "_": "12 [test2] delete user - True|False",
           "module": "linux.cmd",
           "parameter": {
             "timeout": "1000",
@@ -140,7 +132,7 @@
         },
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324300",
-          "_": "14 [test5] create diretory - True",
+          "_": "13 [test5] create diretory - True",
           "module": "linux.dir",
           "parameter": {
             "path": ["/tmp/test/user"]
@@ -148,7 +140,7 @@
         },
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324301",
-          "_": "15 [test4] create user: test not existed home parameter - True",
+          "_": "14 [test4] create user: test not existed home parameter - True",
           "module": "linux.user",
           "parameter": {
             "password": "instant",
@@ -161,7 +153,7 @@
         },
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324302",
-          "_": "16 [test4] assert user exist - True",
+          "_": "15 [test4] assert user exist - True",
           "module": "linux.cmd",
           "parameter": {
             "timeout": "1000",
@@ -172,7 +164,7 @@
 
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324200",
-          "_": "17 [test2] delete user - True|False",
+          "_": "16 [test2] delete user - True|False",
           "module": "linux.cmd",
           "parameter": {
             "timeout": "1000",
@@ -181,7 +173,7 @@
         },
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324300",
-          "_": "18 [test5] create diretory - True",
+          "_": "17 [test5] create diretory - True",
           "module": "linux.dir",
           "parameter": {
             "path": ["/tmp/test/user/visualops3/test/dir"],
@@ -192,7 +184,7 @@
         },
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324301",
-          "_": "19 [test5] create user: test existed home parameter - True",
+          "_": "18 [test5] create user: test existed home parameter - True",
           "module": "linux.user",
           "parameter": {
             "password": "instant",
@@ -205,7 +197,7 @@
         },
         {
           "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324302",
-          "_": "20 [test5] assert user exist - True",
+          "_": "19 [test5] assert user exist - True",
           "module": "linux.cmd",
           "parameter": {
             "timeout": "1000",

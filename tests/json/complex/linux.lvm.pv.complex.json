@@ -35,8 +35,8 @@
           "module": "linux.lvm.pv",
           "parameter": {
             "path": ["/dev/sdb1"],
-            "metadata size": "8",
-            "metadata copies": "1",
+            "metadata size": 8,
+            "metadata copies": 1,
             "data-alignment": "256k",
             "data-alignment offset": "8k",
             "metadata-ignore": "n",
