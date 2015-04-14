@@ -31,6 +31,7 @@ class TimedProc(object):
         def receive():
             if self.with_communicate:
                 (self.stdout, self.stderr) = self.process.communicate(input=self.stdin)
+                self.process.wait()
             else:
                 self.process.wait()
                 (self.stdout, self.stderr) = (None, None)

@@ -2539,10 +2539,7 @@ def manage_file(name,
             # Write the static contents to a temporary file
             tmp = salt.utils.mkstemp(text=True)
             with salt.utils.fopen(tmp, 'w') as tmp_:
-                try:
-                    tmp_.write(contents.encode('utf8'))
-                except Exception:
-                    return _error(ret, 'Not a text file (utf8 encoding failed)')
+                tmp_.write(contents.encode('utf8'))
 
             # Compare contents of files to know if we need to replace
             with contextlib.nested(
@@ -2665,10 +2662,7 @@ def manage_file(name,
             # Write the static contents to a temporary file
             tmp = salt.utils.mkstemp(text=True)
             with salt.utils.fopen(tmp, 'w') as tmp_:
-                try:
-                    tmp_.write(contents.encode('utf8'))
-                except Exception:
-                    return _error(ret, 'Not a text file (utf8 encoding failed)')
+                tmp_.write(contents.encode('utf8'))
             # Copy into place
             salt.utils.copyfile(tmp,
                                 name,

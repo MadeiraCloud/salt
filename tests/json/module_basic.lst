@@ -35,11 +35,6 @@ common.gem.package # -> need to install gem
 
 common.archive
 
-linux.docker.pulled
-linux.docker.running
-linux.docker.built
-linux.docker.deploy
-
 # TODO
 #linux.hosts
 #linux.hostname

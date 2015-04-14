@@ -12,8 +12,6 @@ import urllib2
 import salt.utils
 import salt.syspaths as syspaths
 
-__proxyenabled__ = ['*']
-
 # Set up the default values for all systems
 DEFAULTS = {'mongo.db': 'salt',
             'mongo.host': 'salt',
@@ -79,10 +77,7 @@ def manage_mode(mode):
     '''
     if mode is None:
         return None
-    ret = str(mode).lstrip('0').zfill(4)
-    if ret[0] != '0':
-        return '0{0}'.format(ret)
-    return ret
+    return str(mode).lstrip('0').zfill(3)
 
 
 def valid_fileproto(uri):
@@ -216,7 +211,6 @@ def get(key, default=''):
 
         salt '*' config.get pkg:apache
     '''
-
     ret = salt.utils.traverse_dict(__opts__, key, '_|-')
     if ret != '_|-':
         return ret

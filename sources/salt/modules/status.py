@@ -487,9 +487,7 @@ def all_status():
 def pid(sig):
     '''
     Return the PID or an empty string if the process is running or not.
-    Pass a signature to use to find the process via ps.  Note you can pass
-    a Python-compatible regular expression to return all pids of
-    processes matching the regexp.
+    Pass a signature to use to find the process via ps.
 
     CLI Example:
 
@@ -497,20 +495,15 @@ def pid(sig):
 
         salt '*' status.pid <sig>
     '''
-
-    cmd = __grains__['ps']
-    output = __salt__['cmd.run_stdout'](cmd)
-
-    pids = ''
-    for line in output.splitlines():
-        if 'status.pid' in line:
-            continue
-        if re.search(sig, line):
-            if pids:
-                pids += '\n'
-            pids += line.split()[1]
-
-    return pids
+    # Check whether the sig is already quoted (we check at the end in case they
+    # send a sig like `-E 'someregex'` to use egrep) and doesn't begin with a
+    # dash (again, like `-E someregex`).  Quote sigs that qualify.
+    if (not sig.endswith('"') and not sig.endswith("'") and
+            not sig.startswith('-')):
+        sig = "'" + sig + "'"
+    cmd = ("{0[ps]} | grep {1} | grep -v grep | fgrep -v status.pid | "
+           "awk '{{print $2}}'".format(__grains__, sig))
+    return (__salt__['cmd.run_stdout'](cmd) or '')
 
 
 def version():

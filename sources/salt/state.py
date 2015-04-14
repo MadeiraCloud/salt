@@ -21,7 +21,6 @@ import fnmatch
 import logging
 import collections
 import traceback
-import datetime
 
 # Import salt libs
 import salt.utils
@@ -547,8 +546,7 @@ class State(object):
         pillar = salt.pillar.get_pillar(
                 self.opts,
                 self.opts['grains'],
-                self.opts['id'],
-                self.opts['environment'],
+                self.opts['id']
                 )
         ret = pillar.compile_pillar()
         if self._pillar_override and isinstance(self._pillar_override, dict):
@@ -636,7 +634,7 @@ class State(object):
             elif data['fun'] == 'symlink':
                 if 'bin' in data['name']:
                     self.module_refresh()
-        elif data['state'] in ('pkg', 'ports'):
+        elif data['state'] == 'pkg':
             self.module_refresh()
 
     def verify_ret(self, ret):
@@ -974,7 +972,7 @@ class State(object):
                     for fun in funcs:
                         live['fun'] = fun
                         chunks.append(live)
-        ##chunks = self.order_chunks(chunks)
+        chunks = self.order_chunks(chunks)
         return chunks
 
     def reconcile_extend(self, high):
@@ -1295,7 +1293,6 @@ class State(object):
         Call a state directly with the low data structure, verify data
         before processing.
         '''
-        log.info('Running state [{0}] at time {1}'.format(low['name'], datetime.datetime.now().time().isoformat()))
         errors = self.verify_data(low)
         if errors:
             ret = {
@@ -1372,30 +1369,16 @@ class State(object):
                 self.verify_ret(ret)
         except Exception:
             trb = traceback.format_exc()
-            # There are a number of possibilities to not have the cdata
-            # populated with what we might have expected, so just be enought
-            # smart to not raise another KeyError as the name is easily
-            # guessable and fallback in all cases to present the real
-            # exception to the user
-            if len(cdata['args']) > 0:
-                name = cdata['args'][0]
-            elif 'name' in cdata['kwargs']:
-                name = cdata['kwargs'].get(
-                    'name',
-                    low.get('name',
-                            low.get('__id__'))
-                )
             ret = {
                 'result': False,
-                'name': name,
+                'name': cdata['args'][0],
                 'changes': {},
                 'comment': 'An exception occurred in this state: {0}'.format(
                     trb)
-            }
+                }
         finally:
             if low.get('__prereq__'):
-                sys.modules[self.states[cdata['full']].__module__].__opts__[
-                    'test'] = test
+                sys.modules[self.states[cdata['full']].__module__].__opts__['test'] = test
 
         # If format_call got any warnings, let's show them to the user
         if 'warnings' in cdata:
@@ -1412,7 +1395,6 @@ class State(object):
         self.__run_num += 1
         format_log(ret)
         self.check_refresh(low, ret)
-        log.info('Completed state [{0}] at time {1}'.format(low['name'], datetime.datetime.now().time().isoformat()))
         return ret
 
     def call_chunks(self, chunks):
@@ -2225,9 +2207,6 @@ class BaseHighState(object):
                     if not isinstance(state[name], dict):
                         # Include's or excludes as lists?
                         continue
-                    if not isinstance(state[name][s_dec], list):
-                        # Bad syntax, let the verify seq pick it up later on
-                        continue
 
                     found = False
                     if s_dec.startswith('_'):
@@ -2450,7 +2429,7 @@ class BaseHighState(object):
 
         if cache:
             if os.path.isfile(cfn):
-                with salt.utils.fopen(cfn, 'rb') as fp_:
+                with salt.utils.fopen(cfn, 'r') as fp_:
                     high = self.serial.load(fp_)
                     return self.state.call_high(high)
         #File exists so continue
@@ -2485,21 +2464,13 @@ class BaseHighState(object):
             return err
         if not high:
             return ret
-        cumask = os.umask(077)
-        try:
-            if salt.utils.is_windows():
-                # Make sure cache file isn't read-only
-                self.state.functions['cmd.run']('attrib -R "{0}"'.format(cfn), output_loglevel='quiet')
-            with salt.utils.fopen(cfn, 'w+b') as fp_:
-                try:
-                    self.serial.dump(high, fp_)
-                except TypeError:
-                    # Can't serialize pydsl
-                    pass
-        except (IOError, OSError):
-            msg = 'Unable to write to "state.highstate" cache file {0}'
-            log.error(msg.format(cfn))
-
+        cumask = os.umask(191)
+        with salt.utils.fopen(cfn, 'w+') as fp_:
+            try:
+                self.serial.dump(high, fp_)
+            except TypeError:
+                # Can't serialize pydsl
+                pass
         os.umask(cumask)
         return self.state.call_high(high)
 

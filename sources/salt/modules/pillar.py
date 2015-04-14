@@ -3,29 +3,20 @@
 Extract the pillar data for this minion
 '''
 
-# Import python libs
-import collections
-
 # Import third party libs
 import yaml
 
 # Import salt libs
 import salt.pillar
 import salt.utils
-from salt._compat import string_types
-
-__proxyenabled__ = ['*']
 
 
-def get(key, default='', merge=False, delim=':'):
+def get(key, default=''):
     '''
     .. versionadded:: 0.14
 
     Attempt to retrieve the named value from pillar, if the named value is not
     available return the passed default. The default return is an empty string.
-
-    If the merge parameter is set to ``True``, the default will be recursively
-    merged into the returned pillar data.
 
     The value can also represent a value in a nested dict using a ":" delimiter
     for the dict. This means that if a dict in pillar looks like this::
@@ -37,39 +28,20 @@ def get(key, default='', merge=False, delim=':'):
 
         pkg:apache
 
-    merge
-        Specify whether or not the retrieved values should be recursively
-        merged into the passed default.
-
-        .. versionadded:: Helium
-
-    delim
-        Specify an alternate delimiter to use when traversing a nested dict
-
-        .. versionadded:: Helium
-
     CLI Example:
 
     .. code-block:: bash
 
         salt '*' pillar.get pkg:apache
     '''
-    if merge:
-        ret = salt.utils.traverse_dict_and_list(__pillar__, key, {}, delim)
-        if isinstance(ret, collections.Mapping) and \
-                isinstance(default, collections.Mapping):
-            return salt.utils.dictupdate.update(default, ret)
-
-    return salt.utils.traverse_dict_and_list(__pillar__, key, default, delim)
+    return salt.utils.traverse_dict(__pillar__, key, default)
 
 
 def items(*args):
     '''
-    Calls the master for a fresh pillar and generates the pillar data on the
-    fly
-
-    Contrast with :py:func:`raw` which returns the pillar data that is
-    currently loaded into the minion.
+    This function calls the master for a fresh pillar and generates the pillar
+    data on the fly, unlike pillar.raw which returns the pillar data which
+    is currently loaded into the minion.
 
     CLI Example:
 
@@ -118,10 +90,8 @@ def item(*args):
 
 def raw(key=None):
     '''
-    Return the raw pillar data that is currently loaded into the minion.
-
-    Contrast with :py:func:`items` which calls the master to fetch the most
-    up-to-date Pillar.
+    Return the raw pillar data that is available in the module. This will
+    show the pillar as it is loaded as the __pillar__ dict.
 
     CLI Example:
 
@@ -150,9 +120,9 @@ def ext(external):
 
     .. code-block:: bash
 
-        salt '*' pillar.ext '{libvirt: _}'
+        salt '*' pillar.ext 'libvirt: _'
     '''
-    if isinstance(external, string_types):
+    if isinstance(external, basestring):
         external = yaml.safe_load(external)
     pillar = salt.pillar.get_pillar(
         __opts__,

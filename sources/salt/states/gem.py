@@ -109,10 +109,10 @@ def installed(name,          # pylint: disable=C0103
                                ri=ri, state_ret=ret):
         ret['result'] = True
         ret['changes'][name] = 'Installed'
-        ret['comment'] = 'Gem {0} was successfully installed.'.format(name)
+        ret['comment'] = 'Gem was successfully installed'
     else:
         ret['result'] = False
-        ret['comment'] = 'Could not install gem {0}.'.format(name)
+        ret['comment'] = 'Could not install gem.'
 
     return ret
 

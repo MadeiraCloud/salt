@@ -40,7 +40,7 @@ def _parse_pkg_meta(path):
                 # Binary packages have no REPOID, replace this so the rpm
                 # command does not fail with "invalid tag" error
                 __QUERYFORMAT.replace('%{REPOID}', 'binarypkg'),
-                path.encode('ascii','ignore')
+                path
             )
         ).strip()
         pkginfo = _parse_pkginfo(pkginfo)

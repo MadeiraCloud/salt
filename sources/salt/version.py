@@ -4,7 +4,6 @@ Set up the version of Salt
 '''
 
 # Import python libs
-from __future__ import print_function
 import re
 import sys
 
@@ -41,7 +40,7 @@ class SaltStackVersion(object):
     )
 
     # Salt versions after 0.17.0 will be numbered like:
-    #   <4-digit-year>.<month>.<bugfix>
+    #   <2-digit-year>.<month>.<bugfix>
     #
     # Since the actual version numbers will only be know on release dates, the
     # periodic table element names will be what's going to be used to name
@@ -334,7 +333,7 @@ class SaltStackVersion(object):
 #
 # Please bump version information for __saltstack_version__ on new releases
 # ----------------------------------------------------------------------------
-__saltstack_version__ = SaltStackVersion(2014, 1, 0)
+__saltstack_version__ = SaltStackVersion(2014, 1, 0, 1)
 __version_info__ = __saltstack_version__.info
 __version__ = __saltstack_version__.string
 # <---- Hardcoded Salt Version Information -----------------------------------

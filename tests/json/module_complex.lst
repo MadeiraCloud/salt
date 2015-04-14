@@ -34,11 +34,6 @@ linux.lvm.lv.complex
 
 common.archive.complex
 
-linux.docker.complex
-
-linux.rpm.key.complex
-linux.mkfs.complex
-
 #linux.fs.complex
 #linux.ulimit.complex
 #linux.hosts.complex

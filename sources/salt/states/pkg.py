@@ -241,13 +241,7 @@ def _verify_install(desired, new_pkgs):
     ok = []
     failed = []
     for pkgname, pkgver in desired.iteritems():
-        # hack deal with 'python-pip' in amazon linux
-        if pkgname == 'python-pip':
-            cver = [ new_pkgs.get(p) for p in new_pkgs if p.startswith('python') and p.endswith('pip') ]
-            if cver: cver = cver[0]
-        else:
-            cver = new_pkgs.get(pkgname)
-
+        cver = new_pkgs.get(pkgname)
         if not cver:
             failed.append(pkgname)
             continue
