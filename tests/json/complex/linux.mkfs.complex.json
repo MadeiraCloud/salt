@@ -1,0 +1,111 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632001",
+          "_": "1 [prepare] show disk infos - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "blkid"
+          }
+        },
+
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632101",
+          "_": "2 [test1] create ext2 file system - True",
+          "module": "linux.mkfs",
+          "parameter": {
+            "device": "/dev/xvdf",
+            "fstype": "ext2",
+            "label": "test1"
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632102",
+          "_": "3 [test1] show disk infos - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "blkid ; blkid | grep /dev/xvdf | grep ext2 | grep test1"
+          }
+        },
+
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632201",
+          "_": "4 [test2] try create ext2 file system (identical) - True",
+          "module": "linux.mkfs",
+          "parameter": {
+            "device": "/dev/xvdf",
+            "fstype": "ext2",
+            "label": "test1"
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632202",
+          "_": "5 [test2] show disk infos - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "blkid ; blkid | grep /dev/xvdf | grep ext2 | grep test1"
+          }
+        },
+
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632301",
+          "_": "6 [test3] create ext3 file system - True",
+          "module": "linux.mkfs",
+          "parameter": {
+            "device": "/dev/xvdf",
+            "fstype": "ext3",
+            "label": "test2"
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632302",
+          "_": "7 [test3] show disk infos - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "blkid ; blkid | grep /dev/xvdf | grep ext3 | grep test2"
+          }
+        },
+
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632401",
+          "_": "8 [test4] create ext4 file system - True",
+          "module": "linux.mkfs",
+          "parameter": {
+            "device": "/dev/xvdf",
+            "fstype": "ext4",
+            "label": "test3"
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632402",
+          "_": "9 [test4] show disk infos - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "blkid ; blkid | grep /dev/xvdf | grep ext4 | grep test3"
+          }
+        },
+
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632501",
+          "_": "2 [test5] create xfs file system - True",
+          "module": "linux.mkfs",
+          "parameter": {
+            "device": "/dev/xvdf",
+            "fstype": "xfs",
+            "label": "test4"
+          }
+        },
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632502",
+          "_": "3 [test5] show disk infos - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "cmd": "blkid ; blkid | grep /dev/xvdf | grep test4 | grep xfs"
+          }
+        }
+      ]
+    }
+  }
+}

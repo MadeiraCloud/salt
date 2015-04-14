@@ -293,6 +293,12 @@ def running(name, enable=None, sig=None, **kwargs):
 
     changes = {name: __salt__['service.start'](name, state_ret=ret)}
 
+    # to check service status
+    if not __salt__['service.status'](name, sig or name):
+        ret['result'] = False
+        ret['state_stdout'] = 'Service {0} failed to start'.format(name)
+        return ret
+
     if not changes[name]:
         if enable is True:
             return _enable(name, False, result=False, **kwargs)
@@ -443,6 +449,12 @@ def mod_watch(name, sig=None, reload=False, full_restart=False):
         return ret
 
     result = restart_func(name, state_ret=ret)
+
+    # to check service status
+    if not __salt__['service.status'](name, sig or name):
+        ret['result'] = False
+        ret['state_stdout'] = 'Service {0} failed to start'.format(name)
+        return ret
 
     ret['changes'] = {name: result}
     ret['result'] = result

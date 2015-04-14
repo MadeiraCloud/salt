@@ -38,6 +38,12 @@ try:
 except ImportError as e:
     ppa_format_support = False
 
+try:
+    import apt.debfile
+    resolve_dep_support = True
+except ImportError as e:
+    resolve_dep_support = False
+
 # Source format for urllib fallback on PPA handling
 LP_SRC_FORMAT = 'deb http://ppa.launchpad.net/{0}/{1}/ubuntu {2} main'
 LP_PVT_SRC_FORMAT = 'deb https://{0}private-ppa.launchpad.net/{1}/{2}/ubuntu' \
@@ -54,10 +60,10 @@ def __virtual__():
     '''
     Confirm this module is on a Debian based system
     '''
-    if 'os_family' not in __grains__ or \
-        __grains__['os_family'] != 'Debian':
+    if __grains__.get('os_family', False) != 'Debian':
         return False
     return __virtualname__
+
 
 def __init__(opts):
     '''
@@ -351,11 +357,14 @@ def install(name=None,
     sources
         A list of DEB packages to install. Must be passed as a list of dicts,
         with the keys being package names, and the values being the source URI
-        or local path to the package.
+        or local path to the package.  Dependencies are automatically resolved
+        and marked as auto-installed.
 
         32-bit packages can be installed on 64-bit systems by appending the
         architecture designation (``:i386``, etc.) to the end of the package
         name.
+
+        .. versionchanged:: Helium
 
         CLI Example:
 
@@ -401,6 +410,8 @@ def install(name=None,
         cmd = ['dpkg', '-i', '--force-confold']
         if skip_verify:
             cmd.append('--force-bad-verify')
+        if resolve_dep_support:
+            _resolve_deps(name, pkg_params, **kwargs)
         cmd.extend(pkg_params)
     elif pkg_type == 'repository':
         if pkgs is None and kwargs.get('version') and len(pkg_params) == 1:
@@ -562,6 +573,7 @@ def upgrade(refresh=True, **kwargs):
     old = list_pkgs()
     cmd = ['apt-get', '-q', '-y', '-o', 'DPkg::Options::=--force-confold',
            '-o', 'DPkg::Options::=--force-confdef', 'dist-upgrade']
+
     result = __salt__['cmd.run_stdall'](cmd, python_shell=False, output_loglevel='debug')
     state_std(kwargs, result)
     __context__.pop('pkg.list_pkgs', None)
@@ -684,7 +696,7 @@ def _get_upgradable():
     '''
 
     cmd = 'apt-get --just-print dist-upgrade'
-    out = __salt__['cmd.run_all'](cmd).get('stdout', '')
+    out = __salt__['cmd.run_stdout'](cmd, output_loglevel='debug')
 
     # rexp parses lines that look like the following:
     # Conf libxfont1 (1:1.4.5-1 Debian:testing [i386])
@@ -749,7 +761,7 @@ def version_cmp(pkg1, pkg2):
         for oper, ret in (('lt', -1), ('eq', 0), ('gt', 1)):
             cmd = 'dpkg --compare-versions {0!r} {1} ' \
                   '{2!r}'.format(pkg1, oper, pkg2)
-            if __salt__['cmd.retcode'](cmd) == 0:
+            if __salt__['cmd.retcode'](cmd, output_loglevel='debug') == 0:
                 return ret
     except Exception as e:
         log.error(e)
@@ -1048,13 +1060,14 @@ def mod_repo(repo, saltenv='base', **kwargs):
                         cmd = 'apt-add-repository {0}'.format(repo)
                     else:
                         cmd = 'apt-add-repository -y {0}'.format(repo)
-                    result = __salt__['cmd.run_stdall'](
+                    result = __salt__['cmd.run_stdout'](
                         cmd, output_loglevel='debug', **kwargs
                     )
                     state_std(kwargs, result)
                     out = result['stdout']
                     # explicit refresh when a repo is modified.
-                    refresh_db(**kwargs)
+                    if kwargs.get('refresh_db', True):
+                        refresh_db(**kwargs)
                     return {repo: out}
             else:
                 if not ppa_format_support:
@@ -1077,7 +1090,7 @@ def mod_repo(repo, saltenv='base', **kwargs):
                 # These will defer to any user-defined variants
                 kwargs['dist'] = dist
                 ppa_auth = ''
-                if file not in kwargs:
+                if 'file' not in kwargs:
                     filename = '/etc/apt/sources.list.d/{0}-{1}-{2}.list'
                     kwargs['file'] = filename.format(owner_name, ppa_name,
                                                      dist)
@@ -1170,7 +1183,7 @@ def mod_repo(repo, saltenv='base', **kwargs):
         imported = output.startswith('-----BEGIN PGP')
         if ks:
             if not imported:
-                cmd = ('apt-key adv --keyserver hkp://{0}:80 --logger-fd 1 '
+                cmd = ('apt-key adv --keyserver {0} --logger-fd 1 '
                        '--recv-keys {1}')
                 ret = __salt__['cmd.run_stdall'](
                     cmd.format(ks, keyid), output_loglevel='debug', **kwargs
@@ -1235,6 +1248,8 @@ def mod_repo(repo, saltenv='base', **kwargs):
 
     if not mod_source:
         mod_source = sourceslist.SourceEntry(repo)
+        if 'comments' in kwargs:
+            mod_source.comment = kwargs['comments'][0]
         sources.list.append(mod_source)
 
     # if all comps aren't part of the disable
@@ -1259,7 +1274,8 @@ def mod_repo(repo, saltenv='base', **kwargs):
             setattr(mod_source, key, kwargs[key])
     sources.save()
     # on changes, explicitly refresh
-    refresh_db(**kwargs)
+    if kwargs.get('refresh_db', True):
+        refresh_db(**kwargs)
     return {
         repo: {
             'architectures': getattr(mod_source, 'architectures', []),
@@ -1540,3 +1556,42 @@ def set_selections(path=None, selection=None, clear=False, saltenv='base'):
                         ret[_pkg] = {'old': sel_revmap.get(_pkg),
                                      'new': _state}
     return ret
+
+
+def _resolve_deps(name, pkgs, **kwargs):
+    '''
+    Installs missing dependencies and marks them as auto installed so they
+    are removed when no more manually installed packages depend on them.
+
+    .. versionadded:: Helium
+
+    :depends:   - python-apt module
+    '''
+    missing_deps = []
+    for pkg_file in pkgs:
+        deb = apt.debfile.DebPackage(filename=pkg_file)
+        if deb.check():
+            missing_deps.extend(deb.missing_deps)
+
+    if missing_deps:
+        cmd = ['apt-get', '-q', '-y']
+        cmd = cmd + ['-o', 'DPkg::Options::=--force-confold']
+        cmd = cmd + ['-o', 'DPkg::Options::=--force-confdef']
+        cmd.append('install')
+        cmd.extend(missing_deps)
+
+        ret = __salt__['cmd.retcode'](cmd, env=kwargs.get('env'), python_shell=False,
+                output_loglevel='debug')
+
+        if ret != 0:
+            raise CommandExecutionError(
+                    'Error: unable to resolve dependencies for: {0}'.format(name)
+            )
+        else:
+            try:
+                cmd = ['apt-mark', 'auto'] + missing_deps
+                __salt__['cmd.run'](cmd, env=kwargs.get('env'), python_shell=False,
+                        output_loglevel='debug')
+            except MinionError as exc:
+                raise CommandExecutionError(exc)
+    return

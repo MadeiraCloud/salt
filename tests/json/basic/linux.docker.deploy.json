@@ -1,0 +1,42 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-9DDEBDBC-7E5B-46D8-BD5E-D97BD5300011",
+          "module": "linux.docker.deploy",
+          "parameter": {
+            "command": [
+                "/elasticsearch/bin/elasticsearch",
+                "-Des.config=/my-data/elasticsearch.yaml"
+            ],
+            "container": "test",
+            "files": [
+                {
+                    "key": "/my-data/elasticsearch.yaml",
+                    "value": "path:\n  logs: /data/log\n  data: /data/data"
+                }
+            ],
+            "image": "dockerfile/elasticsearch",
+            "port_bindings": [
+                {
+                    "key": "9200",
+                    "value": "9200"
+                },
+                {
+                    "key": "9300",
+                    "value": "9300"
+                }
+            ],
+            "volumes": [
+                {
+                    "key": "/opt/data",
+                    "value": "/my-data/"
+                }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

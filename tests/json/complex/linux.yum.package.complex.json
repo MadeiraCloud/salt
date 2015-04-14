@@ -116,9 +116,27 @@
             "timeout": "1000",
             "cmd": "rpm -qa | grep mongo-10gen-unstable-tools"
           }
+        },
+
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E501",
+          "_": "12 [test5] install package from file - True",
+          "module": "linux.yum.package",
+          "parameter": {
+            "name": {
+              "epel": "http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm"
+            }
+          }
+        },
+        {
+          "id": "state-93D98508-C254-4CAD-9CBC-8D1175F8E502",
+          "_": "13 [test5] assert package exists - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "rpm -qa | grep epel"
+          }
         }
-
-
       ]
     }
   }

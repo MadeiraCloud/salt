@@ -28,8 +28,10 @@ import salt.utils.network
 import salt.pillar
 import salt.syspaths
 
-# Import salt cloud libs
-import salt.cloud.exceptions
+import sys
+#can't use salt.utils.is_windows, because config.py is included from salt.utils
+if not sys.platform.lower().startswith('win'):
+    import salt.cloud.exceptions
 
 log = logging.getLogger(__name__)
 
@@ -131,6 +133,7 @@ VALID_OPTS = {
     'gitfs_base': str,
     'hgfs_remotes': list,
     'hgfs_root': str,
+    'hgfs_base': str,
     'hgfs_branch_method': str,
     'svnfs_remotes': list,
     'svnfs_root': str,
@@ -179,6 +182,9 @@ VALID_OPTS = {
     'sign_pub_messages': bool,
     'keysize': int,
     'salt_transport': str,
+    'gather_job_timeout': int,
+    'auth_timeout': int,
+    'enumerate_proxy_minions': bool,
 }
 
 # default configurations
@@ -192,6 +198,8 @@ DEFAULT_MINION_OPTS = {
     'id': None,
     'cachedir': os.path.join(salt.syspaths.CACHE_DIR, 'minion'),
     'cache_jobs': False,
+    'grains_cache': False,
+    'grains_cache_expiration': 300,
     'conf_file': os.path.join(salt.syspaths.CONFIG_DIR, 'minion'),
     'sock_dir': os.path.join(salt.syspaths.SOCK_DIR, 'minion'),
     'backup_mode': '',
@@ -272,6 +280,7 @@ DEFAULT_MINION_OPTS = {
     'minion_id_caching': True,
     'keysize': 4096,
     'salt_transport': 'zeromq',
+    'auth_timeout': 3,
 }
 
 DEFAULT_MASTER_OPTS = {
@@ -302,6 +311,7 @@ DEFAULT_MASTER_OPTS = {
     'gitfs_base': 'master',
     'hgfs_remotes': [],
     'hgfs_root': '',
+    'hgfs_base': 'default',
     'hgfs_branch_method': 'branches',
     'svnfs_remotes': [],
     'svnfs_root': '',
@@ -381,6 +391,8 @@ DEFAULT_MASTER_OPTS = {
     'sign_pub_messages': False,
     'keysize': 4096,
     'salt_transport': 'zeromq',
+    'gather_job_timeout': 2,
+    'enumerate_proxy_minions': False,
 }
 
 # ----- Salt Cloud Configuration Defaults ----------------------------------->
@@ -1635,7 +1647,7 @@ def get_id(root_dir=None, minion_id=False, cache=True):
 
     # Check for cached minion ID
     id_cache = os.path.join(root_dir,
-                            config_dir.lstrip('\\'),
+                            config_dir.lstrip(os.path.sep),
                             'minion_id')
 
     if cache:
@@ -1643,7 +1655,8 @@ def get_id(root_dir=None, minion_id=False, cache=True):
             with salt.utils.fopen(id_cache) as idf:
                 name = idf.read().strip()
             if name:
-                log.info('Using cached minion ID: {0}'.format(name))
+                log.info('Using cached minion ID from {0}: {1}'
+                         .format(id_cache, name))
                 return name, False
         except (IOError, OSError):
             pass

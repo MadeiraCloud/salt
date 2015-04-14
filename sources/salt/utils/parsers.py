@@ -12,6 +12,7 @@
 '''
 
 # Import python libs
+from __future__ import print_function
 import os
 import sys
 import getpass
@@ -29,8 +30,8 @@ import salt.syspaths as syspaths
 import salt.log.setup as log
 from salt.utils.validate.path import is_writeable
 
-# Import salt cloud libs
-import salt.cloud.exceptions
+if not utils.is_windows():
+    import salt.cloud.exceptions
 
 
 def _sorted(mixins_or_funcs):
@@ -191,7 +192,7 @@ class OptionParser(optparse.OptionParser):
         )
 
     def print_versions_report(self, file=sys.stdout):
-        print >> file, '\n'.join(version.versions_report())
+        print('\n'.join(version.versions_report()), file=file)
         self.exit()
 
 
@@ -1556,12 +1557,11 @@ class SaltCMDOptionParser(OptionParser, ConfigDirMixIn, MergeConfigMixIn,
                         if len(self.config['fun']) != len(self.config['arg']):
                             self.exit(42, 'Cannot execute compound command without '
                                           'defining all arguments.')
+                else:
+                    self.config['fun'] = self.args[1]
+                    self.config['arg'] = self.args[2:]
             except IndexError:
                 self.exit(42, '\nIncomplete options passed.\n\n')
-
-            else:
-                self.config['fun'] = self.args[1]
-                self.config['arg'] = self.args[2:]
 
     def setup_config(self):
         return config.client_config(self.get_config_file_path())
@@ -1937,6 +1937,18 @@ class SaltCallOptionParser(OptionParser, ConfigDirMixIn, MergeConfigMixIn,
             help=('Specify the minion id to use. If this option is omitted, '
                   'the id option from the minion config will be used.')
         )
+        self.add_option(
+            '--skip-grains',
+            default=False,
+            action='store_true',
+            help=('Do not load grains.')
+        )
+        self.add_option(
+            '--refresh-grains-cache',
+            default=False,
+            action='store_true',
+            help=('Force a refresh of the grains cache')
+    )
 
     def _mixin_after_parsed(self):
         if not self.args and not self.options.grains_run \
@@ -1989,8 +2001,9 @@ class SaltRunOptionParser(OptionParser, ConfigDirMixIn, MergeConfigMixIn,
             dest='doc',
             default=False,
             action='store_true',
-            help=('Display documentation for runners, pass a module or a '
-                  'runner to see documentation on only that module/runner.')
+            help=('Display documentation for runners, pass a runner or '
+                  'runner.function to see documentation on only that runner '
+                  'or function.')
         )
 
     def _mixin_after_parsed(self):
@@ -2138,8 +2151,8 @@ class SaltCloudParser(OptionParser,
     _default_logging_logfile_ = os.path.join(syspaths.LOGS_DIR, 'cloud')
 
     def print_versions_report(self, file=sys.stdout):
-        print >> file, '\n'.join(
-            version.versions_report(include_salt_cloud=True))
+        print('\n'.join(version.versions_report(include_salt_cloud=True)),
+              file=file)
         self.exit()
 
     def _mixin_after_parsed(self):

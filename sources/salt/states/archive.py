@@ -10,6 +10,8 @@ import os
 # Import salt libs
 import salt.utils
 
+from opsagent.checksum import Checksum
+
 log = logging.getLogger(__name__)
 
 
@@ -73,8 +75,8 @@ def extracted(name,
         ret['comment'] = 'tar archive need argument tar_options'
         return ret
 
-    if if_missing is None:
-        if_missing = name
+    # if if_missing is None:
+    #     if_missing = name
     # if (__salt__['file.directory_exists'](if_missing) or
     #     __salt__['file.file_exists'](if_missing)):
     #     ret['result'] = True
@@ -83,17 +85,21 @@ def extracted(name,
 
     log.debug("Input seem valid so far")
     filename = os.path.join(__opts__['cachedir'],
-                            '{0}.{1}'.format(if_missing.replace('/', '_'),
-                                             archive_format))
+        source.split('/')[-1])
 
     #########################################################################
-    re_fetched = False
-    sfn = None
-    ## check whether special paths are absent
+    # check whether special paths are absent
     if if_absent and isinstance(if_absent, list):
-        re_fetched = all( [ os.path.isdir(path) for path in if_absent ] )
+        if any( [ os.path.isdir(path) for path in if_absent ] ):
+            ret['result'] = True
+            ret['comment_'] = 'Any specail directory existed'
+            return ret
 
-    ## get source hash file
+    # get cached checksum
+    cs = Checksum(source.split('/')[-1], name, __opts__['watch_dir'])
+    current_hash = cs.get()
+
+    # get source hash value
     if source_hash:
         try:
             tmp, source_hash, comment_ = __salt__['file.get_managed'](filename,
@@ -108,73 +114,49 @@ def extracted(name,
             ret['state_stdout'] = str(e)
             return ret
 
-    ## check source_hash
-    if not re_fetched:
-        ## check cached file
-        sfn = __salt__['cp.is_cached'](source, __env__)
+        # fetch source tarball when the target directory isn't existed or no cached checksum
+        if os.path.isdir(name) and current_hash:
 
-        if source_hash and os.path.isfile(sfn):
-            hash_value = '{0}={1}'.format(source_hash['hash_type'], source_hash['hsum']).lower()
-            re_fetched = not __salt__['file.check_hash'](sfn, hash_value)
-
-            # the same hash code and existed target directory
-            if not re_fetched and __salt__['file.directory_exists'](name):
+            # check source hash value
+            if source_hash['hash_type'] == 'md5' and current_hash == source_hash['hsum']:
                 ret['result'] = True
-                ret['comment'] = ('Any special path is existed or file sum set for file {0} of {1} is unchanged.'
-                    ).format(filename, source_hash['hsum'])
+                ret['comment'] = ('File sum set for file {0} of {1} is unchanged.'
+                    ).format(source, source_hash['hsum'])
                 return ret
 
-        else:
-            re_fetched = True
-
-    ## fetch the source file
-    if re_fetched:
-        try:
-            sfn = __salt__['cp.cache_file'](source, __env__)
-        except Exception, e:
-            ret['result'] = False
-            ret['comment'] = 'Download source file %s failed.' % source
-            ret['state_stdout'] = str(e)
-            return ret
+    # fetch the source file
+    try:
+        __salt__['cp.get_url'](source, filename, __env__)
+    except Exception, e:
+        ret['result'] = False
+        ret['comment'] = 'Download source file %s failed.' % source
+        ret['state_stdout'] = str(e)
+        return ret
 
     # check source hash
     if source_hash:
         try:
             hash_value = '{0}={1}'.format(source_hash['hash_type'], source_hash['hsum']).lower()
-            if not __salt__['file.check_hash'](sfn, hash_value):
-                dl_sum = __salt__['file.get_hash'](sfn, source_hash['hash_type'])
-                if sfn:
-                    __salt__['file.remove'](sfn)
+            if not __salt__['file.check_hash'](filename, hash_value):
+                dl_sum = __salt__['file.get_hash'](filename, source_hash['hash_type'])
+                if os.path.isfile(filename):
+                    __salt__['file.remove'](filename)
                 ret['result'] = False
                 ret['comment'] = ('File sum set for file {0} of {1} does '
                                     'not match real sum of {2}'
-                                    ).format(sfn,
-                                            source_hash['hsum'],
-                                            dl_sum)
+                                    ).format(filename, source_hash['hsum'], dl_sum)
                 return ret
         except Exception, e:
             ret['result'] = False
-            ret['comment'] = 'Check file sum set for file %s exception.' % sfn
+            ret['comment'] = 'Check file sum set for file %s exception.' % filename
             ret['state_stdout'] = str(e)
             return ret
-
-    ## prepare tmp file
-    try:
-        salt.utils.copyfile(sfn,
-                            filename,
-                            __salt__['config.backup_mode'](''),
-                            __opts__['cachedir'])
-    except IOError:
-        ret['result'] = False
-        ret['comment'] = 'Failed to commit change, permission error'
-        return ret
 
     if not os.path.isfile(filename):
         ret['result'] = False
         ret['comment'] = 'Source file {0} not found'.format(source)
         return ret
     ########################################################################################
-
     if __opts__['test']:
         ret['result'] = None
         ret['comment'] = 'Archive {0} would have been extracted in {1}'.format(
@@ -182,12 +164,16 @@ def extracted(name,
         return ret
 
     try:
+        # # remove original directory
+        # if os.path.isdir(name) and not __salt__['file.remove'](name):
+        #     log.debug("warning: remove original directory failed")
+
         __salt__['file.makedirs'](name)
         # check dir
         if not os.path.isdir(name):
             # remove cached file
-            if sfn:
-                __salt__['file.remove'](sfn)
+            if os.path.isfile(filename):
+                __salt__['file.remove'](filename)
             ret['result'] = False
             ret['comment'] = 'Make directory {0} failed.'.format(name)
             return ret
@@ -203,18 +189,25 @@ def extracted(name,
                 ret['result'] = False
                 ret['comment'] = 'Extract file %s failed' % filename
                 ret['state_stdout'] = results['stderr']
-                return results
+                return ret
             files = results['stdout']
         if len(files) > 0:
             ret['result'] = True
             ret['changes']['directories_created'] = [name]
-            if if_missing != name:
-                ret['changes']['directories_created'].append(if_missing)
+            # if if_missing != name:
+            #     ret['changes']['directories_created'].append(if_missing)
             ret['changes']['extracted_files'] = files
             ret['comment'] = "{0} extracted in {1}".format(source, name)
             os.unlink(filename)
+
+            # remove cached file and update cached md5
+            __salt__['file.remove'](filename)
+            if source_hash:
+                cs.update(source_hash['hsum'])
+
         else:
-            __salt__['file.remove'](if_missing)
+            __salt__['file.remove'](filename)
+            __salt__['file.remove'](name)
             ret['result'] = False
             ret['comment'] = "Can't extract content of {0}".format(source)
         return ret

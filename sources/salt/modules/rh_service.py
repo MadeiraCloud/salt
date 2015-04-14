@@ -56,11 +56,15 @@ def __virtual__():
         'McAfee  OS Server'
     ))
     if 'os' in __grains__ and __grains__['os'] in enable:
+        try:
+            osrelease = float(__grains__.get('osrelease', 0))
+        except ValueError:
+            return False
         if __grains__['os'] == 'Fedora':
             if __grains__.get('osrelease', 0) > 15:
                 return False
         if __grains__['os'] == 'RedHat':
-            if __grains__.get('osrelease', 0) >= 7:
+            if osrelease >= 7:
                 return False
         return __virtualname__
     return False

@@ -106,9 +106,26 @@
             "timeout": "1000",
             "cmd": "ls -l /tmp/test/test.sh && cat /tmp/test/test.sh"
           }
+        },
+
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324400",
+          "_": "11 [test4] create a file from uri - True",
+          "module": "linux.file",
+          "parameter": {
+            "remote_uri": "https://fedoraproject.org/static/8E1431D5.txt",
+            "path": "/tmp/fd.key"
+          }
+        },
+        {
+          "id": "state-C6A19CC2-B87C-4CA2-8A12-C4F68D324401",
+          "_": "12 [test4] assert file exist - True",
+          "module": "linux.cmd",
+          "parameter": {
+            "timeout": "1000",
+            "cmd": "ls -l /tmp && cat /tmp/fd.key"
+          }
         }
-
-
       ]
     }
   }

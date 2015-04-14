@@ -1,0 +1,17 @@
+{
+  "component": {
+    "init": {
+      "state": [
+        {
+          "id": "state-7E596E8A-28CD-4578-8E85-15D020632ABE",
+          "module": "linux.mkfs",
+          "parameter": {
+            "device": "/dev/xvdf",
+            "fstype": "ext4",
+            "label": "test"
+          }
+        }
+      ]
+    }
+  }
+}

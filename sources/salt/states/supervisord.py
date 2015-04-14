@@ -39,6 +39,9 @@ def _check_error(result, success_message):
 def _is_stopped_state(state):
     return state in ('STOPPED', 'STOPPING', 'EXITED', 'FATAL')
 
+def _is_running_state(state):
+    return state == 'RUNNING'
+
 
 def running(name,
             restart=False,
@@ -105,8 +108,11 @@ def running(name,
 
     # start supervisord
     try:
+        cmd = 'ps aux|grep supervisord'
+        if conf_file:
+            cmd = '{0} {1} {2}'.format(cmd, '|grep "\-c"|grep ', conf_file)
         is_supervisord = subprocess.Popen(
-            'ps aux|grep supervisord',
+            cmd,
             shell=True,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE).communicate()[0].strip().find('python')
@@ -120,6 +126,10 @@ def running(name,
                 ret['comment'] = 'Start supervisord failed.'
                 ret['state_stdout'] = result['stdout']
                 return ret
+
+            # waiting for all services starting
+            import time
+            time.sleep(5)
     except Exception, e:
         ret['result'] = False
         ret['comment'] = 'Start up supervisord failed.'
@@ -139,7 +149,7 @@ def running(name,
             process_groups.append(proc[:proc.index(':')])
     process_groups = list(set(process_groups))
 
-    # determine if this process/group needs loading
+    # determine if this process/group needs load
     needs_update = name not in all_processes and name not in process_groups
 
     if __opts__['test']:
@@ -187,27 +197,40 @@ def running(name,
         if '{0}: updated'.format(name) in result:
             just_updated = True
 
-    is_stopped = None
-
+    # check state
+    is_stopped = True
+    is_starting = None
     process_type = None
     if name in process_groups:
         process_type = 'group'
 
         # check if any processes in this group are stopped
-        is_stopped = False
         for proc in all_processes:
-            if proc.startswith(name) \
-                    and _is_stopped_state(all_processes[proc]['state']):
-                is_stopped = True
+            if proc.startswith(name):
+                if all_processes[proc]['state'].upper() == 'RUNNING':
+                    is_stopped = False
+                elif all_processes[proc]['state'].upper() == 'STARTING':
+                    is_starting = True
                 break
 
     elif name in all_processes:
         process_type = 'service'
 
-        if _is_stopped_state(all_processes[name]['state']):
-            is_stopped = True
-        else:
+        if all_processes[name]['state'].upper() == 'RUNNING':
             is_stopped = False
+        elif all_processes[name]['state'].upper() == 'STARTING':
+            is_starting = True
+
+    if is_supervisord < 0:
+        if is_starting:
+            ret['result'] = True
+            comment = "Service {0} is starting".format(name)
+            ret.update({'comment': comment})
+            # remove group flag
+            if ':' in name:
+                name = name[:name.index(':')]
+            ret['changes'][name] = comment
+            return ret
 
     if is_stopped is False:
         if restart and not just_updated:
