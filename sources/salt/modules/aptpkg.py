@@ -568,7 +568,7 @@ def upgrade(refresh=True, **kwargs):
         salt '*' pkg.upgrade
     '''
     if salt.utils.is_true(refresh):
-        refresh_db(**kwargs)
+        refresh_db(kwargs)
 
     old = list_pkgs()
     cmd = ['apt-get', '-q', '-y', '-o', 'DPkg::Options::=--force-confold',

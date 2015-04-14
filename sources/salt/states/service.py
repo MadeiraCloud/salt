@@ -36,9 +36,6 @@ service, then set the reload value to True:
           - pkg: redis
 '''
 
-import time
-
-CHECK_PAUSE=2
 
 def __virtual__():
     '''
@@ -296,8 +293,6 @@ def running(name, enable=None, sig=None, **kwargs):
 
     changes = {name: __salt__['service.start'](name, state_ret=ret)}
 
-    time.sleep(CHECK_PAUSE)
-
     # to check service status
     if not __salt__['service.status'](name, sig or name):
         ret['result'] = False
@@ -473,7 +468,7 @@ def mod_watch_old(name, sig=None, reload=False, full_restart=False, action=None)
 
 
 
-def mod_watch(name, sig=None, reload=False, restart=False, full_restart=False, actions=None):
+def mod_watch(name, sig=None, reload=False, full_restart=False, actions=None):
     '''
     The service watcher, called to invoke the watch command.
 
@@ -492,9 +487,6 @@ def mod_watch(name, sig=None, reload=False, restart=False, full_restart=False, a
 
     pid = __salt__['service.status'](name, sig)
 
-    if not actions:
-        actions = {}
-
     if pid or actions.get(name,None):
         if 'service.reload' in __salt__ and reload:
             action = "reload"
@@ -502,10 +494,10 @@ def mod_watch(name, sig=None, reload=False, restart=False, full_restart=False, a
                 "func": __salt__['service.reload'],
                 "action": action,
             }]
-        elif 'service.restart' in __salt__ and (full_restart or restart):
-            action = "restart"
+        elif 'service.full_restart' in __salt__ and full_restart:
+            action = "fully restart"
             act = [{
-                "func": __salt__['service.restart'],
+                "func": __salt__['service.full_restart'],
                 "action": action,
             }]
         elif actions.get(name,None):

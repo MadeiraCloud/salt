@@ -1376,7 +1376,7 @@ def directory(name,
                     if isinstance(gid, basestring):
                         ret['result'] = False
                         ret['comment'] = 'Failed to enforce group ownership ' \
-                                         'for group {0}'.format(group)
+                                         'for group {0}'.format(group, user)
                 else:
                     ret['result'] = False
                     ret['comment'] = 'group not specified, but configured ' \

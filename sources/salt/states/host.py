@@ -57,10 +57,11 @@ def present(name, ip):  # pylint: disable=C0103
         ret['changes'] = {'host': name}
         ret['result'] = True
         ret['comment'] = 'Added host {0}'.format(name)
+        return ret
     else:
         ret['result'] = False
         ret['comment'] = 'Failed to set host'
-    return ret
+        return ret
 
 
 def absent(name, ip):  # pylint: disable=C0103
