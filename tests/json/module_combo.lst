@@ -20,3 +20,4 @@ combo.11 #linux.yum.package gem + common.gem.package
 combo.12 #linux.apt.package gem + common.gem.package
 
 combo.13 #linux.file program (foo) + conf (supervisor) + linux.yum.package python-pip + common.pip.package supervisor + linux.supervisord foo
+combo.14

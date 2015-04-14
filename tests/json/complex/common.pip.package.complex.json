@@ -7,9 +7,11 @@
           "_": "1 [prepare] setup pip with apt - True|False",
           "module": "linux.apt.package",
           "parameter": {
-            "name": {
-              "pip": ""
-            }
+              "name": [
+                  {
+                      "key":"pip"
+                  }
+              ]
           }
         },
         {
@@ -17,9 +19,11 @@
           "_": "2 [prepare] setup pip with yum - True|False",
           "module": "linux.yum.package",
           "parameter": {
-            "name": {
-              "python-pip": ""
-            }
+              "name": [
+                  {
+                      "key":"python-pip"
+                  }
+              ]
           }
         },
         {
@@ -27,9 +31,11 @@
           "_": "3 [test1] setup supervisor - True",
           "module": "common.pip.package",
           "parameter": {
-            "name": {
-              "supervisor": ""
-            }
+              "name": [
+                  {
+                      "key":"supervisor"
+                  }
+              ]
           }
         }
       ]

@@ -40,6 +40,9 @@ linux.docker.running
 linux.docker.built
 linux.docker.deploy
 
+linux.mesos.master
+linux.mesos.slave
+
 # TODO
 #linux.hosts
 #linux.hostname

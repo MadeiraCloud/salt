@@ -930,6 +930,7 @@ def vops_pulled(repo,
     else:
         return _invalid(comment="repo missing")
 
+    ret = None
     if force_install and containers:
         if type(containers) is not list:
             containers = [containers]
@@ -943,15 +944,24 @@ def vops_pulled(repo,
                     if a.get('changes') and a.get('comment'):
                         out_text += "%s\n"%(a['comment'])
                     if not a.get('result'):
-                        a['comment'] = out_text
-                        return _ret_status(a)
+                        ret = a
+                        break
             else:
                 if a.get('changes') and a.get('comment'):
                     out_text += "%s\n"%(a['comment'])
                 if not a.get('result'):
-                    a['comment'] = out_text
-                    return _ret_status(a)
+                    ret = a
+            if ret:
+                break
 
+    # clean old images
+    cleaned = __salt__['docker.clean_images']()
+    if cleaned.get("comment"):
+        out_text += cleaned["comment"]
+
+    if ret:
+        a['comment'] = out_text
+        return _ret_status(a)
 
     status = base_status.copy()
     status["comment"] = out_text
@@ -974,7 +984,7 @@ def vops_built(tag,
     force_install = False
 
 
-    if tag and path and force:
+    if tag and path and (force != None):
         ret = built(tag,path,force=force)
 #        # DEBUG
 #        print "######### BUILT #####"
@@ -992,8 +1002,8 @@ def vops_built(tag,
             return _ret_status(ret)
         if ret.get('changes'):
             force_install = True
-    elif not force:
-        out_text += "Image %s from Dockerfile in %s already built\n"%(tag,path)
+#    elif not force:
+#        out_text += "Image %s from Dockerfile in %s already built\n"%(tag,path)
     elif not tag:
         return _invalid(comment="tag name missing")
     elif not path:

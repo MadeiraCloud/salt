@@ -6,19 +6,27 @@
           "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
           "module": "linux.yum.package",
           "parameter": {
-            "name": {
-              "subversion": ""
-            }
+              "name": [
+                  {
+                      "key":"subversion"
+                  }
+              ]
           }
         },
         {
-          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1F",
+          "id": "state-1B1576AF-8966-4B72-92CF-1266752169E0",
+          "module": "linux.dir",
+          "parameter": {
+            "path": ["/tmp/svn"]
+          }
+        },
+        {
+          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1G",
           "module": "common.svn",
           "parameter": {
             "repo": "https://github.com/VisualOps/pysa",
             "path": "/tmp/svn/test/",
-            "force": true,
-            "revision": "trunk"
+            "force": true
           }
         }
       ]

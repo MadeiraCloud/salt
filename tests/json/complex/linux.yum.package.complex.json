@@ -28,9 +28,11 @@
           "_": "3 [test1] install package with required parameter when package not installed - True",
           "module": "linux.yum.package",
           "parameter": {
-            "name": {
-              "mongo-10gen-unstable-tools": ""
-            }
+              "name": [
+                  {
+                      "key":"mongo-10gen-unstable-tools"
+                  }
+              ]
           }
         },
         {
@@ -49,9 +51,11 @@
           "_": "5 [test2] install package with required parameter when package already installed - True",
           "module": "linux.yum.package",
           "parameter": {
-            "name": {
-              "mongo-10gen-unstable-tools": ""
-            }
+              "name": [
+                  {
+                      "key":"mongo-10gen-unstable-tools"
+                  }
+              ]
           }
         },
 
@@ -70,10 +74,12 @@
           "_": "7 [test3] install package with disablerepo parameter when package not installed - False",
           "module": "linux.yum.package",
           "parameter": {
-            "name": {
-              "mongo-10gen-unstable-tools": ""
-            },
-            "verify-gpg": false
+              "name": [
+                  {
+                      "key":"mongo-10gen-unstable-tools"
+                  }
+              ],
+              "verify-gpg": true
           }
         },
         {
@@ -101,11 +107,13 @@
           "_": "10 [test4] install package with fromrepo parameter when package not installed - True",
           "module": "linux.yum.package",
           "parameter": {
-            "name": {
-              "mongo-10gen-unstable-tools": ""
-            },
-            "repo": "10gen",
-            "verify-gpg": true
+              "name": [
+                  {
+                      "key":"mongo-10gen-unstable-tools"
+                  }
+              ],
+              "repo": "10gen",
+              "verify-gpg": true
           }
         },
         {
@@ -123,9 +131,12 @@
           "_": "12 [test5] install package from file - True",
           "module": "linux.yum.package",
           "parameter": {
-            "name": {
-              "epel": "http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm"
-            }
+              "name": [
+                  {
+                      "key":"epel",
+                      "value":"http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm"
+                  }
+              ]
           }
         },
         {

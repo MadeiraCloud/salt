@@ -11,22 +11,29 @@
           }
         },
         {
-          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1F",
+          "id": "state-7B5E6E8A-17CD-4578-8E85-15D020632F1G",
           "module": "linux.yum.package",
           "parameter": {
-            "name": {
-              "npm": "",
-              "enablerepo": "epel"
-            }
+              "name": [
+                  {
+                      "key":"npm"
+                  },
+                  {
+                      "key":"enablerepo",
+                      "value":"epel"
+                  }
+              ]
           }
         },
         {
-          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1F",
+          "id": "state-7B5E6E8A-17CD-4578-8E86-15D020632F1H",
           "module": "common.npm.package",
           "parameter": {
-            "name": {
-              "express": ""
-            }
+              "name": [
+                  {
+                      "key": "express"
+                  }
+              ]
           }
         }
       ]

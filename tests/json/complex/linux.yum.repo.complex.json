@@ -16,10 +16,12 @@
           "_": "2 [test2] install mongo - True",
           "module": "linux.yum.package",
           "parameter": {
-            "name": {
-              "mongo-10gen": ""
-            },
-            "fromrepo": "mongodb"
+              "name": [
+                  {
+                      "key":"mongo-10gen"
+                  }
+              ],
+              "fromrepo": "mongodb"
           }
         }
       ]

@@ -9,8 +9,8 @@ if [ ! -f "$1" ]; then
     exit 1
 fi
 
-DOCKER_DEB_VERSION="1.4.1-0"
-DOCKER_RPM_VERSION="1.4.1-1"
+DOCKER_DEB_VERSION="1.5.0-0"
+DOCKER_RPM_VERSION="1.5.0-1"
 
 # get variables
 S_OA_PACKAGE_PATH=$(cat "$1" | grep "^package_path=" | cut -d '=' -f 2)
@@ -39,6 +39,9 @@ fi
 chmod 755 ${S_OA_BOOT_DIR}/${S_OA_SALT}/libs/*
 cp -rf ${S_OA_BOOT_DIR}/${S_OA_SALT}/libs/{docker,mock.py,requests,six.py,websocket.py} ${S_OA_PACKAGE_PATH}/
 if [ "$S_PLATFORM" = "APT" ]; then
+    ## Mesos
+    cp -r ${S_OA_BOOT_DIR}/${S_OA_SALT}/scripts/mesos-apt ${S_OA_CONF_DIR}/
+    ## Docker
     DOCKER_NAME="docker.deb"
     wget -nv ${S_OA_BASE_REMOTE}/docker/docker_${DOCKER_DEB_VERSION}_all.deb.cksum -O ${S_OA_CONF_DIR}/docker.deb.cksum
     cd ${S_OA_CONF_DIR}
@@ -48,6 +51,7 @@ if [ "$S_PLATFORM" = "APT" ]; then
     if [ "$REF_CKSUM" != "$CUR_CKSUM" ]; then
         wget -nv ${S_OA_BASE_REMOTE}/docker/docker_${DOCKER_DEB_VERSION}_all.deb -O ${S_OA_CONF_DIR}/docker.deb
         apt-get -y remove docker 2> /dev/null
+        service docker stop 2> /dev/null
     fi
 elif [ "$S_PLATFORM" = "YUM" ]; then
     DOCKER_NAME="docker.rpm"
@@ -59,6 +63,7 @@ elif [ "$S_PLATFORM" = "YUM" ]; then
     if [ "$REF_CKSUM" != "$CUR_CKSUM" ]; then
         wget -nv ${S_OA_BASE_REMOTE}/docker/docker-${DOCKER_RPM_VERSION}.x86_64.rpm -O ${S_OA_CONF_DIR}/docker.rpm
         yum -y remove docker 2> /dev/null
+        service docker stop 2> /dev/null
     fi
 fi
 

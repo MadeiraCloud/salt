@@ -4,7 +4,7 @@
 ## (c) 2014 MadeiraCloud LTD.
 #
 
-DEFAULT_TAG="v2014-07-18"
+DEFAULT_TAG="v2015-03-26"
 
 # get tag
 echo "Input the tag you want to publish [${DEFAULT_TAG}]"

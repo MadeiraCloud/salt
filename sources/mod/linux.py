@@ -582,11 +582,18 @@ ensure the specified services are running, and trigger service restart if necess
 
 ### Parameters
 
-*   **`name`** (*required*): the list of the service names to be run
+*   **`name`** (*required*): the list of the service names to be run. The value represents the action if one of the watched file has changed (if applicable):
 
-		example: httpd, mysqld
+	- ***`<null>`*** *`default`*: try to reload the service. If reload fails, restart the service.
+	- ***`<command>`***: path to a command to execute
+	- ***`reload`***: 'reload' the service
+	- ***`restart`***: 'restart' the service
 
-*   **`watch`** (*optional*): watch a list of files, restart the service if any of them is modified
+
+		example: httpd: bash /opt/scripts/nginx_mysql_restart.sh, mysqld: restart
+
+
+*   **`watch`** (*optional*): watch a list of files, execute action if any of them is modified
 
 		example: /etc/nginx/nginx.conf, /etc/my.cnf
 				''',
@@ -594,7 +601,7 @@ ensure the specified services are running, and trigger service restart if necess
 			},
 			'parameter'	:	{
 				'name'		:	{
-					'type'		:	'array',
+					'type'		:	'dict',
 					'required'	:	True,
 					'visible'	:	True
 				},
@@ -2602,12 +2609,188 @@ See Chef documentation for more details.
 
 
 
+		# Create and ensure a Raid array is present
+		'raid'	:	{
+			'module'	:	'linux.raid',
+			'distro'	:	None,
+			'reference'	:	{
+				'en'	:	'''
+### Description
+Create and ensure a Raid array is present.
+
+See `mdadm` documentation for more details.
+
+### Parameters
+
+*   **`device-name`** (*required*): Name of the raid array
+
+		example:
+			/dev/md0
+
+*   **`level`** (*required*): The RAID level to use when creating the raid. Options are: linear, raid0, 0, stripe, raid1, 1, mirror, raid4, 4, raid5, 5, raid6, 6, raid10, 10, multipath, mp, faulty, container. Obviously some of these are synonymous.
+
+		example:
+			raid1
+
+*   **`devices`** (*required*): A list of devices used to build the array.
+
+		example:
+			/dev/xvdf, /dev/xvdg
+
+*   **`arguments`** (*optional*): Additional arguments passed to the mdadm binary (see mdadm documentation). You can use these arguments to specify chunk size, for example.
+
+		example:
+			chunk:	256
+				''',
+				'cn'	:	''''''
+			},
+			'parameter'	:	{
+				'device-name'		:	{
+					'type'		:	'line',
+					'required'	:	True,
+					'visible'	:	True,
+				},
+				'level'		:	{
+					'type'		:	'line',
+					'required'	:	True,
+					'visible'	:	True,
+				},
+				'devices'		:	{
+					'type'		:	'array',
+					'required'	:	True,
+					'visible'	:	True,
+				},
+				'arguments'		:	{
+					'type'		:	'dict',
+					'required'	:	False,
+					'visible'	:	True,
+				},
+			},
+                },
 
 
-#		'ntp'	:	{},
-#		'quota'	:	{},
-#		'ssh'	:	{},
-#		'raid'	:	{},
-#		'iptables'	:	{},
+		# mesos master/slave state
+		"mesos master": {
+			"module": "linux.mesos.master",
+			"reference": {
+				"cn": "",
+				"en": """
+### Description
+Runs a Mesos Master instance
+
+### Parameters
+
+*   **`cluster_name`** (*required*): Name of the Mesos cluster
+
+		example:
+			Mesos Cluster
+
+*   **`server_id`** (*required*): ID of the Mesos Master server
+
+		example:
+			1
+			2
+
+*   **`masters_addresses`** (*required*): IPs/hostnames of the Mesos Master servers. If no hostname is given, the ip address will be used by default as hostname.
+
+		example:
+			@{master1.PrivateIpAddress}:    master1
+			@{master2.PrivateIpAddress}:    master2
+			@{master3.PrivateIpAddress}:
+
+*   **`hostname`** (*optional*): Hostname of the Mesos Master server instance
+
+		example:
+			master1
+
+*   **`framework`** (*optional*): Framework to install on top of Mesos
+
+		example:
+			marathon
+			"""
+			},
+			"parameter" : {
+				"cluster_name" : {
+					"type" 		: "line",
+					"required"	: True,
+					"visible"	: True,
+				},
+				"server_id" : {
+					"type" 		: "line",
+					"required"	: True,
+					"visible"	: True,
+				},
+				"masters_addresses" : {
+					"type"		: "dict",
+					"required"	: True,
+					"visible"	: True,
+				},
+				"hostname" : {
+					"type"		: "line",
+					"required"	: False,
+					"visible"	: True,
+				},
+				"framework"	: {
+					"type"		: "array",
+					"required"	: False,
+					"visible"	: True,
+					"option"	: [
+						"marathon",
+					],
+				},
+				"master_ip" : {
+					"type"		: "line",
+					"required"	: True,
+					"visible"	: False,
+				},
+			},
+		},
+		"mesos slave": {
+			"module": "linux.mesos.slave",
+			"reference": {
+				"cn": "",
+				"en": """
+### Description
+Runs a Mesos Slave instance
+
+### Parameters
+
+*   **`masters_addresses`** (*required*): IPs/hostnames of the Mesos Master servers. If no hostname is given, the ip address will be used by default as hostname.
+
+
+		example:
+			@{master1.PrivateIpAddress}:    master1
+			@{master2.PrivateIpAddress}:    master2
+			@{master3.PrivateIpAddress}:
+
+*   **`attributes`** (*required*): Mesos slave attributes (see Mesos documentation)
+
+		example:
+			subnet: web
+			public: true
+			rack:   rack-5
+			asg:    asg0
+			zone:   all
+""",
+			},
+			"parameter" : {
+				"masters_addresses" : {
+					"type"		: "dict",
+					"required"	: True,
+					"visible"	: True,
+				},
+				"attributes" : {
+					"type"		: "dict",
+					"required"	: True,
+					"visible"	: True
+				},
+				"slave_ip" : {
+					"type"		: "line",
+					"required"	: True,
+					"visible"	: False,
+				},
+			},
+		},
+
 	}
 }

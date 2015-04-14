@@ -1,0 +1,21 @@
+{
+    "component": {
+        "init": {
+            "state": [
+                {
+                    "id": "state-7E596E8A-28CD-4578-8E85-15D020632AAA",
+                    "module": "linux.mesos.master",
+                    "parameter": {
+                        "cluster_name": "cluster",
+                        "master_ip": "127.0.0.1",
+                        "masters_addresses": [
+                            {"key":"127.0.0.1","value":"master1"}
+                        ],
+                        "server_id": "1",
+                        "hostname": "master1"
+                    }
+                }
+            ]
+        }
+    }
+}

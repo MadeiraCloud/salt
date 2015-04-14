@@ -64,9 +64,9 @@
                     "parameter": {
                         "PE size": "4M",
                         "clustered": "n",
-                        "max-lv-number": 128,
-                        "max-pv-number": 128,
-                        "metadata-copies": 1,
+                        "max-lv-number": "128",
+                        "max-pv-number": "128",
+                        "metadata-copies": "1",
                         "name": "vgtest",
                         "path": [
                             "/dev/sdb1",
