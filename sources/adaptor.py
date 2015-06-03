@@ -153,7 +153,8 @@ class StateAdaptor(object):
         },
         'common.pip.package'    : {
             'attributes' : {
-                'name' : 'names'
+                'name' : 'names',
+                'install_options' : 'install_options'
             },
             'states' : [
                 'installed', 'removed'
