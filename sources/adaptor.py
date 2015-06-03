@@ -153,7 +153,8 @@ class StateAdaptor(object):
         },
         'common.pip.package'    : {
             'attributes' : {
-                'name' : 'names'
+                'name' : 'names',
+                'install_options' : 'install_options'
             },
             'states' : [
                 'installed', 'removed'
@@ -347,7 +348,7 @@ class StateAdaptor(object):
             'states' : ['running', 'mod_watch'],
             'type' : 'supervisord',
             'require' : [
-                {'common.pip.package' : {'name' : [{'key':'supervisor'}]}}
+                {'common.pip.package' : {'name' : [{'key':'supervisor'}], 'install_options': '--install-scripts=/usr/bin'}}
             ]
         },
         'linux.service' : {
