@@ -919,8 +919,7 @@ class StateAdaptor(object):
                 {'linux.apt.repo' : { 'content' : "deb http://repos.mesosphere.io/ubuntu trusty main", 'name': "mesos", 'os': ["ubuntu","debian"] }},
                 {'linux.cmd' : { 'cmd' : "apt-get -q update", 'os': ["ubuntu","debian"] }},
                 {'linux.apt.package' : { 'name' : [
-                    {'key':"mesosphere"},
-                    {'key':"openjdk-7-jre-headless"},
+                    {'key':"mesosphere"}
                 ], 'os': ["ubuntu","debian"] }},
                 {'linux.file': { "path": "/etc/init/mesos-master.conf", "content": get_file_content(os.path.join(CONFIG_PATH,"mesos-apt","mesos-master.conf")) }},
                 {'linux.file': { "path": "/etc/init.d/mesos-master", "content": get_file_content(os.path.join(CONFIG_PATH,"mesos-apt","mesos-master")), "mode": "755" }},
